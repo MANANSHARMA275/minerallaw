@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Login — MineralLaw.in{% endblock %}
+
+{% block content %}
+
+<div class="max-w-md mx-auto py-12">
+
+    <!-- Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-amber-400 mb-2" data-i18n="login_title">
+            Login to MineralLaw.in
+        </h1>
+        <p class="text-slate-400 text-sm" data-i18n="login_subtitle">
+            Enter your phone number to receive a one-time login code
+        </p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="bg-slate-800 rounded-lg border border-slate-700 p-8">
+
+        <!-- Step 1: Phone number -->
+        <div id="step-phone">
+            <label class="block text-sm font-medium text-slate-300 mb-2" data-i18n="phone_label">
+                Mobile Number
+            </label>
+            <div class="flex gap-2 mb-4">
+                <span class="bg-slate-700 border border-slate-600 rounded px-3 py-2.5 text-slate-400 text-sm">
+                    +91
+                </span>
+                <input
+                    type="tel"
+                    id="phone-input"
+                    maxlength="10"
+                    placeholder="9876543210"
+                    class="flex-1 bg-slate-700 border border-slate-600 rounded px-3 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm"
+                >
+            </div>
+
+            <button
+                onclick="sendOTP()"
+                id="send-otp-btn"
+                class="w-full bg-amber-400 text-slate-900 py-2.5 rounded font-bold hover:bg-amber-300 transition text-sm">
+                <span data-i18n="send_otp">Send OTP</span>
+            </button>
+        </div>
+
+        <!-- Step 2: OTP entry (hidden initially) -->
+        <div id="step-otp" class="hidden">
+            <p class="text-slate-400 text-sm mb-4">
+                <span data-i18n="otp_sent">OTP sent to</span>
+                <span id="phone-display" class="text-white font-medium"></span>
+            </p>
+
+            <label class="block text-sm font-medium text-slate-300 mb-2" data-i18n="otp_label">
+                Enter 6-digit OTP
+            </label>
+            <input
+                type="number"
+                id="otp-input"
+                maxlength="6"
+                placeholder="123456"
+                class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm mb-4"
+            >
+
+            <button
+                onclick="verifyOTP()"
+                class="w-full bg-amber-400 text-slate-900 py-2.5 rounded font-bold hover:bg-amber-300 transition text-sm mb-3">
+                <span data-i18n="verify_otp">Verify & Login</span>
+            </button>
+
+            <button
+                onclick="resetLogin()"
+                class="w-full text-slate-400 text-sm hover:text-slate-300 transition">
+                <span data-i18n="change_number">← Change number</span>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- DPDP consent note -->
+    <p class="text-center text-slate-500 text-xs mt-6 px-4" data-i18n="consent_note">
+        By logging in, you agree to our Terms of Service. We collect your phone number
+        and mining details only to provide compliance services.
+        Your data is stored in India and never sold.
+    </p>
+
+</div>
+
+<!-- Login JS -->
+<script>
+function sendOTP() {
+    const phone = document.getElementById('phone-input').value.trim();
+    if (phone.length !== 10) {
+        alert('Please enter a valid 10-digit mobile number.');
+        return;
+    }
+
+    const btn = document.getElementById('send-otp-btn');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+
+    fetch('/otp/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `phone=%2B91${phone}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'sent') {
+            document.getElementById('step-phone').classList.add('hidden');
+            document.getElementById('step-otp').classList.remove('hidden');
+            document.getElementById('phone-display').textContent = `+91 ${phone}`;
+        } else {
+            alert(data.error || 'Failed to send OTP. Please try again.');
+            btn.textContent = 'Send OTP';
+            btn.disabled = false;
+        }
+    })
+    .catch(() => {
+        alert('Network error. Please try again.');
+        btn.textContent = 'Send OTP';
+        btn.disabled = false;
+    });
+}
+
+function verifyOTP() {
+    const phone = document.getElementById('phone-display').textContent.replace(/\s/g, '');
+    const otp = document.getElementById('otp-input').value.trim();
+
+    fetch('/otp/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `phone=${encodeURIComponent(phone)}&otp=${otp}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            window.location.href = '/dashboard';
+        } else {
+            alert(data.error || 'Invalid OTP. Please try again.');
+        }
+    });
+}
+
+function resetLogin() {
+    document.getElementById('step-otp').classList.add('hidden');
+    document.getElementById('step-phone').classList.remove('hidden');
+    document.getElementById('send-otp-btn').textContent = 'Send OTP';
+    document.getElementById('send-otp-btn').disabled = false;
+}
+</script>
+
+{% endblock %}

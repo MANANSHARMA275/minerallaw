@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}MineralLaw.in — Rajasthan Mining Compliance{% endblock %}
+
+{% block content %}
+
+<!-- ============================================================
+     HERO SECTION
+============================================================ -->
+<div class="text-center py-16">
+    <h1 class="text-4xl font-bold text-amber-400 mb-4" data-i18n="hero_title">
+        Rajasthan Mining Compliance
+    </h1>
+    <p class="text-xl text-slate-300 mb-3" data-i18n="hero_subtitle">
+        Never miss a government deadline. Never pay a penalty.
+    </p>
+    <p class="text-slate-400 mb-8 max-w-xl mx-auto" data-i18n="hero_desc">
+        Track EC reports, calculate royalty fees, and get expert guidance —
+        all in one place. Built for Rajasthan mine owners.
+    </p>
+
+    <div class="flex gap-4 justify-center flex-wrap">
+        <a href="{{ url_for('main.login') }}"
+           class="bg-amber-400 text-slate-900 px-8 py-3 rounded-lg font-bold text-lg hover:bg-amber-300 transition">
+            <span data-i18n="hero_cta">Get Started Free</span>
+        </a>
+        <a href="{{ url_for('main.pricing') }}"
+           class="border border-slate-600 text-slate-300 px-8 py-3 rounded-lg font-semibold hover:border-amber-400 hover:text-amber-400 transition">
+            <span data-i18n="hero_pricing">View Pricing</span>
+        </a>
+    </div>
+</div>
+
+<!-- ============================================================
+     PROBLEM STATEMENT
+============================================================ -->
+<div class="bg-red-950 border border-red-800 rounded-lg p-6 mb-12 max-w-3xl mx-auto">
+    <h2 class="text-red-400 font-bold text-lg mb-3" data-i18n="problem_title">
+        ⚠️ The Cost of Missing a Deadline
+    </h2>
+    <ul class="text-slate-300 space-y-2 text-sm">
+        <li>• Missed EC compliance report → <strong class="text-red-400">₹1 lakh penalty + mine shutdown</strong></li>
+        <li>• Wrong mineral category filed → <strong class="text-red-400">3-4 months delay = ₹10-50 lakh loss</strong></li>
+        <li>• Incorrect royalty calculation → <strong class="text-red-400">Application rejected by DMG</strong></li>
+    </ul>
+</div>
+
+<!-- ============================================================
+     FEATURES
+============================================================ -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+
+    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+        <div class="text-amber-400 text-2xl mb-3">📅</div>
+        <h3 class="font-bold text-white mb-2" data-i18n="feature1_title">Compliance Calendar</h3>
+        <p class="text-slate-400 text-sm" data-i18n="feature1_desc">
+            Automatic reminders 7 days and 1 day before every EC report, annual return,
+            and government deadline. Delivered to your WhatsApp.
+        </p>
+    </div>
+
+    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+        <div class="text-amber-400 text-2xl mb-3">🧮</div>
+        <h3 class="font-bold text-white mb-2" data-i18n="feature2_title">Fee Calculator</h3>
+        <p class="text-slate-400 text-sm" data-i18n="feature2_desc">
+            Calculate exact royalty, DMF, and NPV amounts using verified Rajasthan
+            government rates. Historical rates for past lease dates.
+        </p>
+    </div>
+
+    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+        <div class="text-amber-400 text-2xl mb-3">👨‍⚖️</div>
+        <h3 class="font-bold text-white mb-2" data-i18n="feature3_title">Expert Consultation</h3>
+        <p class="text-slate-400 text-sm" data-i18n="feature3_desc">
+            30 years of Rajasthan mining law expertise. Get answers to complex
+            compliance questions within 24 hours.
+        </p>
+    </div>
+
+</div>
+
+<!-- ============================================================
+     SOCIAL PROOF
+============================================================ -->
+<div class="text-center py-8 border-t border-slate-700">
+    <p class="text-slate-500 text-sm" data-i18n="trusted_by">
+        Trusted by mine owners across Rajasthan
+    </p>
+</div>
+
+{% endblock %}

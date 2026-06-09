@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MineralLaw.in — Mining Compliance Made Simple{% endblock %}</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom styles + Print stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+
+        /* Print stylesheet — mine owners print checklists for government offices */
+        @media print {
+            nav, footer, .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .print-only { display: block !important; }
+            a { color: black !important; text-decoration: none !important; }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- ============================================================
+         NAVIGATION
+    ============================================================ -->
+    <nav class="bg-slate-800 border-b border-slate-700 no-print">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+
+            <!-- Logo -->
+            <a href="{{ url_for('main.home') }}" class="text-xl font-bold text-amber-400">
+                MineralLaw.in
+            </a>
+
+            <!-- Nav links -->
+            <div class="flex items-center gap-4 text-sm">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('main.dashboard') }}"
+                       class="text-slate-300 hover:text-amber-400 transition">
+                        <span data-i18n="nav_dashboard">Dashboard</span>
+                    </a>
+                    <a href="{{ url_for('main.calculator') }}"
+                       class="text-slate-300 hover:text-amber-400 transition">
+                        <span data-i18n="nav_calculator">Calculator</span>
+                    </a>
+                    <a href="{{ url_for('main.checklist') }}"
+                       class="text-slate-300 hover:text-amber-400 transition">
+                        <span data-i18n="nav_checklist">Checklist</span>
+                    </a>
+                    <a href="{{ url_for('main.ask_expert') }}"
+                       class="text-slate-300 hover:text-amber-400 transition">
+                        <span data-i18n="nav_expert">Ask Expert</span>
+                    </a>
+                    <a href="{{ url_for('main.logout') }}"
+                       class="text-slate-400 hover:text-red-400 transition">
+                        <span data-i18n="nav_logout">Logout</span>
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('main.pricing') }}"
+                       class="text-slate-300 hover:text-amber-400 transition">
+                        <span data-i18n="nav_pricing">Pricing</span>
+                    </a>
+                    <a href="{{ url_for('main.login') }}"
+                       class="bg-amber-400 text-slate-900 px-4 py-1.5 rounded font-semibold hover:bg-amber-300 transition">
+                        <span data-i18n="nav_login">Login</span>
+                    </a>
+                {% endif %}
+
+                <!-- Hindi/English toggle -->
+                <button onclick="toggleLanguage()"
+                        class="text-xs text-slate-400 hover:text-amber-400 border border-slate-600 px-2 py-1 rounded transition">
+                    हिं/EN
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============================================================
+         FLASH MESSAGES
+    ============================================================ -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="max-w-6xl mx-auto px-4 pt-4 w-full no-print">
+                {% for category, message in messages %}
+                    <div class="mb-2 px-4 py-3 rounded text-sm
+                        {% if category == 'error' %}bg-red-900 text-red-200 border border-red-700
+                        {% elif category == 'info' %}bg-blue-900 text-blue-200 border border-blue-700
+                        {% else %}bg-green-900 text-green-200 border border-green-700{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- ============================================================
+         MAIN CONTENT
+    ============================================================ -->
+    <main class="flex-grow max-w-6xl mx-auto px-4 py-8 w-full">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ============================================================
+         FOOTER
+    ============================================================ -->
+    <footer class="bg-slate-800 border-t border-slate-700 mt-auto no-print">
+        <div class="max-w-6xl mx-auto px-4 py-6 text-center text-slate-400 text-xs">
+            <!-- Legal disclaimer — shown on every page -->
+            <p class="mb-2">
+                <strong class="text-slate-300">Disclaimer:</strong>
+                All information on MineralLaw.in is for compliance guidance only.
+                It does not constitute legal advice. Verify all calculations and
+                deadlines with SEIAA before making any government submission.
+            </p>
+            <p>© 2026 MineralLaw.in — Mining Compliance for Rajasthan</p>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+         JAVASCRIPT — Language toggle + utilities
+    ============================================================ -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+</html>
