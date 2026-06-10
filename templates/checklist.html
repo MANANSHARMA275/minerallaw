@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block title %}EC Compliance Checklist — MineralLaw.in{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-100 mb-2">EC Compliance Checklist</h1>
+            <p class="text-slate-400 text-sm max-w-xl">
+                Step-by-step guide for Rajasthan minor mineral mines.
+                Print this page and carry it to the government office.
+            </p>
+        </div>
+        <button onclick="window.print()"
+                class="no-print flex-shrink-0 border border-slate-600 text-slate-300
+                       px-4 py-2 rounded-lg text-sm hover:border-amber-400
+                       hover:text-amber-400 transition">
+            🖨 Print
+        </button>
+    </div>
+
+    <!-- Phases -->
+    <div class="space-y-6">
+
+        <!-- Phase 1 -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-amber-400 text-slate-900 text-xs font-bold px-2.5 py-1 rounded-full">
+                    Phase 1
+                </span>
+                <h2 class="text-slate-100 font-semibold text-lg">
+                    EC Application (Environment Clearance)
+                </h2>
+            </div>
+            <ul class="space-y-2 text-slate-300 text-sm">
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Prepare Form-1 with mine location, mineral type, lease area
+                </li>
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Submit to SEIAA Rajasthan (State Expert Appraisal Committee)
+                </li>
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Attach: land documents, NOC from revenue dept, site plan
+                </li>
+                <li class="flex gap-2 items-start">
+                    <span class="text-orange-400 mt-0.5 flex-shrink-0">⚠️</span>
+                    <span class="text-orange-300">
+                        Father verifies: current SEIAA submission address and procedure
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-amber-400 text-slate-900 text-xs font-bold px-2.5 py-1 rounded-full">
+                    Phase 2
+                </span>
+                <h2 class="text-slate-100 font-semibold text-lg">
+                    Mining Plan Approval
+                </h2>
+            </div>
+            <ul class="space-y-2 text-slate-300 text-sm">
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Prepare mining plan per MCDR 2017
+                </li>
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Submit to IBM (Indian Bureau of Mines) for minor mineral approval
+                </li>
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Attach: EC copy, lease deed, survey maps
+                </li>
+                <li class="flex gap-2 items-start">
+                    <span class="text-orange-400 mt-0.5 flex-shrink-0">⚠️</span>
+                    <span class="text-orange-300">
+                        Father verifies: current IBM office contacts for Rajasthan
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-amber-400 text-slate-900 text-xs font-bold px-2.5 py-1 rounded-full">
+                    Phase 3
+                </span>
+                <h2 class="text-slate-100 font-semibold text-lg">
+                    Royalty Registration
+                </h2>
+            </div>
+            <ul class="space-y-2 text-slate-300 text-sm">
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Register with DMG Rajasthan (Dept of Mines and Geology)
+                </li>
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Obtain royalty passbook
+                </li>
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    First payment: within 30 days of production start
+                </li>
+                <li class="flex gap-2 items-start">
+                    <span class="text-orange-400 mt-0.5 flex-shrink-0">⚠️</span>
+                    <span class="text-orange-300">
+                        Father verifies: exact DMG registration procedure 2026
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Phase 4 -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-amber-400 text-slate-900 text-xs font-bold px-2.5 py-1 rounded-full">
+                    Phase 4
+                </span>
+                <h2 class="text-slate-100 font-semibold text-lg">
+                    DMF Registration
+                </h2>
+            </div>
+            <ul class="space-y-2 text-slate-300 text-sm">
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Register with District Mineral Foundation
+                </li>
+                <li class="flex gap-2 items-start">
+                    <span class="text-amber-400 mt-0.5 flex-shrink-0">•</span>
+                    <span>
+                        DMF rate: 10% of royalty for minor minerals
+                        <span class="text-orange-300 text-xs ml-1">(⚠️ Father confirms)</span>
+                    </span>
+                </li>
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Payment: monthly, with royalty payment
+                </li>
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Maintain payment receipts for 7 years
+                </li>
+            </ul>
+        </div>
+
+        <!-- Phase 5 -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-amber-400 text-slate-900 text-xs font-bold px-2.5 py-1 rounded-full">
+                    Phase 5
+                </span>
+                <h2 class="text-slate-100 font-semibold text-lg">
+                    6-Monthly EC Compliance Report
+                </h2>
+            </div>
+            <ul class="space-y-2 text-slate-300 text-sm">
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Submit to SEIAA within 30 days of each 6-month period
+                </li>
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Include: production data, environmental monitoring, water usage
+                </li>
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Attach: photographs of site and plantation work
+                </li>
+                <li class="flex gap-2 items-start">
+                    <span class="text-orange-400 mt-0.5 flex-shrink-0">⚠️</span>
+                    <span class="text-orange-300">
+                        Father verifies: exact due dates and submission format
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Phase 6 -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-amber-400 text-slate-900 text-xs font-bold px-2.5 py-1 rounded-full">
+                    Phase 6
+                </span>
+                <h2 class="text-slate-100 font-semibold text-lg">
+                    Annual Return (DMG)
+                </h2>
+            </div>
+            <ul class="space-y-2 text-slate-300 text-sm">
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Submit annual return to DMG Rajasthan by 31st March each year
+                </li>
+                <li class="flex gap-2">
+                    <span class="text-amber-400 mt-0.5">•</span>
+                    Include: annual production, royalty paid, employment data
+                </li>
+                <li class="flex gap-2 items-start">
+                    <span class="text-orange-400 mt-0.5 flex-shrink-0">⚠️</span>
+                    <span class="text-orange-300">
+                        Father verifies: exact form name and submission portal
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+    </div><!-- /phases -->
+
+    <!-- Disclaimer -->
+    <div class="mt-8 bg-amber-950 border border-amber-700 rounded-xl p-5">
+        <p class="text-amber-300 text-sm">
+            ⚠️ This checklist is for general guidance only. Every mine's EC conditions
+            are different. Verify each step against your actual EC approval letter.
+            Use Ask Expert for mine-specific guidance.
+        </p>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-6 text-center">
+        <a href="{{ url_for('main.ask_expert') }}"
+           class="inline-block bg-amber-400 text-slate-900 px-8 py-3 rounded-lg
+                  font-semibold hover:bg-amber-300 transition no-print">
+            Ask Expert for Your Mine
+        </a>
+    </div>
+
+    <!-- Footer note -->
+    <p class="mt-8 text-slate-600 text-xs text-center">
+        Content verified by a Rajasthan mining compliance specialist.
+        Father must update this checklist after Phase 0 interviews.
+    </p>
+
+</div>
+{% endblock %}

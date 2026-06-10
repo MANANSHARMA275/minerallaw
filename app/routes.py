@@ -7,8 +7,18 @@
 # ------------------------------------------------------------
 # SECTION 1: IMPORTS
 # ------------------------------------------------------------
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+import datetime as dt
+import os
+from decimal import Decimal, ROUND_HALF_UP
+
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_required, current_user, logout_user
+
+from app.models import AuditLog, Mineral, db
+from app.fee_calculator import get_rate_for_date, calculate_royalty, get_calculation_disclaimer
+from app.helpers import gmail_prefill, log_audit
+from app.validators import validate_mineral_query
+from app.tickets import create_ticket
 
 # ------------------------------------------------------------
 # SECTION 2: BLUEPRINT
@@ -84,7 +94,8 @@ def dashboard():
     SECURITY : Login required
     LEGAL    : Shows user's own data only — no cross-user data leak
     """
-    return render_template('dashboard.html', user=current_user)
+    recent_activity = AuditLog.query.filter_by(user_id=current_user.id).order_by(AuditLog.id.desc()).limit(5).all()
+    return render_template('dashboard.html', user=current_user, recent_activity=recent_activity)
 
 
 @main.route('/calculator')
@@ -93,11 +104,111 @@ def calculator():
     """
     PURPOSE  : Fee calculator — royalty, DMF, NPV
     RECEIVES : None
-    RETURNS  : calculator.html template
+    RETURNS  : calculator.html template with DB-sourced mineral list
     SECURITY : Login required — rate data is proprietary
     LEGAL    : Every output shows disclaimer with rate date and notification number
     """
-    return render_template('calculator.html')
+    minerals = Mineral.query.order_by(Mineral.name).all()
+    return render_template('calculator.html', minerals=minerals)
+
+
+@main.route('/calculator/calculate', methods=['POST'])
+@login_required
+def calculate():
+    """
+    PURPOSE  : Run royalty + DMF + NPV calculation and return JSON result
+    RECEIVES : POST form — mineral_id, area_ha, production_tpa, lease_years, target_date
+    RETURNS  : JSON — full calculation breakdown with disclaimer and audit trail
+    SECURITY : Login required. All inputs validated before any DB read.
+               area_ha and production caps prevent absurd inputs.
+    LEGAL    : AuditLog entry written on every calculation (immutable trail).
+               Disclaimer generated from the live Rate object — never hardcoded.
+               ⚠️ All rates are PLACEHOLDERS until father verifies in Phase 0.
+    """
+    try:
+        mineral_id = int(request.form.get('mineral_id', 0))
+        area_ha    = float(request.form.get('area_ha', 0))
+        production = float(request.form.get('production_tpa', 0))
+        lease_years = int(request.form.get('lease_years', 5))
+        target_date_str = request.form.get('target_date', '')
+    except ValueError:
+        return jsonify({'error': 'Invalid input. Please enter valid numbers.'}), 400
+
+    if mineral_id <= 0 or area_ha <= 0 or production <= 0:
+        return jsonify({'error': 'Mineral, area, and production are required.'}), 400
+    if area_ha > 500:
+        return jsonify({'error': 'Area exceeds 500 ha. Contact expert.'}), 400
+    if production > 10_000_000:
+        return jsonify({'error': 'Production exceeds limit. Contact expert.'}), 400
+
+    if not target_date_str:
+        target_date = dt.date.today()
+    else:
+        try:
+            target_date = dt.date.fromisoformat(target_date_str)
+        except ValueError:
+            return jsonify({'error': 'Invalid date format.'}), 400
+
+    royalty_rate = get_rate_for_date(mineral_id, 'Rajasthan', 'royalty', target_date)
+    if royalty_rate is None:
+        return jsonify({
+            'error': 'No rate available for this mineral and date. Contact expert.'
+        }), 404
+
+    dmf_rate_row = get_rate_for_date(mineral_id, 'Rajasthan', 'dmf', target_date)
+
+    royalty_annual = calculate_royalty(production, float(royalty_rate.value))
+
+    if dmf_rate_row:
+        dmf_percent = Decimal(str(dmf_rate_row.value)) / Decimal('100')
+        dmf_annual  = (royalty_annual * dmf_percent).quantize(
+            Decimal('1'), rounding=ROUND_HALF_UP
+        )
+    else:
+        dmf_annual = Decimal('0')
+
+    total_annual = royalty_annual + dmf_annual
+
+    # NPV annuity: P × [(1 - (1+r)^-n) / r]
+    # ⚠️ PLACEHOLDER — father confirms discount rate
+    r = Decimal('0.08')
+    n = Decimal(str(lease_years))
+    annuity_factor = (1 - (1 + r) ** (-n)) / r
+    npv = (total_annual * annuity_factor).quantize(Decimal('1'), rounding=ROUND_HALF_UP)
+
+    disclaimer = get_calculation_disclaimer(royalty_rate)
+
+    mineral = db.session.get(Mineral, mineral_id)
+
+    log_audit(
+        user_id=current_user.id,
+        action='FEE_CALCULATION',
+        table_affected='Rate',
+        record_id=royalty_rate.id,
+        new_value=(
+            f"mineral_id={mineral_id}, production={production}, "
+            f"area={area_ha}ha, date={target_date}, royalty={royalty_annual}"
+        ),
+    )
+
+    return jsonify({
+        'mineral':        mineral.name,
+        'production_tpa': production,
+        'area_ha':        area_ha,
+        'target_date':    str(target_date),
+        'royalty_annual': str(royalty_annual),
+        'dmf_annual':     str(dmf_annual),
+        'total_annual':   str(total_annual),
+        'npv':            str(npv),
+        'lease_years':    lease_years,
+        'rate_per_tonne': str(royalty_rate.value),
+        'rate_info': {
+            'notification':   royalty_rate.notification_number,
+            'effective_from': str(royalty_rate.effective_from),
+        },
+        'disclaimer': disclaimer,
+        'warning': '⚠️ All rates are placeholders. Father must verify before sharing with any real client.',
+    })
 
 
 @main.route('/checklist')
@@ -118,9 +229,64 @@ def checklist():
 def ask_expert():
     """
     PURPOSE  : Expert consultation — opens Gmail pre-fill to father
-    RECEIVES : None
-    RETURNS  : ask_expert.html template
+    RECEIVES : query params — mineral (str), query (str)
+    RETURNS  : ask_expert.html template with pre-filled Gmail link
     SECURITY : Login required — father's email never exposed in HTML source
     LEGAL    : Advocates Act 1961 — labelled consultation, not legal advice
     """
-    return render_template('ask_expert.html')
+    mineral = request.args.get('mineral', '')
+    query   = request.args.get('query', '')
+
+    subject = f"MineralLaw Consultation — {mineral}" if mineral else "MineralLaw Consultation"
+    body_lines = [
+        f"Mineral: {mineral}" if mineral else "",
+        f"Query: {query}" if query else "",
+        "",
+        f"Name: {current_user.name or ''}",
+        f"Company: {current_user.company_name or ''}",
+        f"Phone: {current_user.phone}",
+    ]
+    body = "\n".join(line for line in body_lines if line is not None)
+
+    gmail_link = gmail_prefill(
+        to=os.environ.get('FATHER_EMAIL', ''),
+        subject=subject,
+        body=body,
+    )
+
+    return render_template(
+        'ask_expert.html',
+        gmail_link=gmail_link,
+        mineral=mineral,
+        query=query,
+    )
+
+
+@main.route('/ask-expert/submit', methods=['POST'])
+@login_required
+def ask_expert_submit():
+    """
+    PURPOSE  : Record a consultation request as a Ticket for the expert queue
+    RECEIVES : POST form — mineral (str), query (str)
+    RETURNS  : JSON {"status": ...} or {"error": ...}
+    SECURITY : login_required. Input validated before DB write.
+    LEGAL    : Creates audit-logged Ticket. SLA timer (Celery) tracks response.
+    """
+    mineral = request.form.get('mineral', '').strip()
+    query   = request.form.get('query', '').strip()
+
+    is_valid, error = validate_mineral_query(mineral, query)
+    if not is_valid:
+        return jsonify({'error': error}), 400
+
+    subject = f"Mining Query — {mineral or 'General'}"
+    create_ticket(
+        user_id=current_user.id,
+        subject=subject,
+        description=query,
+        mineral_type=mineral or None,
+    )
+
+    return jsonify({
+        'status': 'Your query has been logged. Expert will respond within 24 hours.'
+    })

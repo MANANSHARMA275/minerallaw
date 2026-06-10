@@ -7,7 +7,7 @@
 # ------------------------------------------------------------
 # SECTION 1: IMPORTS
 # ------------------------------------------------------------
-from datetime import datetime
+from datetime import datetime, timezone
 from flask_login import UserMixin
 from app import db
 
@@ -38,13 +38,13 @@ class User(UserMixin, db.Model):
                                     "marketing": False
                                })
     is_active                = db.Column(db.Boolean, default=True)
-    created_at               = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at               = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     last_login               = db.Column(db.DateTime, nullable=True)
     data_deletion_requested  = db.Column(db.Boolean, default=False)
     deletion_request_date    = db.Column(db.DateTime, nullable=True)
 
     # Relationships
-    tickets      = db.relationship('Ticket', backref='user', lazy=True)
+    tickets      = db.relationship('Ticket', foreign_keys='[Ticket.user_id]', backref='user', lazy=True)
     documents    = db.relationship('Document', backref='user', lazy=True)
     audit_logs   = db.relationship('AuditLog', backref='user', lazy=True)
     payments     = db.relationship('Payment', backref='user', lazy=True)
@@ -102,7 +102,7 @@ class Rate(db.Model):
     superseded          = db.Column(db.Boolean, default=False)
     superseded_reason   = db.Column(db.Text, nullable=True)
     correction_note     = db.Column(db.Text, nullable=True)
-    created_at          = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at          = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     def __repr__(self):
         return f'<Rate {self.rate_type} {self.value} from {self.effective_from}>'
@@ -127,7 +127,7 @@ class Ticket(db.Model):
     state            = db.Column(db.String(50), nullable=True)
     urgency          = db.Column(db.String(20), default='normal')       # low / normal / high
     status           = db.Column(db.String(20), default='open')         # open / in_progress / resolved / escalated
-    created_at       = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at       = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     sla_deadline     = db.Column(db.DateTime, nullable=True)
     first_response_at = db.Column(db.DateTime, nullable=True)
     resolved_at      = db.Column(db.DateTime, nullable=True)
@@ -162,7 +162,7 @@ class Document(db.Model):
     scan_result          = db.Column(db.String(20), nullable=True)
     ai_analysis_result   = db.Column(db.Text, nullable=True)
     ai_analysis_cached   = db.Column(db.Boolean, default=False)
-    created_at           = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at           = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     deleted_at           = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
@@ -219,7 +219,7 @@ class Payment(db.Model):
     subscription_tier    = db.Column(db.String(20), nullable=True)
     invoice_number       = db.Column(db.String(50), nullable=True)
     invoice_pdf_url      = db.Column(db.String(500), nullable=True)
-    created_at           = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at           = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     paid_at              = db.Column(db.DateTime, nullable=True)
     refunded_at          = db.Column(db.DateTime, nullable=True)
 
@@ -248,7 +248,7 @@ class AuditLog(db.Model):
     new_value      = db.Column(db.Text, nullable=True)
     ip_address     = db.Column(db.String(45), nullable=True)
     user_agent     = db.Column(db.String(300), nullable=True)
-    timestamp      = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    timestamp      = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
     def __repr__(self):
         return f'<AuditLog {self.action} at {self.timestamp}>'
@@ -269,7 +269,7 @@ class WorkflowState(db.Model):
     user_id         = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     clearance_type  = db.Column(db.String(50), nullable=False)
     current_stage   = db.Column(db.String(100), nullable=False)
-    transition_date = db.Column(db.DateTime, default=datetime.utcnow)
+    transition_date = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     next_action     = db.Column(db.String(200), nullable=True)
     assigned_to     = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     history         = db.Column(db.JSON, default=list)
@@ -280,17 +280,90 @@ class WorkflowState(db.Model):
 
 
 # ------------------------------------------------------------
-# SECTION 11: FLASK-LOGIN USER LOADER
+# SECTION 11: EC CONDITION TABLE — EC Report Builder (Phase 2 prep)
 # ------------------------------------------------------------
-from app import login_manager
+class ECCondition(db.Model):
+    """
+    PURPOSE  : Store individual conditions from an EC approval letter
+    SECURITY : Users see only their own conditions; father manages master list
+    LEGAL    : Conditions come verbatim from the EC approval letter.
+               Text is never edited after father verification — only superseded.
+               A superseded condition is kept for historical audit purposes.
+               NEVER delete or update a verified condition row.
+    """
+    __tablename__ = 'ec_condition'
 
-@login_manager.user_loader
-def load_user(user_id):
+    id                       = db.Column(db.Integer, primary_key=True)
+    user_id                  = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    ec_document_id           = db.Column(db.Integer, db.ForeignKey('document.id'), nullable=True)
+    condition_number         = db.Column(db.String(20), nullable=False)
+    category                 = db.Column(db.String(10), nullable=False)   # specific / general
+    condition_text           = db.Column(db.Text, nullable=False)
+    requires_monitoring_data = db.Column(db.Boolean, default=False)
+    requires_photo           = db.Column(db.Boolean, default=False)
+    verified_by_father       = db.Column(db.Boolean, default=False)
+    superseded               = db.Column(db.Boolean, default=False)       # never edit — supersede
+    created_at               = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+    def __repr__(self):
+        return f'<ECCondition {self.condition_number} cat={self.category}>'
+
+
+# ------------------------------------------------------------
+# SECTION 12: COMPLIANCE REPORT TABLE — EC Report Builder (Phase 2 prep)
+# ------------------------------------------------------------
+class ComplianceReport(db.Model):
     """
-    PURPOSE  : Load user from DB for Flask-Login session management
-    RECEIVES : user_id (str) — from session cookie
-    RETURNS  : User object or None
-    SECURITY : Returns None if user deleted or inactive
-    LEGAL    : None
+    PURPOSE  : Track a 6-monthly EC compliance report from draft to acknowledged
+    SECURITY : Users see only their own reports; expert review locks editing
+    LEGAL    : Status flow: draft → pending_expert_review → expert_approved
+               → finalized → acknowledged. Parivesh URL preserved for evidence.
+               Reports must not be deleted after acknowledgement — legal record.
     """
-    return User.query.get(int(user_id))
+    __tablename__ = 'compliance_report'
+
+    id                            = db.Column(db.Integer, primary_key=True)
+    user_id                       = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    period_start                  = db.Column(db.Date, nullable=False)
+    period_end                    = db.Column(db.Date, nullable=False)
+    due_date                      = db.Column(db.Date, nullable=False)
+    status                        = db.Column(db.String(30), default='draft')
+    # draft → pending_expert_review → expert_approved → finalized → acknowledged
+    pdf_url                       = db.Column(db.String(500), nullable=True)
+    parivesh_acknowledgement_url  = db.Column(db.String(500), nullable=True)
+    approved_by                   = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    approved_at                   = db.Column(db.DateTime, nullable=True)
+    created_at                    = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+    def __repr__(self):
+        return f'<ComplianceReport {self.period_start}–{self.period_end} {self.status}>'
+
+
+# ------------------------------------------------------------
+# SECTION 13: COMPLIANCE RESPONSE TABLE — EC Report Builder (Phase 2 prep)
+# ------------------------------------------------------------
+class ComplianceResponse(db.Model):
+    """
+    PURPOSE  : One mine owner's self-declaration for a single EC condition
+               within one compliance report period
+    SECURITY : Users see only their own responses; father_comment visible after review
+    LEGAL    : self_declaration must be exactly one of the five prescribed values.
+               Evidence document IDs link to Document table — never embed files here.
+               previous_response_id enables pre-fill from the last period.
+    """
+    __tablename__ = 'compliance_response'
+
+    id                     = db.Column(db.Integer, primary_key=True)
+    report_id              = db.Column(db.Integer, db.ForeignKey('compliance_report.id'), nullable=False)
+    condition_id           = db.Column(db.Integer, db.ForeignKey('ec_condition.id'), nullable=False)
+    self_declaration       = db.Column(db.String(30), nullable=False)
+    # exactly one of: Complied / Being Complied / Not Complied /
+    #                 Partially Complied / Agreed to Comply
+    remarks                = db.Column(db.Text, nullable=True)
+    evidence_document_ids  = db.Column(db.JSON, default=list)
+    previous_response_id   = db.Column(db.Integer, db.ForeignKey('compliance_response.id'), nullable=True)
+    father_comment         = db.Column(db.Text, nullable=True)
+
+    def __repr__(self):
+        return f'<ComplianceResponse report={self.report_id} cond={self.condition_id}>'
+

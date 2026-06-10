@@ -1,0 +1,402 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel — MineralLaw.in{% endblock %}
+
+{% block content %}
+<div class="flex gap-0 min-h-screen -mt-8 -mx-4">
+
+    <!-- ── Sidebar ─────────────────────────────────────────── -->
+    <aside class="w-48 flex-shrink-0 bg-slate-800 border-r border-slate-700 px-4 py-6">
+        <h2 class="text-amber-400 font-bold text-sm uppercase tracking-widest mb-6">
+            Admin Panel
+        </h2>
+        <nav class="space-y-1 text-sm">
+            <a href="{{ url_for('admin.overview') }}"
+               class="flex items-center gap-2 px-3 py-2 rounded-lg transition
+                      {% if section == 'overview' %}bg-slate-700 text-amber-400{% else %}text-slate-300 hover:bg-slate-700 hover:text-slate-100{% endif %}">
+                📊 Overview
+            </a>
+            <a href="{{ url_for('admin.rates') }}"
+               class="flex items-center gap-2 px-3 py-2 rounded-lg transition
+                      {% if section == 'rates' %}bg-slate-700 text-amber-400{% else %}text-slate-300 hover:bg-slate-700 hover:text-slate-100{% endif %}">
+                📋 Rates
+            </a>
+            <a href="{{ url_for('admin.tickets') }}"
+               class="flex items-center gap-2 px-3 py-2 rounded-lg transition
+                      {% if section == 'tickets' %}bg-slate-700 text-amber-400{% else %}text-slate-300 hover:bg-slate-700 hover:text-slate-100{% endif %}">
+                🎫 Tickets
+            </a>
+            <a href="{{ url_for('admin.users') }}"
+               class="flex items-center gap-2 px-3 py-2 rounded-lg transition
+                      {% if section == 'users' %}bg-slate-700 text-amber-400{% else %}text-slate-300 hover:bg-slate-700 hover:text-slate-100{% endif %}">
+                👤 Users
+            </a>
+        </nav>
+        <div class="mt-auto pt-8">
+            <a href="{{ url_for('main.dashboard') }}"
+               class="flex items-center gap-2 text-slate-500 hover:text-slate-300
+                      text-sm transition px-3 py-2">
+                ← Dashboard
+            </a>
+        </div>
+    </aside>
+
+    <!-- ── Main Content ────────────────────────────────────── -->
+    <main class="flex-grow px-8 py-6 overflow-x-auto">
+
+        {% if section == 'overview' %}
+        <!-- ============================================ -->
+        <!-- OVERVIEW                                     -->
+        <!-- ============================================ -->
+        <h1 class="text-xl font-bold text-slate-100 mb-6">Overview</h1>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 text-center">
+                <p class="text-4xl font-bold text-amber-400 mb-1">{{ user_count }}</p>
+                <p class="text-slate-400 text-sm">Registered Users</p>
+            </div>
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 text-center">
+                <p class="text-4xl font-bold text-red-400 mb-1">{{ ticket_count_open }}</p>
+                <p class="text-slate-400 text-sm">Open Tickets</p>
+            </div>
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 text-center">
+                <p class="text-4xl font-bold text-green-400 mb-1">{{ rate_count_active }}</p>
+                <p class="text-slate-400 text-sm">Active Rates</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="{{ url_for('admin.rates') }}"
+               class="bg-slate-800 border border-slate-700 rounded-xl p-5
+                      hover:border-amber-400 transition">
+                <p class="text-amber-400 font-semibold mb-1">Manage Rates →</p>
+                <p class="text-slate-500 text-xs">Add or review royalty and DMF rates</p>
+            </a>
+            <a href="{{ url_for('admin.tickets') }}"
+               class="bg-slate-800 border border-slate-700 rounded-xl p-5
+                      hover:border-amber-400 transition">
+                <p class="text-amber-400 font-semibold mb-1">Review Tickets →</p>
+                <p class="text-slate-500 text-xs">Respond to expert consultation requests</p>
+            </a>
+            <a href="{{ url_for('admin.users') }}"
+               class="bg-slate-800 border border-slate-700 rounded-xl p-5
+                      hover:border-amber-400 transition">
+                <p class="text-amber-400 font-semibold mb-1">View Users →</p>
+                <p class="text-slate-500 text-xs">Review registered mine owners</p>
+            </a>
+        </div>
+
+
+        {% elif section == 'rates' %}
+        <!-- ============================================ -->
+        <!-- RATES                                        -->
+        <!-- ============================================ -->
+        <h1 class="text-xl font-bold text-slate-100 mb-4">Rate Management</h1>
+
+        <!-- Warning -->
+        <div class="bg-orange-950 border border-orange-700 rounded-lg p-4 mb-6 text-sm text-orange-300">
+            ⚠️ Adding a rate closes the previous one. Rates are <strong>NEVER deleted</strong>.
+            Historical rates are preserved for past calculation audit trail.
+        </div>
+
+        <!-- Add Rate Form -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 mb-8">
+            <h2 class="text-slate-100 font-semibold mb-4">Add New Rate</h2>
+            <form id="rate-form" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-slate-400 text-xs mb-1">Mineral</label>
+                    <select name="mineral_id" id="form-mineral-id" required
+                            class="w-full bg-slate-900 border border-slate-600 text-slate-100
+                                   rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                        <option value="">Select mineral…</option>
+                        {% for mineral in minerals %}
+                        <option value="{{ mineral.id }}">{{ mineral.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-xs mb-1">State</label>
+                    <input name="state" type="text" value="Rajasthan" required
+                           class="w-full bg-slate-900 border border-slate-600 text-slate-100
+                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-xs mb-1">Rate Type</label>
+                    <select name="rate_type" required
+                            class="w-full bg-slate-900 border border-slate-600 text-slate-100
+                                   rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                        <option value="">Select type…</option>
+                        <option value="royalty">Royalty</option>
+                        <option value="dmf">DMF</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-xs mb-1">Value</label>
+                    <input name="value" id="form-value" type="number" step="0.01" min="0.01"
+                           placeholder="e.g. 90.00" required
+                           class="w-full bg-slate-900 border border-slate-600 text-slate-100
+                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-xs mb-1">Unit</label>
+                    <input name="unit" type="text" value="per_tonne"
+                           class="w-full bg-slate-900 border border-slate-600 text-slate-100
+                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-xs mb-1">Notification Number</label>
+                    <input name="notification_number" type="text"
+                           placeholder="e.g. DMG/2026/01"
+                           class="w-full bg-slate-900 border border-slate-600 text-slate-100
+                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                </div>
+                <div class="sm:col-span-2">
+                    <button type="submit"
+                            class="bg-amber-400 text-slate-900 px-6 py-2 rounded-lg
+                                   font-semibold text-sm hover:bg-amber-300 transition">
+                        Add New Rate
+                    </button>
+                    <span id="rate-msg" class="ml-3 text-sm hidden"></span>
+                </div>
+            </form>
+        </div>
+
+        <!-- Rate History Table -->
+        <h2 class="text-slate-100 font-semibold mb-3">Rate History</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="text-slate-400 text-left border-b border-slate-700">
+                        <th class="pb-3 pr-4">Mineral</th>
+                        <th class="pb-3 pr-4">State</th>
+                        <th class="pb-3 pr-4">Type</th>
+                        <th class="pb-3 pr-4">Value</th>
+                        <th class="pb-3 pr-4">Eff. From</th>
+                        <th class="pb-3 pr-4">Eff. To</th>
+                        <th class="pb-3 pr-4">Notification</th>
+                        <th class="pb-3">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rate in rates %}
+                    <tr class="border-b border-slate-800
+                               {% if rate.effective_to is none %}text-slate-100{% else %}text-slate-500{% endif %}">
+                        <td class="py-3 pr-4">{{ rate.mineral.name }}</td>
+                        <td class="py-3 pr-4">{{ rate.state }}</td>
+                        <td class="py-3 pr-4 capitalize">{{ rate.rate_type }}</td>
+                        <td class="py-3 pr-4">{{ rate.value }}</td>
+                        <td class="py-3 pr-4">{{ rate.effective_from }}</td>
+                        <td class="py-3 pr-4">{{ rate.effective_to or '—' }}</td>
+                        <td class="py-3 pr-4 text-xs">{{ rate.notification_number or '—' }}</td>
+                        <td class="py-3">
+                            {% if rate.effective_to is none %}
+                            <span class="bg-amber-400 text-slate-900 text-xs font-semibold
+                                         px-2 py-0.5 rounded-full">Active</span>
+                            {% else %}
+                            <span class="text-slate-600 text-xs">Closed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="py-8 text-center text-slate-500">
+                            No rates found. Add one above.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+        {% elif section == 'tickets' %}
+        <!-- ============================================ -->
+        <!-- TICKETS                                      -->
+        <!-- ============================================ -->
+        <h1 class="text-xl font-bold text-slate-100 mb-6">Expert Consultation Requests</h1>
+
+        {% if not tickets %}
+        <div class="text-center py-16 text-slate-500">No open tickets.</div>
+        {% else %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="text-slate-400 text-left border-b border-slate-700">
+                        <th class="pb-3 pr-4">#ID</th>
+                        <th class="pb-3 pr-4">User Phone</th>
+                        <th class="pb-3 pr-4">Subject</th>
+                        <th class="pb-3 pr-4">Status</th>
+                        <th class="pb-3 pr-4">Created</th>
+                        <th class="pb-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr class="border-b border-slate-800 text-slate-300">
+                        <td class="py-3 pr-4 text-slate-500">#{{ ticket.id }}</td>
+                        <td class="py-3 pr-4 font-mono text-xs">
+                            ****{{ ticket.user.phone[-4:] if ticket.user else '????' }}
+                        </td>
+                        <td class="py-3 pr-4 max-w-xs truncate">{{ ticket.subject }}</td>
+                        <td class="py-3 pr-4">
+                            {% if ticket.status == 'open' %}
+                            <span class="bg-red-900 text-red-300 text-xs px-2 py-0.5 rounded-full">open</span>
+                            {% elif ticket.status == 'in_progress' %}
+                            <span class="bg-amber-900 text-amber-300 text-xs px-2 py-0.5 rounded-full">in progress</span>
+                            {% elif ticket.status == 'resolved' %}
+                            <span class="bg-green-900 text-green-300 text-xs px-2 py-0.5 rounded-full">resolved</span>
+                            {% elif ticket.status == 'escalated' %}
+                            <span class="bg-red-900 text-red-300 text-xs px-2 py-0.5 rounded-full">escalated</span>
+                            {% else %}
+                            <span class="text-slate-500 text-xs">{{ ticket.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-3 pr-4 text-slate-500 text-xs">
+                            {{ ticket.created_at.strftime('%d %b %Y') if ticket.created_at else '—' }}
+                        </td>
+                        <td class="py-3">
+                            {% if ticket.status != 'resolved' %}
+                            <button onclick="resolveTicket({{ ticket.id }}, this)"
+                                    class="border border-slate-600 text-slate-300 text-xs
+                                           px-3 py-1 rounded hover:border-green-500
+                                           hover:text-green-400 transition">
+                                Mark Resolved
+                            </button>
+                            {% else %}
+                            <span class="text-slate-600 text-xs">—</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+
+        {% elif section == 'users' %}
+        <!-- ============================================ -->
+        <!-- USERS                                        -->
+        <!-- ============================================ -->
+        <h1 class="text-xl font-bold text-slate-100 mb-2">Registered Users</h1>
+        <p class="text-slate-500 text-xs mb-6">
+            Phone numbers masked per DPDP Act 2023 — last 4 digits only.
+        </p>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="text-slate-400 text-left border-b border-slate-700">
+                        <th class="pb-3 pr-6">Phone</th>
+                        <th class="pb-3 pr-6">Tier</th>
+                        <th class="pb-3 pr-6">Joined</th>
+                        <th class="pb-3">Last Login</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr class="border-b border-slate-800 text-slate-300">
+                        <td class="py-3 pr-6 font-mono text-xs text-slate-400">
+                            ****{{ user.phone[-4:] }}
+                        </td>
+                        <td class="py-3 pr-6 capitalize">
+                            {% if user.subscription_tier == 'free' %}
+                            <span class="text-slate-400">free</span>
+                            {% elif user.subscription_tier == 'pro' %}
+                            <span class="text-amber-400">pro</span>
+                            {% elif user.subscription_tier == 'expert' %}
+                            <span class="text-amber-500">expert</span>
+                            {% else %}
+                            <span class="text-blue-400">{{ user.subscription_tier }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-3 pr-6 text-slate-500 text-xs">
+                            {{ user.created_at.strftime('%d %b %Y') if user.created_at else '—' }}
+                        </td>
+                        <td class="py-3 text-slate-500 text-xs">
+                            {{ user.last_login.strftime('%d %b %Y') if user.last_login else 'Never' }}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="py-8 text-center text-slate-500">
+                            No users registered yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% endif %}
+
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ csp_nonce() }}">
+// Rate form submission
+const rateForm = document.getElementById('rate-form');
+if (rateForm) {
+    rateForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msg = document.getElementById('rate-msg');
+        const btn = rateForm.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        msg.className = 'ml-3 text-sm text-slate-400';
+        msg.textContent = 'Saving…';
+        msg.classList.remove('hidden');
+
+        try {
+            const resp = await fetch('/admin/rates/update', {
+                method: 'POST',
+                body: new FormData(rateForm),
+            });
+            const data = await resp.json();
+            if (resp.ok) {
+                msg.className = 'ml-3 text-sm text-green-400';
+                msg.textContent = data.status;
+                setTimeout(() => location.reload(), 1200);
+            } else {
+                msg.className = 'ml-3 text-sm text-red-400';
+                msg.textContent = data.error || 'Error saving rate.';
+            }
+        } catch {
+            msg.className = 'ml-3 text-sm text-red-400';
+            msg.textContent = 'Network error. Try again.';
+        }
+        btn.disabled = false;
+    });
+}
+
+// Ticket resolve
+async function resolveTicket(ticketId, btn) {
+    if (!confirm('Mark ticket #' + ticketId + ' as resolved?')) return;
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    try {
+        const fd = new FormData();
+        fd.append('response_note', 'Resolved via admin panel.');
+        const resp = await fetch('/admin/tickets/' + ticketId + '/respond', {
+            method: 'POST',
+            body: fd,
+        });
+        const data = await resp.json();
+        if (resp.ok) {
+            btn.closest('tr').querySelector('td:last-child').innerHTML =
+                '<span class="text-green-400 text-xs">Resolved</span>';
+        } else {
+            btn.disabled = false;
+            btn.textContent = 'Mark Resolved';
+            alert(data.error || 'Error resolving ticket.');
+        }
+    } catch {
+        btn.disabled = false;
+        btn.textContent = 'Mark Resolved';
+        alert('Network error. Try again.');
+    }
+}
+</script>
+{% endblock %}

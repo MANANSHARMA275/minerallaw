@@ -17,7 +17,6 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
 
-        /* Print stylesheet — mine owners print checklists for government offices */
         @media print {
             nav, footer, .no-print { display: none !important; }
             body { background: white !important; color: black !important; }
@@ -29,63 +28,51 @@
 
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
 
-    <!-- ============================================================
-         NAVIGATION
-    ============================================================ -->
+    <!-- NAVIGATION -->
     <nav class="bg-slate-800 border-b border-slate-700 no-print">
         <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
 
-            <!-- Logo -->
-            <a href="{{ url_for('main.home') }}" class="text-xl font-bold text-amber-400">
+            <a href="{{ url_for('main.home') }}"
+               class="text-xl font-bold text-amber-400">
                 MineralLaw.in
             </a>
 
-            <!-- Nav links -->
             <div class="flex items-center gap-4 text-sm">
                 {% if current_user.is_authenticated %}
                     <a href="{{ url_for('main.dashboard') }}"
                        class="text-slate-300 hover:text-amber-400 transition">
-                        <span data-i18n="nav_dashboard">Dashboard</span>
+                        Dashboard
                     </a>
                     <a href="{{ url_for('main.calculator') }}"
                        class="text-slate-300 hover:text-amber-400 transition">
-                        <span data-i18n="nav_calculator">Calculator</span>
+                        Calculator
                     </a>
-                    <a href="{{ url_for('main.checklist') }}"
-                       class="text-slate-300 hover:text-amber-400 transition">
-                        <span data-i18n="nav_checklist">Checklist</span>
-                    </a>
-                    <a href="{{ url_for('main.ask_expert') }}"
-                       class="text-slate-300 hover:text-amber-400 transition">
-                        <span data-i18n="nav_expert">Ask Expert</span>
-                    </a>
-                    <a href="{{ url_for('main.logout') }}"
+                    <a href="{{ url_for('auth.logout') }}"
                        class="text-slate-400 hover:text-red-400 transition">
-                        <span data-i18n="nav_logout">Logout</span>
+                        Logout
                     </a>
                 {% else %}
                     <a href="{{ url_for('main.pricing') }}"
                        class="text-slate-300 hover:text-amber-400 transition">
-                        <span data-i18n="nav_pricing">Pricing</span>
+                        Pricing
                     </a>
                     <a href="{{ url_for('main.login') }}"
-                       class="bg-amber-400 text-slate-900 px-4 py-1.5 rounded font-semibold hover:bg-amber-300 transition">
-                        <span data-i18n="nav_login">Login</span>
+                       class="bg-amber-400 text-slate-900 px-4 py-1.5 rounded
+                              font-semibold hover:bg-amber-300 transition">
+                        Login
                     </a>
                 {% endif %}
 
-                <!-- Hindi/English toggle -->
                 <button onclick="toggleLanguage()"
-                        class="text-xs text-slate-400 hover:text-amber-400 border border-slate-600 px-2 py-1 rounded transition">
+                        class="text-xs text-slate-400 hover:text-amber-400
+                               border border-slate-600 px-2 py-1 rounded transition">
                     हिं/EN
                 </button>
             </div>
         </div>
     </nav>
 
-    <!-- ============================================================
-         FLASH MESSAGES
-    ============================================================ -->
+    <!-- FLASH MESSAGES -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <div class="max-w-6xl mx-auto px-4 pt-4 w-full no-print">
@@ -101,19 +88,14 @@
         {% endif %}
     {% endwith %}
 
-    <!-- ============================================================
-         MAIN CONTENT
-    ============================================================ -->
+    <!-- MAIN CONTENT -->
     <main class="flex-grow max-w-6xl mx-auto px-4 py-8 w-full">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- ============================================================
-         FOOTER
-    ============================================================ -->
+    <!-- FOOTER -->
     <footer class="bg-slate-800 border-t border-slate-700 mt-auto no-print">
         <div class="max-w-6xl mx-auto px-4 py-6 text-center text-slate-400 text-xs">
-            <!-- Legal disclaimer — shown on every page -->
             <p class="mb-2">
                 <strong class="text-slate-300">Disclaimer:</strong>
                 All information on MineralLaw.in is for compliance guidance only.
@@ -124,10 +106,11 @@
         </div>
     </footer>
 
-    <!-- ============================================================
-         JAVASCRIPT — Language toggle + utilities
-    ============================================================ -->
+    <!-- JAVASCRIPT -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <!-- PAGE-SPECIFIC SCRIPTS — this was missing, causing login to not work -->
+    {% block scripts %}{% endblock %}
 
 </body>
 </html>

@@ -1,11 +1,31 @@
-.venv/
+# Environment — NEVER commit secrets
 .env
+
+# Virtual environment
+.venv/
+
+# Python bytecode
 __pycache__/
 *.pyc
 *.pyo
+
+# SQLite dev database — tracked via instance/ folder
+instance/
+
+# Application logs
 logs/
 *.log
+
+# Test cache
+.pytest_cache/
+
+# macOS metadata
 .DS_Store
-migrations/versions/
-instance/
-*.db
+
+# Editor artifacts
+.idea/
+.vscode/
+
+# Celery beat schedule
+celerybeat-schedule
+celerybeat.pid
