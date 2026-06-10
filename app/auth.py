@@ -19,7 +19,7 @@ from functools import wraps
 import redis
 from flask import (
     Blueprint, request, jsonify,
-    redirect, url_for, abort
+    redirect, url_for, abort, current_app
 )
 from flask_login import (
     login_user, logout_user,
@@ -96,9 +96,12 @@ def send_otp_with_failover(phone: str, otp: str) -> bool:
     SECURITY : OTP value never logged — only masked phone suffix appears in logs
     LEGAL    : DPDP: user must be able to log in to reach the data deletion control
     """
-    # Development shortcut — print OTP to terminal instead of sending SMS
-    if os.environ.get('FLASK_ENV') == 'development':
-        logger.info(f"[DEV MODE] OTP for {phone[-4:]}: {otp}")
+    # Dev mode: skip SMS when debug, no key, or placeholder key
+    api_key = os.environ.get('MSG91_API_KEY', '')
+    dev_mode = current_app.debug or (not api_key) or api_key.startswith('your-')
+    if dev_mode:
+        print(f"\n{'='*50}\n  DEV MODE OTP for {phone}: {otp}\n{'='*50}\n")
+        current_app.logger.info("DEV MODE: OTP printed to terminal (SMS skipped)")
         return True
 
     # MSG91 primary
@@ -234,29 +237,32 @@ def send_otp_route():
     if not digits.isdigit():
         return jsonify({'error': 'Phone number must contain only digits after +91'}), 400
 
-    # Rate limiting: per-phone counter (3/hour)
-    phone_key = f"otp_rate_phone:{phone}"
-    phone_attempts = redis_client.get(phone_key)
-    if phone_attempts and int(phone_attempts) >= 3:
-        return jsonify({'error': 'Too many OTP requests for this number. Try again in 1 hour.'}), 429
+    try:
+        # Rate limiting: per-phone counter (3/hour)
+        phone_key = f"otp_rate_phone:{phone}"
+        phone_attempts = redis_client.get(phone_key)
+        if phone_attempts and int(phone_attempts) >= 3:
+            return jsonify({'error': 'Too many OTP requests for this number. Try again in 1 hour.'}), 429
 
-    # Rate limiting: per-IP counter (10/hour)
-    ip_key = f"otp_rate_ip:{request.remote_addr}"
-    ip_attempts = redis_client.get(ip_key)
-    if ip_attempts and int(ip_attempts) >= 10:
-        return jsonify({'error': 'Too many requests from this device.'}), 429
+        # Rate limiting: per-IP counter (10/hour)
+        ip_key = f"otp_rate_ip:{request.remote_addr}"
+        ip_attempts = redis_client.get(ip_key)
+        if ip_attempts and int(ip_attempts) >= 10:
+            return jsonify({'error': 'Too many requests from this device.'}), 429
 
-    # Generate and store OTP
-    otp = generate_otp()
-    store_otp(phone, otp)
+        # Generate and store OTP
+        otp = generate_otp()
+        store_otp(phone, otp)
 
-    # Increment rate limit counters atomically
-    pipe = redis_client.pipeline()
-    pipe.incr(phone_key)
-    pipe.expire(phone_key, 3600)
-    pipe.incr(ip_key)
-    pipe.expire(ip_key, 3600)
-    pipe.execute()
+        # Increment rate limit counters atomically
+        pipe = redis_client.pipeline()
+        pipe.incr(phone_key)
+        pipe.expire(phone_key, 3600)
+        pipe.incr(ip_key)
+        pipe.expire(ip_key, 3600)
+        pipe.execute()
+    except redis.exceptions.ConnectionError:
+        return jsonify({'error': 'Login service temporarily unavailable. Please try again in a minute.'}), 503
 
     # Send
     sent = send_otp_with_failover(phone, otp)
@@ -286,7 +292,12 @@ def verify_otp_route():
     if not phone or not submitted_otp:
         return jsonify({'error': 'Phone and OTP are both required'}), 400
 
-    if not verify_and_consume_otp(phone, submitted_otp):
+    try:
+        valid = verify_and_consume_otp(phone, submitted_otp)
+    except redis.exceptions.ConnectionError:
+        return jsonify({'error': 'Login service temporarily unavailable. Please try again in a minute.'}), 503
+
+    if not valid:
         return jsonify({'error': 'Incorrect or expired OTP. Request a new one.'}), 401
 
     # OTP verified — get or create user

@@ -256,10 +256,10 @@
                         </td>
                         <td class="py-3">
                             {% if ticket.status != 'resolved' %}
-                            <button onclick="resolveTicket({{ ticket.id }}, this)"
-                                    class="border border-slate-600 text-slate-300 text-xs
+                            <button class="resolve-btn border border-slate-600 text-slate-300 text-xs
                                            px-3 py-1 rounded hover:border-green-500
-                                           hover:text-green-400 transition">
+                                           hover:text-green-400 transition"
+                                    data-ticket-id="{{ ticket.id }}">
                                 Mark Resolved
                             </button>
                             {% else %}
@@ -370,33 +370,36 @@ if (rateForm) {
     });
 }
 
-// Ticket resolve
-async function resolveTicket(ticketId, btn) {
-    if (!confirm('Mark ticket #' + ticketId + ' as resolved?')) return;
-    btn.disabled = true;
-    btn.textContent = 'Saving…';
+// Ticket resolve — single delegated handler over all .resolve-btn elements
+document.querySelectorAll('.resolve-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const ticketId = btn.dataset.ticketId;
+        if (!confirm('Mark ticket #' + ticketId + ' as resolved?')) return;
+        btn.disabled = true;
+        btn.textContent = 'Saving…';
 
-    try {
-        const fd = new FormData();
-        fd.append('response_note', 'Resolved via admin panel.');
-        const resp = await fetch('/admin/tickets/' + ticketId + '/respond', {
-            method: 'POST',
-            body: fd,
-        });
-        const data = await resp.json();
-        if (resp.ok) {
-            btn.closest('tr').querySelector('td:last-child').innerHTML =
-                '<span class="text-green-400 text-xs">Resolved</span>';
-        } else {
+        try {
+            const fd = new FormData();
+            fd.append('response_note', 'Resolved via admin panel.');
+            const resp = await fetch('/admin/tickets/' + ticketId + '/respond', {
+                method: 'POST',
+                body: fd,
+            });
+            const data = await resp.json();
+            if (resp.ok) {
+                btn.closest('tr').querySelector('td:last-child').innerHTML =
+                    '<span class="text-green-400 text-xs">Resolved</span>';
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Mark Resolved';
+                alert(data.error || 'Error resolving ticket.');
+            }
+        } catch {
             btn.disabled = false;
             btn.textContent = 'Mark Resolved';
-            alert(data.error || 'Error resolving ticket.');
+            alert('Network error. Try again.');
         }
-    } catch {
-        btn.disabled = false;
-        btn.textContent = 'Mark Resolved';
-        alert('Network error. Try again.');
-    }
-}
+    });
+});
 </script>
 {% endblock %}

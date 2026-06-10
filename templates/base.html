@@ -63,7 +63,7 @@
                     </a>
                 {% endif %}
 
-                <button onclick="toggleLanguage()"
+                <button id="lang-toggle-btn"
                         class="text-xs text-slate-400 hover:text-amber-400
                                border border-slate-600 px-2 py-1 rounded transition">
                     हिं/EN
@@ -108,6 +108,10 @@
 
     <!-- JAVASCRIPT -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <script nonce="{{ csp_nonce() }}">
+    document.getElementById('lang-toggle-btn').addEventListener('click', toggleLanguage);
+    </script>
 
     <!-- PAGE-SPECIFIC SCRIPTS — this was missing, causing login to not work -->
     {% block scripts %}{% endblock %}

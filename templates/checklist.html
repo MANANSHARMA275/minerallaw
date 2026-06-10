@@ -14,7 +14,7 @@
                 Print this page and carry it to the government office.
             </p>
         </div>
-        <button onclick="window.print()"
+        <button id="print-checklist-btn"
                 class="no-print flex-shrink-0 border border-slate-600 text-slate-300
                        px-4 py-2 rounded-lg text-sm hover:border-amber-400
                        hover:text-amber-400 transition">
@@ -241,4 +241,10 @@
     </p>
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ csp_nonce() }}">
+document.getElementById('print-checklist-btn').addEventListener('click', () => window.print());
+</script>
 {% endblock %}

@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}Pricing — MineralLaw.in{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-10">
+
+    <!-- ── SECTION 1: Header ──────────────────────────────── -->
+    <div class="text-center mb-10">
+        <h1 class="text-3xl font-bold text-slate-100 mb-3">
+            Simple, Transparent Pricing
+        </h1>
+        <p class="text-slate-400 text-base max-w-xl mx-auto">
+            Built for Rajasthan mine owners. Less than the cost of one penalty notice.
+        </p>
+
+        <!-- Free-period banner -->
+        <div class="mt-6 bg-amber-400 text-slate-900 rounded-xl px-6 py-4 inline-block">
+            <p class="font-bold text-base">
+                🎉 Payments launch soon — all accounts are currently FREE with full access
+                during our early period.
+            </p>
+        </div>
+    </div>
+
+    <!-- ── SECTION 2: Pricing cards ─────────────────────── -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
+
+        <!-- FREE -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col">
+            <div class="mb-4">
+                <h2 class="text-slate-100 font-bold text-lg">Free</h2>
+                <p class="text-3xl font-bold text-slate-100 mt-1">₹0
+                    <span class="text-slate-400 text-sm font-normal">/month</span>
+                </p>
+            </div>
+            <ul class="space-y-2 text-sm mb-6 flex-grow">
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> Compliance checklist
+                </li>
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> 5 fee calculations/month
+                </li>
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> 2 PDF analyses/month
+                    <span class="text-slate-500 text-xs">(coming Phase 2)</span>
+                </li>
+                <li class="flex items-start gap-2 text-slate-500">
+                    <span class="mt-0.5">✗</span> WhatsApp reminders
+                </li>
+                <li class="flex items-start gap-2 text-slate-500">
+                    <span class="mt-0.5">✗</span> Expert consultation
+                </li>
+            </ul>
+            <a href="{{ url_for('main.login') }}"
+               class="block text-center bg-slate-700 hover:bg-slate-600 text-slate-100
+                      font-semibold py-2.5 rounded-lg transition text-sm">
+                Get Started
+            </a>
+        </div>
+
+        <!-- PRO — highlighted -->
+        <div class="bg-slate-800 border-2 border-amber-400 rounded-xl p-6 flex flex-col relative">
+            <span class="absolute -top-3 left-1/2 -translate-x-1/2
+                         bg-amber-400 text-slate-900 text-xs font-bold
+                         px-3 py-1 rounded-full">Most Popular</span>
+            <div class="mb-4">
+                <h2 class="text-amber-400 font-bold text-lg">Pro</h2>
+                <p class="text-3xl font-bold text-slate-100 mt-1">₹999
+                    <span class="text-slate-400 text-sm font-normal">/month</span>
+                </p>
+            </div>
+            <ul class="space-y-2 text-sm mb-6 flex-grow">
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> Everything in Free
+                </li>
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> Unlimited calculations
+                </li>
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> 10 PDF analyses/month
+                </li>
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> WhatsApp deadline reminders
+                </li>
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> 2 expert queries/month
+                </li>
+            </ul>
+            <a href="{{ url_for('main.login') }}"
+               class="block text-center bg-amber-400 hover:bg-amber-300 text-slate-900
+                      font-bold py-2.5 rounded-lg transition text-sm">
+                Start Free
+            </a>
+        </div>
+
+        <!-- EXPERT -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col">
+            <div class="mb-4">
+                <h2 class="text-slate-100 font-bold text-lg">Expert</h2>
+                <p class="text-3xl font-bold text-slate-100 mt-1">₹2,999
+                    <span class="text-slate-400 text-sm font-normal">/month</span>
+                </p>
+            </div>
+            <ul class="space-y-2 text-sm mb-6 flex-grow">
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> Everything in Pro
+                </li>
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> Unlimited expert consultations
+                </li>
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> Priority response (same day)
+                </li>
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> Document review by specialist
+                </li>
+            </ul>
+            <a href="{{ url_for('main.login') }}"
+               class="block text-center bg-slate-700 hover:bg-slate-600 text-slate-100
+                      font-semibold py-2.5 rounded-lg transition text-sm">
+                Start Free
+            </a>
+        </div>
+
+        <!-- ENTERPRISE -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col">
+            <div class="mb-4">
+                <h2 class="text-slate-100 font-bold text-lg">Enterprise</h2>
+                <p class="text-3xl font-bold text-slate-100 mt-1">₹49,999
+                    <span class="text-slate-400 text-sm font-normal">/year</span>
+                </p>
+            </div>
+            <ul class="space-y-2 text-sm mb-6 flex-grow">
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> Everything in Expert
+                </li>
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> Multiple mines, multiple users
+                </li>
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> Dedicated account manager
+                </li>
+                <li class="flex items-start gap-2 text-slate-300">
+                    <span class="text-green-400 mt-0.5">✓</span> On-site compliance audit
+                    <span class="text-slate-500 text-xs">(Rajasthan)</span>
+                </li>
+            </ul>
+            <a href="{{ url_for('main.ask_expert') }}"
+               class="block text-center bg-slate-700 hover:bg-slate-600 text-slate-100
+                      font-semibold py-2.5 rounded-lg transition text-sm">
+                Contact Us
+            </a>
+        </div>
+
+    </div>
+
+    <!-- ── SECTION 3: FAQs ───────────────────────────────── -->
+    <div class="mb-12">
+        <h2 class="text-xl font-bold text-slate-100 mb-5 text-center">
+            Frequently Asked Questions
+        </h2>
+        <div class="space-y-4 max-w-2xl mx-auto">
+
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5">
+                <h3 class="text-slate-100 font-semibold mb-2">
+                    When will payments start?
+                </h3>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                    Razorpay payments launch in Phase 3. Until then every account has
+                    full free access. Early users will receive a launch discount.
+                </p>
+            </div>
+
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5">
+                <h3 class="text-slate-100 font-semibold mb-2">
+                    Can I cancel anytime?
+                </h3>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                    Yes. Monthly plans cancel instantly with no lock-in. Your data
+                    export is available before deletion (DPDP Act 2023).
+                </p>
+            </div>
+
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5">
+                <h3 class="text-slate-100 font-semibold mb-2">
+                    Are the calculations official?
+                </h3>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                    All rates are verified against DMG notifications and shown with
+                    notification numbers. They remain estimates — always verify with
+                    SEIAA before government payment.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ── SECTION 4: Footer disclaimer ─────────────────── -->
+    <p class="text-center text-slate-500 text-xs max-w-2xl mx-auto">
+        Prices in INR, inclusive of GST. Rates and calculations are estimates
+        only. MineralLaw.in is a compliance information service, not legal advice.
+    </p>
+
+</div>
+{% endblock %}
