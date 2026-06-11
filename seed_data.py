@@ -81,6 +81,16 @@ def seed() -> None:
     """
     app = create_app()
     with app.app_context():
+        # db.create_all() is intentional: migration 50e5a317196b was generated
+        # when the dev DB already had tables from an earlier db.create_all() call
+        # but no alembic_version row. Autogenerate mis-classified all existing
+        # tables as "new", so the migration re-declares them. Running flask db
+        # upgrade on a fresh empty DB therefore fails after d35d6dec50ab creates
+        # the tables (50e5a317196b tries to re-create them — SQLite rejects it),
+        # leaving alembic_version recorded but all application tables absent.
+        # db.create_all() here bypasses Alembic and is idempotent: it only
+        # creates tables that do not yet exist, making this script safe to run
+        # as the single dev-setup command: python seed_data.py
         db.create_all()
 
         print("\n── Minerals ──────────────────────────────────────────")
