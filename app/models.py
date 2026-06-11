@@ -255,7 +255,48 @@ class AuditLog(db.Model):
 
 
 # ------------------------------------------------------------
-# SECTION 10: WORKFLOW STATE TABLE
+# SECTION 10: AUCTION STATUS TABLE — single-row settings pattern
+# ------------------------------------------------------------
+class AuctionStatus(db.Model):
+    """
+    PURPOSE  : Superadmin-controlled banner for the public Auctions page.
+               Single-row settings table — only one row should ever exist.
+               Use get_auction_status() to read/create it.
+    SECURITY : Written only via /admin/auctions/update (role_required superadmin)
+    LEGAL    : No government data stored here — links point to official portals.
+               status_text is plain text; escape on render, no HTML allowed.
+    """
+    __tablename__ = 'auction_status'
+
+    id              = db.Column(db.Integer, primary_key=True)
+    is_live         = db.Column(db.Boolean, default=False, nullable=False)
+    status_text     = db.Column(db.String(300), nullable=True)
+    status_text_hi  = db.Column(db.String(300), nullable=True)
+    updated_by      = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    updated_at      = db.Column(db.DateTime, nullable=True)
+
+    def __repr__(self):
+        return f'<AuctionStatus live={self.is_live}>'
+
+
+def get_auction_status() -> 'AuctionStatus':
+    """
+    PURPOSE  : Return the single AuctionStatus row, creating a default if absent
+    RECEIVES : None — reads from current app context DB session
+    RETURNS  : AuctionStatus — guaranteed non-None
+    SECURITY : Read path is safe; write path (create default) is idempotent
+    LEGAL    : Default row has is_live=False so no false "open" banner on first run
+    """
+    row = AuctionStatus.query.first()
+    if row is None:
+        row = AuctionStatus(is_live=False, status_text=None, status_text_hi=None)
+        db.session.add(row)
+        db.session.commit()
+    return row
+
+
+# ------------------------------------------------------------
+# SECTION 11: WORKFLOW STATE TABLE
 # ------------------------------------------------------------
 class WorkflowState(db.Model):
     """
@@ -280,7 +321,7 @@ class WorkflowState(db.Model):
 
 
 # ------------------------------------------------------------
-# SECTION 11: EC CONDITION TABLE — EC Report Builder (Phase 2 prep)
+# SECTION 12: EC CONDITION TABLE — EC Report Builder (Phase 2 prep)
 # ------------------------------------------------------------
 class ECCondition(db.Model):
     """
@@ -310,7 +351,7 @@ class ECCondition(db.Model):
 
 
 # ------------------------------------------------------------
-# SECTION 12: COMPLIANCE REPORT TABLE — EC Report Builder (Phase 2 prep)
+# SECTION 13: COMPLIANCE REPORT TABLE — EC Report Builder (Phase 2 prep)
 # ------------------------------------------------------------
 class ComplianceReport(db.Model):
     """
@@ -340,7 +381,7 @@ class ComplianceReport(db.Model):
 
 
 # ------------------------------------------------------------
-# SECTION 13: COMPLIANCE RESPONSE TABLE — EC Report Builder (Phase 2 prep)
+# SECTION 14: COMPLIANCE RESPONSE TABLE — EC Report Builder (Phase 2 prep)
 # ------------------------------------------------------------
 class ComplianceResponse(db.Model):
     """

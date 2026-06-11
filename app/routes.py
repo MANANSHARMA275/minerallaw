@@ -14,7 +14,7 @@ from decimal import Decimal, ROUND_HALF_UP
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_required, current_user, logout_user
 
-from app.models import AuditLog, Mineral, db
+from app.models import AuditLog, Mineral, db, get_auction_status
 from app.fee_calculator import get_rate_for_date, calculate_royalty, calculate_dmf, get_calculation_disclaimer
 from app.helpers import gmail_prefill, log_audit
 from app.validators import validate_mineral_query, validate_rate_date
@@ -38,6 +38,20 @@ def home():
     LEGAL    : Disclaimer shown on every page via base.html
     """
     return render_template('home.html')
+
+
+@main.route('/auctions')
+def auctions():
+    """
+    PURPOSE  : Public Auction Center page — verified official links + live banner
+    RECEIVES : None
+    RETURNS  : auctions.html with AuctionStatus row
+    SECURITY : Public route — no login required. No government data stored here.
+    LEGAL    : Links point to official portals only. Disclaimer on page.
+               No scraping — all data manually entered by superadmin.
+    """
+    status = get_auction_status()
+    return render_template('auctions.html', auction=status)
 
 
 @main.route('/login')

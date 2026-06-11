@@ -14,7 +14,7 @@ from decimal import Decimal
 from flask import Blueprint, abort, jsonify, render_template, request
 from flask_login import current_user, login_required
 
-from app.models import AuditLog, Mineral, Rate, Ticket, User, db
+from app.models import AuditLog, AuctionStatus, Mineral, Rate, Ticket, User, db, get_auction_status
 from app.helpers import log_audit
 
 
@@ -220,6 +220,66 @@ def ticket_respond(ticket_id):
     )
 
     return jsonify({'status': 'Ticket marked resolved.'})
+
+
+@admin_bp.route('/auctions')
+@login_required
+@role_required('superadmin')
+def auctions():
+    """
+    PURPOSE  : Admin view for auction status — toggle live flag and set banner text
+    RECEIVES : None
+    RETURNS  : admin_panel.html with auction section and current AuctionStatus
+    SECURITY : superadmin only
+    LEGAL    : Plain text only — no HTML in status_text; escaped on render
+    """
+    current_status = get_auction_status()
+    return render_template(
+        'admin_panel.html',
+        section='auctions',
+        auction=current_status,
+    )
+
+
+@admin_bp.route('/auctions/update', methods=['POST'])
+@login_required
+@role_required('superadmin')
+def auction_update():
+    """
+    PURPOSE  : Update auction live status and banner text
+    RECEIVES : is_live ('1'/'0'), status_text (str), status_text_hi (str) (form)
+    RETURNS  : JSON {"status": "Auction status updated."}
+    SECURITY : superadmin only. status_text stored as plain text — no HTML.
+    LEGAL    : Every change logged to AuditLog with old→new value.
+               No government auction data stored — text is manually set by father.
+    """
+    is_live = request.form.get('is_live', '0') == '1'
+    status_text = request.form.get('status_text', '').strip()[:300] or None
+    status_text_hi = request.form.get('status_text_hi', '').strip()[:300] or None
+
+    row = get_auction_status()
+
+    old_value = f"is_live={row.is_live}, status_text={row.status_text!r}"
+
+    row.is_live = is_live
+    row.status_text = status_text
+    row.status_text_hi = status_text_hi
+    row.updated_by = current_user.id
+    row.updated_at = datetime.now(timezone.utc)
+    db.session.commit()
+
+    new_value = f"is_live={row.is_live}, status_text={row.status_text!r}"
+
+    log_audit(
+        user_id=current_user.id,
+        action='AUCTION_STATUS_UPDATED',
+        table_affected='AuctionStatus',
+        record_id=row.id,
+        old_value=old_value,
+        new_value=new_value,
+    )
+
+    return jsonify({'status': 'Auction status updated.'})
 
 
 @admin_bp.route('/users')

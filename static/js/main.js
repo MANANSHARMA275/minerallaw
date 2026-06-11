@@ -14,6 +14,7 @@ const translations = {
         nav_calculator: "Calculator",
         nav_checklist:  "Checklist",
         nav_expert:     "Ask Expert",
+        nav_auctions:   "Auctions",
         nav_logout:     "Logout",
         nav_login:      "Login",
         nav_pricing:    "Pricing",
@@ -93,6 +94,20 @@ const translations = {
         pricing_title:     "Simple, Transparent Pricing",
         pricing_subtitle:  "Built for Rajasthan mine owners. Less than the cost of one penalty notice.",
         pricing_faq:       "Frequently Asked Questions",
+
+        // Auctions page
+        auction_title:           "Mine Auctions — Rajasthan",
+        auction_subtitle:        "Government mine blocks in Rajasthan are allotted via official e-auction. Track open auctions and access the official portals below.",
+        auction_live_label:      "🟢 Auctions currently open",
+        auction_none_label:      "No auctions currently flagged. Check the official portal below.",
+        auction_verified_prefix: "Last updated",
+        auction_mstc_title:      "MSTC Minor Mineral Block Auction (Rajasthan)",
+        auction_mstc_desc:       "Official Government of India e-auction platform where Rajasthan minor mineral blocks are auctioned.",
+        auction_dmg_title:       "DMG Rajasthan — Notifications & Tender Documents",
+        auction_dmg_desc:        "Department of Mines and Geology, Rajasthan — official notifications, tender documents, and auction schedules.",
+        auction_gis_title:       "DMG Mineral Map (GIS)",
+        auction_gis_desc:        "Official map of mines, leases, and auction blocks in Rajasthan.",
+        auction_disclaimer:      "MineralLaw.in is not affiliated with MSTC or DMG. These links open official government portals. Always verify auction details on the official portal before bidding.",
     },
 
     // ⚠️ PLACEHOLDER HINDI — father must verify all legal/technical terms before launch (Phase 2 per project spec).
@@ -102,6 +117,7 @@ const translations = {
         nav_calculator: "कैलकुलेटर",
         nav_checklist:  "चेकलिस्ट",
         nav_expert:     "विशेषज्ञ से पूछें",
+        nav_auctions:   "नीलामी",
         nav_logout:     "लॉगआउट",
         nav_login:      "लॉगिन",
         nav_pricing:    "मूल्य",
@@ -181,6 +197,20 @@ const translations = {
         pricing_title:     "सरल, पारदर्शी मूल्य",
         pricing_subtitle:  "राजस्थान खनन मालिकों के लिए। एक जुर्माना नोटिस की लागत से भी कम।",
         pricing_faq:       "अक्सर पूछे जाने वाले प्रश्न",
+
+        // Auctions page
+        auction_title:           "खान नीलामी — राजस्थान",
+        auction_subtitle:        "राजस्थान में सरकारी खान ब्लॉक आधिकारिक ई-नीलामी के माध्यम से आवंटित किए जाते हैं। खुली नीलामियों की जानकारी और आधिकारिक पोर्टल नीचे देखें।",
+        auction_live_label:      "🟢 नीलामियाँ वर्तमान में खुली हैं",
+        auction_none_label:      "अभी कोई नीलामी सक्रिय नहीं। नीचे आधिकारिक पोर्टल देखें।",
+        auction_verified_prefix: "अंतिम अपडेट",
+        auction_mstc_title:      "MSTC लघु खनिज ब्लॉक नीलामी (राजस्थान)",
+        auction_mstc_desc:       "भारत सरकार का आधिकारिक ई-नीलामी मंच जहाँ राजस्थान के लघु खनिज ब्लॉकों की नीलामी होती है।",
+        auction_dmg_title:       "DMG राजस्थान — अधिसूचनाएँ और निविदा दस्तावेज़",
+        auction_dmg_desc:        "खान और भूविज्ञान विभाग, राजस्थान — आधिकारिक अधिसूचनाएँ, निविदा दस्तावेज़ और नीलामी कार्यक्रम।",
+        auction_gis_title:       "DMG खनिज मानचित्र (GIS)",
+        auction_gis_desc:        "राजस्थान में खानों, पट्टों और नीलामी ब्लॉकों का आधिकारिक मानचित्र।",
+        auction_disclaimer:      "MineralLaw.in का MSTC या DMG से कोई संबंध नहीं है। ये लिंक आधिकारिक सरकारी पोर्टल खोलते हैं। बोली लगाने से पहले नीलामी विवरण की पुष्टि आधिकारिक पोर्टल पर करें।",
     }
 };
 

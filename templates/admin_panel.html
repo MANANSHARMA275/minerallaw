@@ -31,6 +31,11 @@
                       {% if section == 'users' %}bg-slate-700 text-amber-400{% else %}text-slate-300 hover:bg-slate-700 hover:text-slate-100{% endif %}">
                 👤 Users
             </a>
+            <a href="{{ url_for('admin.auctions') }}"
+               class="flex items-center gap-2 px-3 py-2 rounded-lg transition
+                      {% if section == 'auctions' %}bg-slate-700 text-amber-400{% else %}text-slate-300 hover:bg-slate-700 hover:text-slate-100{% endif %}">
+                🏛️ Auctions
+            </a>
         </nav>
         <div class="mt-auto pt-8">
             <a href="{{ url_for('main.dashboard') }}"
@@ -328,6 +333,91 @@
             </table>
         </div>
 
+
+        {% elif section == 'auctions' %}
+        <!-- ============================================ -->
+        <!-- AUCTIONS                                     -->
+        <!-- ============================================ -->
+        <h1 class="text-xl font-bold text-slate-100 mb-2">Auction Status</h1>
+        <p class="text-slate-500 text-xs mb-6">
+            Toggle whether auctions are live and set the banner text shown on
+            the public /auctions page. Status text is plain text — no HTML.
+        </p>
+
+        <!-- Current status -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 mb-6">
+            <p class="text-slate-400 text-xs mb-1">Current status</p>
+            {% if auction.is_live %}
+            <span class="bg-green-700 text-green-100 text-xs font-semibold px-2 py-0.5 rounded-full">
+                🟢 Live
+            </span>
+            {% else %}
+            <span class="bg-slate-700 text-slate-300 text-xs font-semibold px-2 py-0.5 rounded-full">
+                ⚫ Not live
+            </span>
+            {% endif %}
+            {% if auction.status_text %}
+            <p class="text-slate-300 text-sm mt-2">{{ auction.status_text | e }}</p>
+            {% endif %}
+            {% if auction.updated_at %}
+            <p class="text-slate-500 text-xs mt-2">
+                Last updated {{ auction.updated_at.strftime('%d %b %Y, %H:%M UTC') }}
+            </p>
+            {% endif %}
+        </div>
+
+        <!-- Update form -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
+            <h2 class="text-slate-100 font-semibold mb-4">Update Auction Status</h2>
+            <form id="auction-form" class="space-y-4">
+                <div>
+                    <label class="block text-slate-400 text-xs mb-2">Auctions Live?</label>
+                    <div class="flex gap-4">
+                        <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+                            <input type="radio" name="is_live" value="1"
+                                   {% if auction.is_live %}checked{% endif %}
+                                   class="accent-amber-400">
+                            Yes — show green banner
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+                            <input type="radio" name="is_live" value="0"
+                                   {% if not auction.is_live %}checked{% endif %}
+                                   class="accent-amber-400">
+                            No — show grey banner
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-xs mb-1">
+                        Status Text (English) — plain text, max 300 chars
+                    </label>
+                    <input name="status_text" type="text" maxlength="300"
+                           value="{{ auction.status_text | e if auction.status_text else '' }}"
+                           placeholder="e.g. ML(03) 2026 — bids close 15 July"
+                           class="w-full bg-slate-900 border border-slate-600 text-slate-100
+                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-xs mb-1">
+                        Status Text (Hindi) — optional, plain text, max 300 chars
+                    </label>
+                    <input name="status_text_hi" type="text" maxlength="300"
+                           value="{{ auction.status_text_hi | e if auction.status_text_hi else '' }}"
+                           placeholder="e.g. ML(03) 2026 — बोलियाँ 15 जुलाई तक"
+                           class="w-full bg-slate-900 border border-slate-600 text-slate-100
+                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                </div>
+                <div>
+                    <button type="submit"
+                            class="bg-amber-400 text-slate-900 px-6 py-2 rounded-lg
+                                   font-semibold text-sm hover:bg-amber-300 transition">
+                        Update Status
+                    </button>
+                    <span id="auction-msg" class="ml-3 text-sm hidden"></span>
+                </div>
+            </form>
+        </div>
+
         {% endif %}
 
     </main>
@@ -361,6 +451,40 @@ if (rateForm) {
             } else {
                 msg.className = 'ml-3 text-sm text-red-400';
                 msg.textContent = data.error || 'Error saving rate.';
+            }
+        } catch {
+            msg.className = 'ml-3 text-sm text-red-400';
+            msg.textContent = 'Network error. Try again.';
+        }
+        btn.disabled = false;
+    });
+}
+
+// Auction status form
+const auctionForm = document.getElementById('auction-form');
+if (auctionForm) {
+    auctionForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msg = document.getElementById('auction-msg');
+        const btn = auctionForm.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        msg.className = 'ml-3 text-sm text-slate-400';
+        msg.textContent = 'Saving…';
+        msg.classList.remove('hidden');
+
+        try {
+            const resp = await fetch('/admin/auctions/update', {
+                method: 'POST',
+                body: new FormData(auctionForm),
+            });
+            const data = await resp.json();
+            if (resp.ok) {
+                msg.className = 'ml-3 text-sm text-green-400';
+                msg.textContent = data.status;
+                setTimeout(() => location.reload(), 1200);
+            } else {
+                msg.className = 'ml-3 text-sm text-red-400';
+                msg.textContent = data.error || 'Error saving status.';
             }
         } catch {
             msg.className = 'ml-3 text-sm text-red-400';
