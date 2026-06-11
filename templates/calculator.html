@@ -5,8 +5,8 @@
 {% block content %}
 <div class="max-w-3xl mx-auto">
 
-  <h1 class="text-2xl font-bold text-white mb-1">Mining Fee Calculator</h1>
-  <p class="text-slate-400 text-sm mb-8">
+  <h1 class="text-2xl font-bold text-white mb-1" data-i18n="calc_title">Mining Fee Calculator</h1>
+  <p class="text-slate-400 text-sm mb-8" data-i18n="calc_subtitle">
     Estimate royalty, DMF, and NPV for Rajasthan minor mineral mines.
     Every result shows the applicable notification number and date.
   </p>
@@ -14,7 +14,7 @@
   <!-- ── INPUT FORM ──────────────────────────────────────────── -->
   <form id="calc-form" class="bg-slate-800 border border-slate-700 rounded-lg p-6 mb-6">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <h2 class="text-white font-semibold mb-5">Mine Details</h2>
+    <h2 class="text-white font-semibold mb-5" data-i18n="calc_mine_details">Mine Details</h2>
 
     <!-- Error section -->
     <div id="error-section"
@@ -25,9 +25,8 @@
 
       <!-- Mineral dropdown — populated from DB -->
       <div>
-        <label class="block text-slate-300 text-sm mb-2" for="mineral_id">
-          Mineral Type
-        </label>
+        <label class="block text-slate-300 text-sm mb-2" for="mineral_id"
+               data-i18n="calc_mineral">Mineral Type</label>
         <select id="mineral_id" name="mineral_id"
                 class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-3
                        text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
@@ -41,7 +40,7 @@
       <!-- Target date (optional) -->
       <div>
         <label class="block text-slate-300 text-sm mb-2" for="target_date">
-          Rate Date
+          <span data-i18n="calc_date">Rate Date</span>
           <span class="text-slate-500 font-normal">(leave blank for today's rate)</span>
         </label>
         <input type="date" id="target_date" name="target_date"
@@ -52,9 +51,8 @@
 
       <!-- Area -->
       <div>
-        <label class="block text-slate-300 text-sm mb-2" for="area_ha">
-          Mine Area (hectares)
-        </label>
+        <label class="block text-slate-300 text-sm mb-2" for="area_ha"
+               data-i18n="calc_area">Mine Area (hectares)</label>
         <input type="number" id="area_ha" name="area_ha"
                min="0.1" step="0.1" placeholder="e.g. 20"
                class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-3
@@ -63,9 +61,8 @@
 
       <!-- Annual production -->
       <div>
-        <label class="block text-slate-300 text-sm mb-2" for="production_tpa">
-          Annual Production (tonnes/year)
-        </label>
+        <label class="block text-slate-300 text-sm mb-2" for="production_tpa"
+               data-i18n="calc_production">Annual Production (tonnes/year)</label>
         <input type="number" id="production_tpa" name="production_tpa"
                min="1" step="1" placeholder="e.g. 50000"
                class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-3
@@ -75,7 +72,7 @@
       <!-- Lease period -->
       <div class="sm:col-span-2">
         <label class="block text-slate-300 text-sm mb-2" for="lease_years">
-          Lease Period (years)
+          <span data-i18n="calc_lease">Lease Period (years)</span>
           <span class="text-slate-500 font-normal">(for NPV calculation)</span>
         </label>
         <select id="lease_years" name="lease_years"
@@ -113,7 +110,7 @@
 
     <div class="bg-slate-800 border border-slate-700 rounded-lg p-6 mb-4">
       <h2 class="text-white font-semibold mb-5 flex items-center justify-between">
-        Calculation Results
+        <span data-i18n="calc_results">Calculation Results</span>
         <button id="print-calc-btn"
                 class="text-slate-400 hover:text-white text-sm font-normal
                        border border-slate-600 px-3 py-1 rounded transition-colors no-print">
@@ -124,15 +121,15 @@
       <!-- Summary cards -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <div class="bg-slate-700 rounded-lg p-4 text-center">
-          <p class="text-slate-400 text-xs mb-1">Annual Royalty</p>
+          <p class="text-slate-400 text-xs mb-1" data-i18n="calc_royalty">Annual Royalty</p>
           <p id="royalty-annual" class="text-white text-xl font-bold">—</p>
         </div>
         <div class="bg-slate-700 rounded-lg p-4 text-center">
-          <p class="text-slate-400 text-xs mb-1">Annual DMF</p>
+          <p class="text-slate-400 text-xs mb-1" data-i18n="calc_dmf">Annual DMF</p>
           <p id="dmf-annual" class="text-white text-xl font-bold">—</p>
         </div>
         <div class="bg-slate-700 rounded-lg p-4 text-center">
-          <p class="text-slate-400 text-xs mb-1">Total Annual Govt. Payment</p>
+          <p class="text-slate-400 text-xs mb-1" data-i18n="calc_total">Total Annual Govt. Payment</p>
           <p id="total-annual" class="text-amber-400 text-xl font-bold">—</p>
         </div>
       </div>
@@ -159,7 +156,7 @@
 
     <!-- ⚠️ Mandatory disclaimer — amber, PROMINENT -->
     <div class="bg-amber-900 border-2 border-amber-500 rounded-lg px-5 py-4 mb-2">
-      <p class="text-amber-300 font-bold text-sm mb-1">Important Legal Notice</p>
+      <p class="text-amber-300 font-bold text-sm mb-1" data-i18n="calc_notice">Important Legal Notice</p>
       <p id="disclaimer-text" class="text-amber-100 text-sm leading-relaxed">—</p>
     </div>
 

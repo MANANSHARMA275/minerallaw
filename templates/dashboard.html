@@ -34,15 +34,14 @@
             {% endif %}
 
             <a href="{{ url_for('auth.logout') }}"
-               class="text-slate-400 hover:text-white text-sm transition-colors">
-                Sign Out
-            </a>
+               class="text-slate-400 hover:text-white text-sm transition-colors"
+               data-i18n="dash_signout">Sign Out</a>
         </div>
     </div>
 
     <!-- ── Compliance Health (placeholder) ────────────────── -->
     <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 mb-6">
-        <h2 class="text-slate-100 font-semibold mb-3">Compliance Health</h2>
+        <h2 class="text-slate-100 font-semibold mb-3" data-i18n="dash_health">Compliance Health</h2>
         <div class="flex items-center gap-4">
             <div class="w-16 h-16 rounded-full border-4 border-amber-400 flex items-center
                         justify-center text-amber-400 font-bold text-xl flex-shrink-0">
@@ -66,9 +65,8 @@
            class="bg-slate-800 border border-slate-700 rounded-xl p-5
                   hover:border-amber-400 transition group">
             <div class="text-amber-400 text-2xl mb-2">🧮</div>
-            <h3 class="text-slate-100 font-medium group-hover:text-amber-400 transition">
-                Fee Calculator
-            </h3>
+            <h3 class="text-slate-100 font-medium group-hover:text-amber-400 transition"
+                data-i18n="dash_calculator">Fee Calculator</h3>
             <p class="text-slate-500 text-xs mt-1">Royalty, DMF &amp; NPV estimates</p>
         </a>
 
@@ -76,9 +74,8 @@
            class="bg-slate-800 border border-slate-700 rounded-xl p-5
                   hover:border-amber-400 transition group">
             <div class="text-amber-400 text-2xl mb-2">👨‍💼</div>
-            <h3 class="text-slate-100 font-medium group-hover:text-amber-400 transition">
-                Ask Expert
-            </h3>
+            <h3 class="text-slate-100 font-medium group-hover:text-amber-400 transition"
+                data-i18n="dash_expert">Ask Expert</h3>
             <p class="text-slate-500 text-xs mt-1">30 years of Rajasthan mining expertise</p>
         </a>
 
@@ -86,16 +83,15 @@
            class="bg-slate-800 border border-slate-700 rounded-xl p-5
                   hover:border-amber-400 transition group">
             <div class="text-amber-400 text-2xl mb-2">✅</div>
-            <h3 class="text-slate-100 font-medium group-hover:text-amber-400 transition">
-                Compliance Checklist
-            </h3>
+            <h3 class="text-slate-100 font-medium group-hover:text-amber-400 transition"
+                data-i18n="dash_checklist">Compliance Checklist</h3>
             <p class="text-slate-500 text-xs mt-1">Step-by-step EC &amp; lease guidance</p>
         </a>
     </div>
 
     <!-- ── Recent Activity ────────────────────────────────── -->
     <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 mb-6">
-        <h2 class="text-slate-100 font-semibold mb-4">Recent Activity</h2>
+        <h2 class="text-slate-100 font-semibold mb-4" data-i18n="dash_activity">Recent Activity</h2>
 
         {% if recent_activity %}
         <ul class="space-y-3">
@@ -131,37 +127,37 @@
 
     <!-- ── Account Info ───────────────────────────────────── -->
     <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
-        <h2 class="text-slate-100 font-semibold mb-4">Account</h2>
+        <h2 class="text-slate-100 font-semibold mb-4" data-i18n="dash_account">Account</h2>
 
         <div class="space-y-0 text-sm">
             <div class="flex justify-between items-center py-3 border-b border-slate-700">
-                <span class="text-slate-400">Phone</span>
+                <span class="text-slate-400" data-i18n="dash_phone">Phone</span>
                 <span class="text-slate-100">{{ user.phone }}</span>
             </div>
             {% if user.name %}
             <div class="flex justify-between items-center py-3 border-b border-slate-700">
-                <span class="text-slate-400">Name</span>
+                <span class="text-slate-400" data-i18n="dash_name">Name</span>
                 <span class="text-slate-100">{{ user.name }}</span>
             </div>
             {% endif %}
             {% if user.email %}
             <div class="flex justify-between items-center py-3 border-b border-slate-700">
-                <span class="text-slate-400">Email</span>
+                <span class="text-slate-400" data-i18n="dash_email">Email</span>
                 <span class="text-slate-100">{{ user.email }}</span>
             </div>
             {% endif %}
             {% if user.company_name %}
             <div class="flex justify-between items-center py-3 border-b border-slate-700">
-                <span class="text-slate-400">Company</span>
+                <span class="text-slate-400" data-i18n="dash_company">Company</span>
                 <span class="text-slate-100">{{ user.company_name }}</span>
             </div>
             {% endif %}
             <div class="flex justify-between items-center py-3 border-b border-slate-700">
-                <span class="text-slate-400">Plan</span>
+                <span class="text-slate-400" data-i18n="dash_plan">Plan</span>
                 <span class="text-slate-100 capitalize">{{ user.subscription_tier }}</span>
             </div>
             <div class="flex justify-between items-center py-3">
-                <span class="text-slate-400">Member since</span>
+                <span class="text-slate-400" data-i18n="dash_member_since">Member since</span>
                 <span class="text-slate-100">
                     {{ user.created_at.strftime('%d %b %Y') if user.created_at else 'N/A' }}
                 </span>
@@ -170,9 +166,8 @@
 
         <!-- DPDP: Data deletion right -->
         <div class="mt-6 pt-4 border-t border-slate-700">
-            <h3 class="text-slate-300 text-sm font-medium mb-2">
-                Your Data Rights (DPDP Act 2023)
-            </h3>
+            <h3 class="text-slate-300 text-sm font-medium mb-2"
+                data-i18n="dash_data_rights">Your Data Rights (DPDP Act 2023)</h3>
             <p class="text-slate-500 text-xs mb-4">
                 You can request permanent deletion of all your data at any time.
                 Deletion is processed within 30 days. Financial records are retained

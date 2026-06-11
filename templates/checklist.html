@@ -8,18 +8,17 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
         <div>
-            <h1 class="text-2xl font-bold text-slate-100 mb-2">EC Compliance Checklist</h1>
-            <p class="text-slate-400 text-sm max-w-xl">
+            <h1 class="text-2xl font-bold text-slate-100 mb-2" data-i18n="check_title">EC Compliance Checklist</h1>
+            <p class="text-slate-400 text-sm max-w-xl" data-i18n="check_subtitle">
                 Step-by-step guide for Rajasthan minor mineral mines.
                 Print this page and carry it to the government office.
             </p>
         </div>
         <button id="print-checklist-btn"
+                data-i18n="check_print"
                 class="no-print flex-shrink-0 border border-slate-600 text-slate-300
                        px-4 py-2 rounded-lg text-sm hover:border-amber-400
-                       hover:text-amber-400 transition">
-            🖨 Print
-        </button>
+                       hover:text-amber-400 transition">🖨 Print</button>
     </div>
 
     <!-- Phases -->
@@ -229,9 +228,8 @@
     <div class="mt-6 text-center">
         <a href="{{ url_for('main.ask_expert') }}"
            class="inline-block bg-amber-400 text-slate-900 px-8 py-3 rounded-lg
-                  font-semibold hover:bg-amber-300 transition no-print">
-            Ask Expert for Your Mine
-        </a>
+                  font-semibold hover:bg-amber-300 transition no-print"
+           data-i18n="check_cta">Ask Expert for Your Mine</a>
     </div>
 
     <!-- Footer note -->
