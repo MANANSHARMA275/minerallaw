@@ -5,6 +5,44 @@
 # ============================================================
 
 import re
+from datetime import date
+
+_EARLIEST_VALID_DATE = date(1950, 1, 1)
+
+
+def validate_rate_date(date_str: str) -> tuple:
+    """
+    PURPOSE  : Validate the Rate Date field from the fee calculator form
+    RECEIVES : date_str (str) — raw input; blank string means "use today"
+    RETURNS  : tuple[bool, date | None, str] —
+               (True, parsed_date_or_None, '') on success (None means use today);
+               (False, None, error_msg) on rejection
+    SECURITY : Rejects unparseable input before any DB query; never raises 500
+    LEGAL    : Future dates rejected — government rates do not yet exist.
+               Pre-1950 dates rejected — predates modern Indian mining law.
+               Blank is allowed and means "today" (existing behaviour preserved).
+    """
+    if not date_str or not date_str.strip():
+        return True, None, ''
+
+    try:
+        parsed = date.fromisoformat(date_str.strip())
+    except ValueError:
+        return False, None, (
+            'Date is not valid. Use YYYY-MM-DD format, or leave blank for today.'
+        )
+
+    if parsed > date.today():
+        return False, None, (
+            'Rate date cannot be in the future. Leave blank to use today\'s rate.'
+        )
+
+    if parsed < _EARLIEST_VALID_DATE:
+        return False, None, (
+            'Please check the date — it appears too far in the past.'
+        )
+
+    return True, parsed, ''
 
 
 def validate_phone(phone: str) -> tuple:

@@ -17,7 +17,7 @@ from flask_login import login_required, current_user, logout_user
 from app.models import AuditLog, Mineral, db
 from app.fee_calculator import get_rate_for_date, calculate_royalty, calculate_dmf, get_calculation_disclaimer
 from app.helpers import gmail_prefill, log_audit
-from app.validators import validate_mineral_query
+from app.validators import validate_mineral_query, validate_rate_date
 from app.tickets import create_ticket
 
 # ------------------------------------------------------------
@@ -141,13 +141,10 @@ def calculate():
     if production > 10_000_000:
         return jsonify({'error': 'Production exceeds limit. Contact expert.'}), 400
 
-    if not target_date_str:
-        target_date = dt.date.today()
-    else:
-        try:
-            target_date = dt.date.fromisoformat(target_date_str)
-        except ValueError:
-            return jsonify({'error': 'Invalid date format.'}), 400
+    ok, parsed_date, date_err = validate_rate_date(target_date_str)
+    if not ok:
+        return jsonify({'error': date_err}), 400
+    target_date = parsed_date if parsed_date is not None else dt.date.today()
 
     royalty_rate = get_rate_for_date(mineral_id, 'Rajasthan', 'royalty', target_date)
     if royalty_rate is None:
