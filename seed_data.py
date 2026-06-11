@@ -122,17 +122,29 @@ def seed() -> None:
             effective_to=None,          # None = currently active
         )
 
-        # ⚠️ PLACEHOLDER — DMF stored as decimal multiplier (0.10 = 10 %).
-        #    fee_calculator.py uses dmf_row.value directly as the multiplier:
-        #        dmf_annual = royalty × dmf_row.value
+        # ⚠️ PLACEHOLDER — DMF stored as PERCENTAGE (10.00 = 10%).
+        #    CONVENTION: Rate.value for rate_type='dmf' is a percentage.
+        #    calculate_dmf() computes: royalty × (value / 100).
         #    Father must confirm exact % before client use.
+        insert_rate_if_absent(
+            notification_number='PLACEHOLDER-DMG-DMF/2019/01',
+            mineral_id=limestone.id,
+            state='Rajasthan',
+            rate_type='dmf',
+            value=10.00,                # 10% — PERCENTAGE CONVENTION
+            unit='percent',
+            effective_from=date(2019, 1, 1),
+            effective_to=date(2021, 12, 31),
+        )
+
+        # ⚠️ PLACEHOLDER — father verifies current DMF rate in Phase 0
         insert_rate_if_absent(
             notification_number='PLACEHOLDER-DMG-DMF/2022/01',
             mineral_id=limestone.id,
             state='Rajasthan',
             rate_type='dmf',
-            value=0.10,                 # 10 % of royalty — DECIMAL MULTIPLIER
-            unit='percent_of_royalty',
+            value=10.00,                # 10% — PERCENTAGE CONVENTION
+            unit='percent',
             effective_from=date(2022, 1, 1),
             effective_to=None,
         )

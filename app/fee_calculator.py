@@ -25,31 +25,31 @@ from app.logger import logger
 PLACEHOLDER_RATES = {
     'limestone': {
         'royalty_per_tonne': Decimal('90'),       # ⚠️ FATHER VERIFY: Rajasthan 2026
-        'dmf_rate': Decimal('0.10'),              # ⚠️ FATHER VERIFY: 10% of royalty
+        'dmf_rate': Decimal('10'),                # ⚠️ FATHER VERIFY: percentage, 10 = 10%
         'notification': 'PLACEHOLDER — Father must enter verified rate',
         'effective_from': date(2022, 1, 1)
     },
     'stone': {
         'royalty_per_tonne': Decimal('25'),       # ⚠️ FATHER VERIFY
-        'dmf_rate': Decimal('0.10'),
+        'dmf_rate': Decimal('10'),
         'notification': 'PLACEHOLDER — Father must enter verified rate',
         'effective_from': date(2022, 1, 1)
     },
     'sand': {
         'royalty_per_tonne': Decimal('40'),       # ⚠️ FATHER VERIFY
-        'dmf_rate': Decimal('0.10'),
+        'dmf_rate': Decimal('10'),
         'notification': 'PLACEHOLDER — Father must enter verified rate',
         'effective_from': date(2022, 1, 1)
     },
     'marble': {
         'royalty_per_tonne': Decimal('120'),      # ⚠️ FATHER VERIFY
-        'dmf_rate': Decimal('0.10'),
+        'dmf_rate': Decimal('10'),
         'notification': 'PLACEHOLDER — Father must enter verified rate',
         'effective_from': date(2022, 1, 1)
     },
     'granite': {
         'royalty_per_tonne': Decimal('100'),      # ⚠️ FATHER VERIFY
-        'dmf_rate': Decimal('0.10'),
+        'dmf_rate': Decimal('10'),
         'notification': 'PLACEHOLDER — Father must enter verified rate',
         'effective_from': date(2022, 1, 1)
     },
@@ -127,15 +127,20 @@ def calculate_royalty(production_tpa: float, rate_per_tonne: float) -> Decimal:
     return (production * rate).quantize(Decimal('1'), rounding=ROUND_HALF_UP)
 
 
-def calculate_dmf(royalty: Decimal, dmf_rate: Decimal) -> Decimal:
+def calculate_dmf(royalty: Decimal, dmf_pct: Decimal) -> Decimal:
     """
-    PURPOSE  : DMF = royalty × DMF rate (typically 10% of royalty)
-    RECEIVES : royalty (Decimal), dmf_rate (Decimal) — e.g. Decimal('0.10')
-    RETURNS  : Decimal — rounded to nearest rupee
+    PURPOSE  : DMF = royalty × (DMF percentage / 100)
+    RECEIVES : royalty (Decimal), dmf_pct (Decimal) — PERCENTAGE e.g. Decimal('10')
+               for 10%. This matches how Rate.value is stored and how DMG
+               notifications express the rate. Admin panel entries must also be
+               in this unit (10 means 10%, not 0.10).
+    RETURNS  : Decimal — rounded to nearest rupee (ROUND_HALF_UP)
     SECURITY : No external calls
-    LEGAL    : ⚠️ FATHER VERIFY — DMF rate may vary by mine investment category
+    LEGAL    : CONVENTION — Rate.value for rate_type='dmf' stores a percentage.
+               Computation: dmf = royalty × (value / 100).
+               ⚠️ FATHER VERIFY — DMF rate may vary by mine investment category.
     """
-    result = royalty * dmf_rate
+    result = royalty * (dmf_pct / Decimal('100'))
     return result.quantize(Decimal('1'), rounding=ROUND_HALF_UP)
 
 
@@ -237,7 +242,7 @@ def run_full_calculation(
         logger.info(f"Using placeholder rates for {mineral_name} — DB has no verified data")
 
     if dmf_rate_pct is None:
-        dmf_rate_pct = Decimal('0.10')  # Default 10% ⚠️ FATHER VERIFY
+        dmf_rate_pct = Decimal('10')    # Default 10% as percentage ⚠️ FATHER VERIFY
 
     # Run calculations
     royalty_annual = calculate_royalty(production_tpa, float(royalty_rate))
@@ -262,7 +267,7 @@ def run_full_calculation(
         'lease_date': lease_date.strftime('%d %B %Y'),
         'lease_years': lease_years,
         'royalty_rate_per_tonne': float(royalty_rate),
-        'dmf_rate_pct': float(dmf_rate_pct * 100),
+        'dmf_rate_pct': float(dmf_rate_pct),          # already a percentage (e.g. 10.0)
         'royalty_annual': float(royalty_annual),
         'dmf_annual': float(dmf_annual),
         'total_annual': float(total_annual),

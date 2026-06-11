@@ -15,7 +15,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_required, current_user, logout_user
 
 from app.models import AuditLog, Mineral, db
-from app.fee_calculator import get_rate_for_date, calculate_royalty, get_calculation_disclaimer
+from app.fee_calculator import get_rate_for_date, calculate_royalty, calculate_dmf, get_calculation_disclaimer
 from app.helpers import gmail_prefill, log_audit
 from app.validators import validate_mineral_query
 from app.tickets import create_ticket
@@ -159,13 +159,12 @@ def calculate():
 
     royalty_annual = calculate_royalty(production, float(royalty_rate.value))
 
+    dmf_warning = None
     if dmf_rate_row:
-        dmf_percent = Decimal(str(dmf_rate_row.value)) / Decimal('100')
-        dmf_annual  = (royalty_annual * dmf_percent).quantize(
-            Decimal('1'), rounding=ROUND_HALF_UP
-        )
+        dmf_annual = calculate_dmf(royalty_annual, Decimal(str(dmf_rate_row.value)))
     else:
-        dmf_annual = Decimal('0')
+        dmf_annual  = Decimal('0')
+        dmf_warning = 'DMF rate unavailable for this date — verify with expert'
 
     total_annual = royalty_annual + dmf_annual
 
@@ -208,6 +207,7 @@ def calculate():
         },
         'disclaimer': disclaimer,
         'warning': '⚠️ All rates are placeholders. Father must verify before sharing with any real client.',
+        'dmf_warning': dmf_warning,
     })
 
 
