@@ -108,6 +108,7 @@
         <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 mb-8">
             <h2 class="text-slate-100 font-semibold mb-4">Add New Rate</h2>
             <form id="rate-form" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div>
                     <label class="block text-slate-400 text-xs mb-1">Mineral</label>
                     <select name="mineral_id" id="form-mineral-id" required
@@ -370,6 +371,7 @@
         <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
             <h2 class="text-slate-100 font-semibold mb-4">Update Auction Status</h2>
             <form id="auction-form" class="space-y-4">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div>
                     <label class="block text-slate-400 text-xs mb-2">Auctions Live?</label>
                     <div class="flex gap-4">
@@ -426,37 +428,41 @@
 
 {% block scripts %}
 <script nonce="{{ csp_nonce() }}">
+// Shared helper: POST a form, parse JSON safely, show result in a msg span.
+// If the server returns a non-JSON body (e.g. CSRF 400 HTML), falls back to
+// the HTTP status code so the real cause is visible rather than "Network error".
+async function submitAdminForm(form, url, msgEl) {
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    msgEl.className = 'ml-3 text-sm text-slate-400';
+    msgEl.textContent = 'Saving…';
+    msgEl.classList.remove('hidden');
+
+    try {
+        const resp = await fetch(url, { method: 'POST', body: new FormData(form) });
+        let data = {};
+        try { data = await resp.json(); } catch { /* non-JSON body — CSRF or 5xx HTML */ }
+        if (resp.ok) {
+            msgEl.className = 'ml-3 text-sm text-green-400';
+            msgEl.textContent = data.status || 'Saved.';
+            setTimeout(() => location.reload(), 1200);
+        } else {
+            msgEl.className = 'ml-3 text-sm text-red-400';
+            msgEl.textContent = data.error || `Server error ${resp.status}. Try again.`;
+        }
+    } catch {
+        msgEl.className = 'ml-3 text-sm text-red-400';
+        msgEl.textContent = 'Network error. Check your connection and try again.';
+    }
+    btn.disabled = false;
+}
+
 // Rate form submission
 const rateForm = document.getElementById('rate-form');
 if (rateForm) {
     rateForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const msg = document.getElementById('rate-msg');
-        const btn = rateForm.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        msg.className = 'ml-3 text-sm text-slate-400';
-        msg.textContent = 'Saving…';
-        msg.classList.remove('hidden');
-
-        try {
-            const resp = await fetch('/admin/rates/update', {
-                method: 'POST',
-                body: new FormData(rateForm),
-            });
-            const data = await resp.json();
-            if (resp.ok) {
-                msg.className = 'ml-3 text-sm text-green-400';
-                msg.textContent = data.status;
-                setTimeout(() => location.reload(), 1200);
-            } else {
-                msg.className = 'ml-3 text-sm text-red-400';
-                msg.textContent = data.error || 'Error saving rate.';
-            }
-        } catch {
-            msg.className = 'ml-3 text-sm text-red-400';
-            msg.textContent = 'Network error. Try again.';
-        }
-        btn.disabled = false;
+        await submitAdminForm(rateForm, '/admin/rates/update', document.getElementById('rate-msg'));
     });
 }
 
@@ -465,32 +471,7 @@ const auctionForm = document.getElementById('auction-form');
 if (auctionForm) {
     auctionForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const msg = document.getElementById('auction-msg');
-        const btn = auctionForm.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        msg.className = 'ml-3 text-sm text-slate-400';
-        msg.textContent = 'Saving…';
-        msg.classList.remove('hidden');
-
-        try {
-            const resp = await fetch('/admin/auctions/update', {
-                method: 'POST',
-                body: new FormData(auctionForm),
-            });
-            const data = await resp.json();
-            if (resp.ok) {
-                msg.className = 'ml-3 text-sm text-green-400';
-                msg.textContent = data.status;
-                setTimeout(() => location.reload(), 1200);
-            } else {
-                msg.className = 'ml-3 text-sm text-red-400';
-                msg.textContent = data.error || 'Error saving status.';
-            }
-        } catch {
-            msg.className = 'ml-3 text-sm text-red-400';
-            msg.textContent = 'Network error. Try again.';
-        }
-        btn.disabled = false;
+        await submitAdminForm(auctionForm, '/admin/auctions/update', document.getElementById('auction-msg'));
     });
 }
 
