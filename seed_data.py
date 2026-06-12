@@ -3,14 +3,15 @@
 # PURPOSE: Idempotent development seed — one Limestone mineral with
 #          two royalty rates and one DMF rate, all clearly marked as
 #          PLACEHOLDER pending father verification in Phase 0.
+#          Also seeds a dev superadmin if DEV_SUPERADMIN_PHONE is set.
 # RUN:     python seed_data.py
 # LAST UPDATED: Phase 1
 # ============================================================
 
-import sys
+import os
 from datetime import date
 from app import create_app, db
-from app.models import Mineral, Rate
+from app.models import Mineral, Rate, User
 
 
 # ------------------------------------------------------------
@@ -62,6 +63,40 @@ def insert_rate_if_absent(notification_number: str, **kwargs) -> None:
     print(f"  Rate '{notification_number}' inserted")
 
 
+def seed_superadmin() -> None:
+    """
+    PURPOSE  : Create a dev superadmin user if DEV_SUPERADMIN_PHONE is set.
+               Idempotent — safe to re-run; skips if the phone already exists.
+    RECEIVES : None — reads DEV_SUPERADMIN_PHONE from the environment
+    RETURNS  : None
+    SECURITY : Never hardcodes a phone number. Set DEV_SUPERADMIN_PHONE in
+               .env (git-ignored). Never commit a real phone to the repo.
+    LEGAL    : Dev-only utility; must not run against a production DB.
+    """
+    phone = os.environ.get('DEV_SUPERADMIN_PHONE', '').strip()
+    if not phone:
+        print("  DEV_SUPERADMIN_PHONE not set — skipping superadmin seed")
+        print("  (Set it in .env to create a local superadmin account)")
+        return
+
+    existing = User.query.filter_by(phone=phone).first()
+    if existing:
+        if existing.role != 'superadmin':
+            existing.role = 'superadmin'
+            print(f"  User {phone[-4:]:>4} role upgraded to superadmin")
+        else:
+            print(f"  Superadmin ****{phone[-4:]} already exists — skipping")
+        return
+
+    admin = User(
+        phone=phone,
+        role='superadmin',
+        subscription_tier='free',
+    )
+    db.session.add(admin)
+    print(f"  Superadmin ****{phone[-4:]} created")
+
+
 # ------------------------------------------------------------
 # MAIN
 # ------------------------------------------------------------
@@ -76,22 +111,20 @@ def seed() -> None:
     SECURITY : No user-supplied input; runs only in app context.
                Placeholder data is clearly labelled — never shown as
                verified rates to users.
-    LEGAL    : ⚠️ ALL values are PLACEHOLDERS.  Father must verify exact
-               rates against DMG notifications before client-facing use.
+    LEGAL    : ⚠️ ALL rate values are PLACEHOLDERS.  Father must verify
+               exact rates against DMG notifications before client-facing use.
     """
     app = create_app()
     with app.app_context():
-        # db.create_all() is intentional: migration 50e5a317196b was generated
-        # when the dev DB already had tables from an earlier db.create_all() call
-        # but no alembic_version row. Autogenerate mis-classified all existing
-        # tables as "new", so the migration re-declares them. Running flask db
-        # upgrade on a fresh empty DB therefore fails after d35d6dec50ab creates
-        # the tables (50e5a317196b tries to re-create them — SQLite rejects it),
-        # leaving alembic_version recorded but all application tables absent.
-        # db.create_all() here bypasses Alembic and is idempotent: it only
-        # creates tables that do not yet exist, making this script safe to run
-        # as the single dev-setup command: python seed_data.py
+        # db.create_all() is intentional: the Alembic migration chain was
+        # repaired on 2026-06-12 (50e5a317196b now creates only the 3 EC
+        # tables; b7f3a1d9c2e8 adds auction_status). For local dev this
+        # script remains the one-command setup — db.create_all() is idempotent
+        # and picks up any model changes not yet in a migration.
         db.create_all()
+
+        print("\n── Superadmin ────────────────────────────────────────")
+        seed_superadmin()
 
         print("\n── Minerals ──────────────────────────────────────────")
         limestone = get_or_create_mineral('Limestone', 'minor')
@@ -154,10 +187,12 @@ def seed() -> None:
         # ── Final count report ─────────────────────────────────
         mineral_count = Mineral.query.count()
         rate_count = Rate.query.count()
+        user_count = User.query.count()
         print(f"\n── Done ──────────────────────────────────────────────")
         print(f"  Mineral rows : {mineral_count}")
         print(f"  Rate rows    : {rate_count}")
-        print(f"\n⚠️  All values are PLACEHOLDERS — father must verify")
+        print(f"  User rows    : {user_count}")
+        print(f"\n⚠️  All rate values are PLACEHOLDERS — father must verify")
         print(f"   against DMG notifications before client-facing use.\n")
 
 

@@ -48,6 +48,11 @@
                     <a href="{{ url_for('main.auctions') }}"
                        class="text-slate-300 hover:text-amber-400 transition"
                        data-i18n="nav_auctions">Auctions</a>
+                    {% if current_user.role == 'superadmin' %}
+                    <a href="{{ url_for('admin.overview') }}"
+                       class="text-amber-400 hover:text-amber-300 transition"
+                       data-i18n="nav_admin">Admin</a>
+                    {% endif %}
                     <a href="{{ url_for('auth.logout') }}"
                        class="text-slate-400 hover:text-red-400 transition"
                        data-i18n="nav_logout">Logout</a>
