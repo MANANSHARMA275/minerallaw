@@ -1,11 +1,20 @@
 # ============================================================
 # FILE: seed_data.py
-# PURPOSE: Idempotent development seed — one Limestone mineral with
-#          two royalty rates and one DMF rate, all clearly marked as
-#          PLACEHOLDER pending father verification in Phase 0.
+# PURPOSE: Idempotent development seed — 11 Rajasthan minor minerals
+#          (Limestone + 10 new), each with one royalty rate and one DMF
+#          rate, all clearly marked as PLACEHOLDER pending father
+#          verification in Phase 0.
 #          Also seeds a dev superadmin if DEV_SUPERADMIN_PHONE is set.
 # RUN:     python seed_data.py
 # LAST UPDATED: Phase 1
+# ============================================================
+#
+# SCHEMA NOTE (do not implement yet):
+# Rajasthan royalty varies by DISTRICT and by END-USE (e.g. masonry
+# stone ₹30 Sikar vs ₹23 other districts; ₹100 for cobbles).  The
+# current Rate model is one-rate-per-mineral-per-state.  Father to
+# advise in Phase 0 whether district/use-type columns are needed before
+# real rates are entered.
 # ============================================================
 
 import os
@@ -103,9 +112,11 @@ def seed_superadmin() -> None:
 
 def seed() -> None:
     """
-    PURPOSE  : Populate dev database with one Limestone mineral and
-               three placeholder rates (2 royalty + 1 DMF).
-               Safe to re-run — all writes are guarded by name/key checks.
+    PURPOSE  : Populate dev database with 11 Rajasthan minor minerals
+               (Limestone already verified as present; 10 new ones added
+               as PLACEHOLDER) each with one royalty Rate and one DMF
+               Rate.  Safe to re-run — all writes are guarded by
+               name/notification_number checks.
     RECEIVES : None — reads app context from create_app()
     RETURNS  : None
     SECURITY : No user-supplied input; runs only in app context.
@@ -127,7 +138,17 @@ def seed() -> None:
         seed_superadmin()
 
         print("\n── Minerals ──────────────────────────────────────────")
-        limestone = get_or_create_mineral('Limestone', 'minor')
+        limestone       = get_or_create_mineral('Limestone',     'minor')
+        marble          = get_or_create_mineral('Marble',        'minor')
+        granite         = get_or_create_mineral('Granite',       'minor')
+        sandstone       = get_or_create_mineral('Sandstone',     'minor')
+        masonry_stone   = get_or_create_mineral('Masonry Stone', 'minor')
+        bajri           = get_or_create_mineral('Bajri',         'minor')
+        kankar          = get_or_create_mineral('Kankar',        'minor')
+        diorite         = get_or_create_mineral('Diorite',       'minor')
+        brick_earth     = get_or_create_mineral('Brick Earth',   'minor')
+        ordinary_sand   = get_or_create_mineral('Ordinary Sand', 'minor')
+        murram          = get_or_create_mineral('Murram',        'minor')
 
         print("\n── Rates ─────────────────────────────────────────────")
 
@@ -182,6 +203,46 @@ def seed() -> None:
             effective_to=None,
         )
 
+        # ── New minor minerals — ALL PLACEHOLDER rates ─────────
+        # Each entry: one royalty rate (50.00/tonne) + one DMF rate (10%).
+        # Values are deliberately fake. Father verifies against official
+        # DMG Rajasthan royalty schedule before any client-facing use.
+        _NEW_MINERALS = [
+            ('MARBLE',        marble),
+            ('GRANITE',       granite),
+            ('SANDSTONE',     sandstone),
+            ('MASONRY-STONE', masonry_stone),
+            ('BAJRI',         bajri),
+            ('KANKAR',        kankar),
+            ('DIORITE',       diorite),
+            ('BRICK-EARTH',   brick_earth),
+            ('ORDINARY-SAND', ordinary_sand),
+            ('MURRAM',        murram),
+        ]
+        for key, mineral in _NEW_MINERALS:
+            # ⚠️ PLACEHOLDER royalty — father verifies exact rate
+            insert_rate_if_absent(
+                notification_number=f'PLACEHOLDER-DMG-{key}/2022/01',
+                mineral_id=mineral.id,
+                state='Rajasthan',
+                rate_type='royalty',
+                value=50.00,
+                unit='per_tonne',
+                effective_from=date(2022, 1, 1),
+                effective_to=None,
+            )
+            # ⚠️ PLACEHOLDER DMF — 10% convention, father confirms
+            insert_rate_if_absent(
+                notification_number=f'PLACEHOLDER-DMG-DMF-{key}/2022/01',
+                mineral_id=mineral.id,
+                state='Rajasthan',
+                rate_type='dmf',
+                value=10.00,            # 10% — PERCENTAGE CONVENTION
+                unit='percent',
+                effective_from=date(2022, 1, 1),
+                effective_to=None,
+            )
+
         db.session.commit()
 
         # ── Final count report ─────────────────────────────────
@@ -192,6 +253,7 @@ def seed() -> None:
         print(f"  Mineral rows : {mineral_count}")
         print(f"  Rate rows    : {rate_count}")
         print(f"  User rows    : {user_count}")
+        print(f"  (11 Rajasthan minor minerals: 1 existing + 10 new PLACEHOLDER)")
         print(f"\n⚠️  All rate values are PLACEHOLDERS — father must verify")
         print(f"   against DMG notifications before client-facing use.\n")
 
