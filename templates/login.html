@@ -8,41 +8,39 @@
 
     <!-- Logo -->
     <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-yellow-400">MineralLaw.in</h1>
-      <p class="text-gray-400 mt-2 text-sm">Mining compliance, simplified.</p>
+      <h1 class="text-3xl font-bold text-amber-600">MineralLaw.in</h1>
+      <p class="text-slate-500 mt-2 text-sm">Mining compliance, simplified.</p>
     </div>
 
     <!-- Error banner -->
     {% if error %}
-    <div class="mb-4 bg-red-900 border border-red-600 text-red-200 rounded px-4 py-3 text-sm">
+    <div class="mb-4 bg-red-50 border border-red-300 text-red-800 rounded px-4 py-3 text-sm">
       {{ error }}
     </div>
     {% endif %}
 
     <!-- Card -->
-    <div class="rounded-lg shadow-xl p-8 border border-slate-700"
-         style="background-color: #1e293b;">
+    <div class="bg-white rounded-lg shadow-md p-8 border border-slate-200">
 
       <!-- STEP 1: Phone input -->
       <div id="step-phone">
-        <h2 class="text-xl font-semibold text-white mb-1">Sign In</h2>
-        <p class="text-gray-400 text-sm mb-6">
+        <h2 class="text-xl font-semibold text-slate-900 mb-1">Sign In</h2>
+        <p class="text-slate-500 text-sm mb-6">
           Enter your mobile number to receive an OTP.
         </p>
 
         <div id="phone-error"
-             class="hidden mb-4 bg-red-900 border border-red-600 text-red-200
+             class="hidden mb-4 bg-red-50 border border-red-300 text-red-800
                     rounded px-4 py-3 text-sm">
         </div>
 
         <div class="mb-4">
-          <label class="block text-gray-300 text-sm mb-2" for="phone-input">
+          <label class="block text-slate-700 text-sm mb-2" for="phone-input">
             Mobile Number
           </label>
           <div class="flex">
-            <span style="background-color: #334155; color: #94a3b8;"
-                  class="border border-r-0 border-slate-600 rounded-l px-3
-                         flex items-center text-sm">
+            <span class="bg-slate-100 text-slate-500 border border-r-0 border-slate-300
+                         rounded-l px-3 flex items-center text-sm">
               +91
             </span>
             <input
@@ -51,20 +49,19 @@
               inputmode="numeric"
               maxlength="10"
               placeholder="9876543210"
-              style="background-color: #334155; color: white; caret-color: white;"
-              class="flex-1 border border-slate-600 rounded-r px-4 py-3
-                     focus:outline-none focus:ring-2 focus:ring-yellow-400
+              class="flex-1 bg-white text-slate-900 border border-slate-300 rounded-r px-4 py-3
+                     focus:outline-none focus:ring-2 focus:ring-amber-400
                      text-lg tracking-widest"
             />
           </div>
-          <p class="text-gray-500 text-xs mt-1">
+          <p class="text-slate-400 text-xs mt-1">
             10-digit mobile number, without country code.
           </p>
         </div>
 
         <button
           id="send-otp-btn"
-          class="w-full bg-yellow-400 hover:bg-yellow-500 text-slate-900
+          class="w-full bg-amber-400 hover:bg-amber-300 text-slate-900
                  font-semibold py-3 rounded transition-colors duration-150
                  disabled:opacity-50 disabled:cursor-not-allowed">
           Send OTP
@@ -73,18 +70,18 @@
 
       <!-- STEP 2: OTP input -->
       <div id="step-otp" class="hidden">
-        <h2 class="text-xl font-semibold text-white mb-1">Enter OTP</h2>
-        <p id="otp-subtitle" class="text-gray-400 text-sm mb-6">
+        <h2 class="text-xl font-semibold text-slate-900 mb-1">Enter OTP</h2>
+        <p id="otp-subtitle" class="text-slate-500 text-sm mb-6">
           OTP sent to your mobile number.
         </p>
 
         <div id="otp-error"
-             class="hidden mb-4 bg-red-900 border border-red-600 text-red-200
+             class="hidden mb-4 bg-red-50 border border-red-300 text-red-800
                     rounded px-4 py-3 text-sm">
         </div>
 
         <div class="mb-4">
-          <label class="block text-gray-300 text-sm mb-2" for="otp-input">
+          <label class="block text-slate-700 text-sm mb-2" for="otp-input">
             6-Digit OTP
           </label>
           <input
@@ -93,17 +90,16 @@
             inputmode="numeric"
             maxlength="6"
             placeholder="_ _ _ _ _ _"
-            style="background-color: #334155; color: white; caret-color: white;"
-            class="w-full border border-slate-600 rounded px-4 py-3
-                   focus:outline-none focus:ring-2 focus:ring-yellow-400
+            class="w-full bg-white text-slate-900 border border-slate-300 rounded px-4 py-3
+                   focus:outline-none focus:ring-2 focus:ring-amber-400
                    text-2xl tracking-widest text-center"
           />
-          <p class="text-gray-500 text-xs mt-1">OTP is valid for 5 minutes.</p>
+          <p class="text-slate-400 text-xs mt-1">OTP is valid for 5 minutes.</p>
         </div>
 
         <button
           id="verify-otp-btn"
-          class="w-full bg-yellow-400 hover:bg-yellow-500 text-slate-900
+          class="w-full bg-amber-400 hover:bg-amber-300 text-slate-900
                  font-semibold py-3 rounded transition-colors duration-150
                  disabled:opacity-50 disabled:cursor-not-allowed">
           Verify & Login
@@ -111,7 +107,7 @@
 
         <button
           id="resend-btn"
-          class="w-full mt-3 text-gray-400 hover:text-yellow-400 text-sm
+          class="w-full mt-3 text-slate-500 hover:text-amber-600 text-sm
                  py-2 transition-colors duration-150">
           Resend OTP
         </button>
@@ -119,11 +115,11 @@
 
     </div>
 
-    <p class="text-center text-gray-600 text-xs mt-6">
+    <p class="text-center text-slate-400 text-xs mt-6">
       By signing in you agree to our
-      <a href="/terms" class="text-yellow-400 hover:underline">Terms of Service</a>
+      <a href="/terms" class="text-amber-600 hover:underline">Terms of Service</a>
       and
-      <a href="/privacy" class="text-yellow-400 hover:underline">Privacy Policy</a>.
+      <a href="/privacy" class="text-amber-600 hover:underline">Privacy Policy</a>.
     </p>
 
   </div>

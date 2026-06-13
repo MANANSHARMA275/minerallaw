@@ -8,15 +8,15 @@
     <!-- ── Header ─────────────────────────────────────────── -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-slate-100">
+            <h1 class="text-2xl font-bold text-slate-900">
                 Welcome{% if user.name %}, {{ user.name }}{% endif %}
             </h1>
-            <p class="text-slate-400 text-sm mt-1">{{ user.phone }}</p>
+            <p class="text-slate-500 text-sm mt-1">{{ user.phone }}</p>
         </div>
 
         <div class="flex items-center gap-3">
             {% if user.subscription_tier == 'free' %}
-                <span class="bg-slate-700 text-slate-300 text-xs font-medium px-3 py-1 rounded-full">
+                <span class="bg-slate-100 text-slate-600 text-xs font-medium px-3 py-1 rounded-full">
                     Free Plan
                 </span>
             {% elif user.subscription_tier == 'pro' %}
@@ -34,24 +34,24 @@
             {% endif %}
 
             <a href="{{ url_for('auth.logout') }}"
-               class="text-slate-400 hover:text-white text-sm transition-colors"
+               class="text-slate-500 hover:text-slate-900 text-sm transition-colors"
                data-i18n="dash_signout">Sign Out</a>
         </div>
     </div>
 
     <!-- ── Compliance Health (placeholder) ────────────────── -->
-    <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 mb-6">
-        <h2 class="text-slate-100 font-semibold mb-3" data-i18n="dash_health">Compliance Health</h2>
+    <div class="bg-white border border-slate-200 rounded-xl p-6 mb-6 shadow-sm">
+        <h2 class="text-slate-900 font-semibold mb-3" data-i18n="dash_health">Compliance Health</h2>
         <div class="flex items-center gap-4">
             <div class="w-16 h-16 rounded-full border-4 border-amber-400 flex items-center
-                        justify-center text-amber-400 font-bold text-xl flex-shrink-0">
+                        justify-center text-amber-600 font-bold text-xl flex-shrink-0">
                 —
             </div>
             <div>
-                <p class="text-slate-300 text-sm">
+                <p class="text-slate-700 text-sm">
                     Add your mine details to enable compliance tracking.
                 </p>
-                <p class="text-slate-500 text-xs mt-1">
+                <p class="text-slate-400 text-xs mt-1">
                     Deadline tracking, overdue alerts, and automated reminders
                     will appear here once your mine profile is set up.
                 </p>
@@ -62,53 +62,53 @@
     <!-- ── Quick Actions ──────────────────────────────────── -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <a href="{{ url_for('main.calculator') }}"
-           class="bg-slate-800 border border-slate-700 rounded-xl p-5
+           class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm
                   hover:border-amber-400 transition group">
-            <div class="text-amber-400 text-2xl mb-2">🧮</div>
-            <h3 class="text-slate-100 font-medium group-hover:text-amber-400 transition"
+            <div class="text-amber-500 text-2xl mb-2">🧮</div>
+            <h3 class="text-slate-900 font-medium group-hover:text-amber-600 transition"
                 data-i18n="dash_calculator">Fee Calculator</h3>
-            <p class="text-slate-500 text-xs mt-1">Royalty, DMF &amp; NPV estimates</p>
+            <p class="text-slate-400 text-xs mt-1">Royalty, DMF &amp; NPV estimates</p>
         </a>
 
         <a href="{{ url_for('main.ask_expert') }}"
-           class="bg-slate-800 border border-slate-700 rounded-xl p-5
+           class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm
                   hover:border-amber-400 transition group">
-            <div class="text-amber-400 text-2xl mb-2">👨‍💼</div>
-            <h3 class="text-slate-100 font-medium group-hover:text-amber-400 transition"
+            <div class="text-amber-500 text-2xl mb-2">👨‍💼</div>
+            <h3 class="text-slate-900 font-medium group-hover:text-amber-600 transition"
                 data-i18n="dash_expert">Ask Expert</h3>
-            <p class="text-slate-500 text-xs mt-1">30 years of Rajasthan mining expertise</p>
+            <p class="text-slate-400 text-xs mt-1">30 years of Rajasthan mining expertise</p>
         </a>
 
         <a href="{{ url_for('main.checklist') }}"
-           class="bg-slate-800 border border-slate-700 rounded-xl p-5
+           class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm
                   hover:border-amber-400 transition group">
-            <div class="text-amber-400 text-2xl mb-2">✅</div>
-            <h3 class="text-slate-100 font-medium group-hover:text-amber-400 transition"
+            <div class="text-amber-500 text-2xl mb-2">✅</div>
+            <h3 class="text-slate-900 font-medium group-hover:text-amber-600 transition"
                 data-i18n="dash_checklist">Compliance Checklist</h3>
-            <p class="text-slate-500 text-xs mt-1">Step-by-step EC &amp; lease guidance</p>
+            <p class="text-slate-400 text-xs mt-1">Step-by-step EC &amp; lease guidance</p>
         </a>
     </div>
 
     <!-- ── Recent Activity ────────────────────────────────── -->
-    <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 mb-6">
-        <h2 class="text-slate-100 font-semibold mb-4" data-i18n="dash_activity">Recent Activity</h2>
+    <div class="bg-white border border-slate-200 rounded-xl p-6 mb-6 shadow-sm">
+        <h2 class="text-slate-900 font-semibold mb-4" data-i18n="dash_activity">Recent Activity</h2>
 
         {% if recent_activity %}
         <ul class="space-y-3">
             {% for log in recent_activity %}
             <li class="flex items-start justify-between gap-4 py-3 border-b
-                        border-slate-700 last:border-0">
+                        border-slate-100 last:border-0">
                 <div>
-                    <p class="text-slate-200 text-sm font-medium">
+                    <p class="text-slate-800 text-sm font-medium">
                         {{ log.action.replace('_', ' ').title() }}
                     </p>
                     {% if log.new_value %}
-                    <p class="text-slate-500 text-xs mt-0.5 truncate max-w-xs">
+                    <p class="text-slate-400 text-xs mt-0.5 truncate max-w-xs">
                         {{ log.new_value[:80] }}{% if log.new_value|length > 80 %}…{% endif %}
                     </p>
                     {% endif %}
                 </div>
-                <p class="text-slate-500 text-xs shrink-0">
+                <p class="text-slate-400 text-xs shrink-0">
                     {{ log.timestamp.strftime('%d %b, %H:%M') if log.timestamp else '' }}
                 </p>
             </li>
@@ -117,8 +117,8 @@
         {% else %}
         <div class="text-center py-8">
             <div class="text-4xl mb-3">📋</div>
-            <p class="text-slate-400 text-sm">No activity yet.</p>
-            <p class="text-slate-600 text-xs mt-2">
+            <p class="text-slate-500 text-sm">No activity yet.</p>
+            <p class="text-slate-400 text-xs mt-2">
                 Your fee calculations and other actions will appear here.
             </p>
         </div>
@@ -126,55 +126,55 @@
     </div>
 
     <!-- ── Account Info ───────────────────────────────────── -->
-    <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
-        <h2 class="text-slate-100 font-semibold mb-4" data-i18n="dash_account">Account</h2>
+    <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+        <h2 class="text-slate-900 font-semibold mb-4" data-i18n="dash_account">Account</h2>
 
         <div class="space-y-0 text-sm">
-            <div class="flex justify-between items-center py-3 border-b border-slate-700">
-                <span class="text-slate-400" data-i18n="dash_phone">Phone</span>
-                <span class="text-slate-100">{{ user.phone }}</span>
+            <div class="flex justify-between items-center py-3 border-b border-slate-100">
+                <span class="text-slate-500" data-i18n="dash_phone">Phone</span>
+                <span class="text-slate-900">{{ user.phone }}</span>
             </div>
             {% if user.name %}
-            <div class="flex justify-between items-center py-3 border-b border-slate-700">
-                <span class="text-slate-400" data-i18n="dash_name">Name</span>
-                <span class="text-slate-100">{{ user.name }}</span>
+            <div class="flex justify-between items-center py-3 border-b border-slate-100">
+                <span class="text-slate-500" data-i18n="dash_name">Name</span>
+                <span class="text-slate-900">{{ user.name }}</span>
             </div>
             {% endif %}
             {% if user.email %}
-            <div class="flex justify-between items-center py-3 border-b border-slate-700">
-                <span class="text-slate-400" data-i18n="dash_email">Email</span>
-                <span class="text-slate-100">{{ user.email }}</span>
+            <div class="flex justify-between items-center py-3 border-b border-slate-100">
+                <span class="text-slate-500" data-i18n="dash_email">Email</span>
+                <span class="text-slate-900">{{ user.email }}</span>
             </div>
             {% endif %}
             {% if user.company_name %}
-            <div class="flex justify-between items-center py-3 border-b border-slate-700">
-                <span class="text-slate-400" data-i18n="dash_company">Company</span>
-                <span class="text-slate-100">{{ user.company_name }}</span>
+            <div class="flex justify-between items-center py-3 border-b border-slate-100">
+                <span class="text-slate-500" data-i18n="dash_company">Company</span>
+                <span class="text-slate-900">{{ user.company_name }}</span>
             </div>
             {% endif %}
-            <div class="flex justify-between items-center py-3 border-b border-slate-700">
-                <span class="text-slate-400" data-i18n="dash_plan">Plan</span>
-                <span class="text-slate-100 capitalize">{{ user.subscription_tier }}</span>
+            <div class="flex justify-between items-center py-3 border-b border-slate-100">
+                <span class="text-slate-500" data-i18n="dash_plan">Plan</span>
+                <span class="text-slate-900 capitalize">{{ user.subscription_tier }}</span>
             </div>
             <div class="flex justify-between items-center py-3">
-                <span class="text-slate-400" data-i18n="dash_member_since">Member since</span>
-                <span class="text-slate-100">
+                <span class="text-slate-500" data-i18n="dash_member_since">Member since</span>
+                <span class="text-slate-900">
                     {{ user.created_at.strftime('%d %b %Y') if user.created_at else 'N/A' }}
                 </span>
             </div>
         </div>
 
         <!-- DPDP: Data deletion right -->
-        <div class="mt-6 pt-4 border-t border-slate-700">
-            <h3 class="text-slate-300 text-sm font-medium mb-2"
+        <div class="mt-6 pt-4 border-t border-slate-100">
+            <h3 class="text-slate-700 text-sm font-medium mb-2"
                 data-i18n="dash_data_rights">Your Data Rights (DPDP Act 2023)</h3>
-            <p class="text-slate-500 text-xs mb-4">
+            <p class="text-slate-400 text-xs mb-4">
                 You can request permanent deletion of all your data at any time.
                 Deletion is processed within 30 days. Financial records are retained
                 for 7 years as required by GST law.
             </p>
             <button id="delete-data-btn"
-                    class="bg-red-900 hover:bg-red-800 border border-red-700 text-red-300
+                    class="bg-red-50 hover:bg-red-100 border border-red-300 text-red-700
                            text-sm px-4 py-2 rounded transition">
                 Request Data Deletion
             </button>

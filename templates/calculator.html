@@ -5,31 +5,31 @@
 {% block content %}
 <div class="max-w-3xl mx-auto">
 
-  <h1 class="text-2xl font-bold text-white mb-1" data-i18n="calc_title">Mining Fee Calculator</h1>
-  <p class="text-slate-400 text-sm mb-8" data-i18n="calc_subtitle">
+  <h1 class="text-2xl font-bold text-slate-900 mb-1" data-i18n="calc_title">Mining Fee Calculator</h1>
+  <p class="text-slate-500 text-sm mb-8" data-i18n="calc_subtitle">
     Estimate royalty, DMF, and NPV for Rajasthan minor mineral mines.
     Every result shows the applicable notification number and date.
   </p>
 
   <!-- ── INPUT FORM ──────────────────────────────────────────── -->
-  <form id="calc-form" class="bg-slate-800 border border-slate-700 rounded-lg p-6 mb-6">
+  <form id="calc-form" class="bg-white border border-slate-200 rounded-lg p-6 mb-6 shadow-sm">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <h2 class="text-white font-semibold mb-5" data-i18n="calc_mine_details">Mine Details</h2>
+    <h2 class="text-slate-900 font-semibold mb-5" data-i18n="calc_mine_details">Mine Details</h2>
 
     <!-- Error section -->
     <div id="error-section"
-         class="hidden mb-4 bg-red-900 border border-red-600 text-red-200 rounded px-4 py-3 text-sm">
+         class="hidden mb-4 bg-red-50 border border-red-400 text-red-800 rounded px-4 py-3 text-sm">
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
       <!-- Mineral dropdown — populated from DB -->
       <div>
-        <label class="block text-slate-300 text-sm mb-2" for="mineral_id"
+        <label class="block text-slate-700 text-sm mb-2" for="mineral_id"
                data-i18n="calc_mineral">Mineral Type</label>
         <select id="mineral_id" name="mineral_id"
-                class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-3
-                       text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+                class="w-full bg-white border border-slate-300 rounded px-3 py-3
+                       text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400">
           <option value="">Select mineral…</option>
           {% for m in minerals %}
           <option value="{{ m.id }}">{{ m.name }}</option>
@@ -39,46 +39,46 @@
 
       <!-- Target date (optional) -->
       <div>
-        <label class="block text-slate-300 text-sm mb-2" for="target_date">
+        <label class="block text-slate-700 text-sm mb-2" for="target_date">
           <span data-i18n="calc_date">Rate Date</span>
-          <span class="text-slate-500 font-normal">(leave blank for today's rate)</span>
+          <span class="text-slate-400 font-normal">(leave blank for today's rate)</span>
         </label>
         <input type="date" id="target_date" name="target_date"
                min="1950-01-01"
                placeholder="Leave blank for today's rate"
-               class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-3
-                      text-white focus:outline-none focus:ring-2 focus:ring-amber-400" />
+               class="w-full bg-white border border-slate-300 rounded px-3 py-3
+                      text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400" />
       </div>
 
       <!-- Area -->
       <div>
-        <label class="block text-slate-300 text-sm mb-2" for="area_ha"
+        <label class="block text-slate-700 text-sm mb-2" for="area_ha"
                data-i18n="calc_area">Mine Area (hectares)</label>
         <input type="number" id="area_ha" name="area_ha"
                min="0.1" step="0.1" placeholder="e.g. 20"
-               class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-3
-                      text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+               class="w-full bg-white border border-slate-300 rounded px-3 py-3
+                      text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400" />
       </div>
 
       <!-- Annual production -->
       <div>
-        <label class="block text-slate-300 text-sm mb-2" for="production_tpa"
+        <label class="block text-slate-700 text-sm mb-2" for="production_tpa"
                data-i18n="calc_production">Annual Production (tonnes/year)</label>
         <input type="number" id="production_tpa" name="production_tpa"
                min="1" step="1" placeholder="e.g. 50000"
-               class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-3
-                      text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+               class="w-full bg-white border border-slate-300 rounded px-3 py-3
+                      text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400" />
       </div>
 
       <!-- Lease period -->
       <div class="sm:col-span-2">
-        <label class="block text-slate-300 text-sm mb-2" for="lease_years">
+        <label class="block text-slate-700 text-sm mb-2" for="lease_years">
           <span data-i18n="calc_lease">Lease Period (years)</span>
-          <span class="text-slate-500 font-normal">(for NPV calculation)</span>
+          <span class="text-slate-400 font-normal">(for NPV calculation)</span>
         </label>
         <select id="lease_years" name="lease_years"
-                class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-3
-                       text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+                class="w-full bg-white border border-slate-300 rounded px-3 py-3
+                       text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400">
           <option value="5" selected>5 years</option>
           <option value="10">10 years</option>
           <option value="20">20 years</option>
@@ -98,67 +98,67 @@
   <!-- ── RESULTS (hidden until calculation runs) ─────────────── -->
   <div id="result-section" class="hidden">
 
-    <!-- ⚠️ PLACEHOLDER warning — orange, prominent -->
-    <div class="mb-4 bg-orange-900 border-2 border-orange-500 text-orange-100
+    <!-- ⚠️ PLACEHOLDER warning — amber, prominent, high-contrast on light bg -->
+    <div class="mb-4 bg-amber-50 border-2 border-amber-500 text-amber-900
                 rounded-lg px-5 py-4">
-      <p class="font-bold text-orange-300 text-sm mb-1">⚠️ Placeholder Rates Active</p>
-      <p class="text-sm">
+      <p class="font-bold text-amber-800 text-sm mb-1">⚠️ Placeholder Rates Active</p>
+      <p class="text-sm text-amber-900">
         All rates are <strong>sample values for development testing only</strong>.
         Father must verify every figure against official DMG notifications before
         sharing any result with a real client.
       </p>
     </div>
 
-    <div class="bg-slate-800 border border-slate-700 rounded-lg p-6 mb-4">
-      <h2 class="text-white font-semibold mb-5 flex items-center justify-between">
+    <div class="bg-white border border-slate-200 rounded-lg p-6 mb-4 shadow-sm">
+      <h2 class="text-slate-900 font-semibold mb-5 flex items-center justify-between">
         <span data-i18n="calc_results">Calculation Results</span>
         <button id="print-calc-btn"
-                class="text-slate-400 hover:text-white text-sm font-normal
-                       border border-slate-600 px-3 py-1 rounded transition-colors no-print">
+                class="text-slate-500 hover:text-slate-900 text-sm font-normal
+                       border border-slate-300 px-3 py-1 rounded transition-colors no-print">
           🖨 Print
         </button>
       </h2>
 
       <!-- Summary cards -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div class="bg-slate-700 rounded-lg p-4 text-center">
-          <p class="text-slate-400 text-xs mb-1" data-i18n="calc_royalty">Annual Royalty</p>
-          <p id="royalty-annual" class="text-white text-xl font-bold">—</p>
+        <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center">
+          <p class="text-slate-500 text-xs mb-1" data-i18n="calc_royalty">Annual Royalty</p>
+          <p id="royalty-annual" class="text-slate-900 text-xl font-bold">—</p>
         </div>
-        <div class="bg-slate-700 rounded-lg p-4 text-center">
-          <p class="text-slate-400 text-xs mb-1" data-i18n="calc_dmf">Annual DMF</p>
-          <p id="dmf-annual" class="text-white text-xl font-bold">—</p>
+        <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center">
+          <p class="text-slate-500 text-xs mb-1" data-i18n="calc_dmf">Annual DMF</p>
+          <p id="dmf-annual" class="text-slate-900 text-xl font-bold">—</p>
         </div>
-        <div class="bg-slate-700 rounded-lg p-4 text-center">
-          <p class="text-slate-400 text-xs mb-1" data-i18n="calc_total">Total Annual Govt. Payment</p>
-          <p id="total-annual" class="text-amber-400 text-xl font-bold">—</p>
+        <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center">
+          <p class="text-slate-500 text-xs mb-1" data-i18n="calc_total">Total Annual Govt. Payment</p>
+          <p id="total-annual" class="text-amber-600 text-xl font-bold">—</p>
         </div>
       </div>
 
       <!-- NPV -->
-      <div class="bg-slate-700 rounded-lg p-4 text-center mb-6">
-        <p class="text-slate-400 text-xs mb-1">
+      <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center mb-6">
+        <p class="text-slate-500 text-xs mb-1">
           Net Present Value (NPV) — all payments over lease period @ 8% discount
         </p>
-        <p id="npv" class="text-white text-2xl font-bold">—</p>
+        <p id="npv" class="text-slate-900 text-2xl font-bold">—</p>
       </div>
 
       <!-- Breakdown table -->
       <table class="w-full text-sm">
         <thead>
-          <tr class="border-b border-slate-600">
-            <th class="text-slate-400 font-normal text-left py-2">Item</th>
-            <th class="text-slate-400 font-normal text-right py-2">Value</th>
+          <tr class="border-b border-slate-200">
+            <th class="text-slate-500 font-normal text-left py-2">Item</th>
+            <th class="text-slate-500 font-normal text-right py-2">Value</th>
           </tr>
         </thead>
-        <tbody id="breakdown-table" class="text-slate-300"></tbody>
+        <tbody id="breakdown-table" class="text-slate-700"></tbody>
       </table>
     </div>
 
-    <!-- ⚠️ Mandatory disclaimer — amber, PROMINENT -->
-    <div class="bg-amber-900 border-2 border-amber-500 rounded-lg px-5 py-4 mb-2">
-      <p class="text-amber-300 font-bold text-sm mb-1" data-i18n="calc_notice">Important Legal Notice</p>
-      <p id="disclaimer-text" class="text-amber-100 text-sm leading-relaxed">—</p>
+    <!-- ⚠️ Mandatory disclaimer — amber, PROMINENT, high-contrast -->
+    <div class="bg-amber-50 border-2 border-amber-500 rounded-lg px-5 py-4 mb-2">
+      <p class="text-amber-800 font-bold text-sm mb-1" data-i18n="calc_notice">Important Legal Notice</p>
+      <p id="disclaimer-text" class="text-amber-900 text-sm leading-relaxed">—</p>
     </div>
 
   </div><!-- /#result-section -->
@@ -222,33 +222,33 @@ calcBtn.addEventListener('click', async () => {
 
     // Breakdown table
     document.getElementById('breakdown-table').innerHTML = `
-      <tr class="border-b border-slate-700">
+      <tr class="border-b border-slate-100">
         <td class="py-2">Mineral</td>
         <td class="text-right">${data.mineral}</td>
       </tr>
-      <tr class="border-b border-slate-700">
+      <tr class="border-b border-slate-100">
         <td class="py-2">Area</td>
         <td class="text-right">${data.area_ha} ha</td>
       </tr>
-      <tr class="border-b border-slate-700">
+      <tr class="border-b border-slate-100">
         <td class="py-2">Annual Production</td>
         <td class="text-right">${Number(data.production_tpa).toLocaleString('en-IN')} TPA</td>
       </tr>
-      <tr class="border-b border-slate-700">
+      <tr class="border-b border-slate-100">
         <td class="py-2">Rate Date</td>
         <td class="text-right">${data.target_date}</td>
       </tr>
-      <tr class="border-b border-slate-700">
+      <tr class="border-b border-slate-100">
         <td class="py-2">Royalty Rate</td>
         <td class="text-right">₹${data.rate_per_tonne}/tonne</td>
       </tr>
-      <tr class="border-b border-slate-700">
+      <tr class="border-b border-slate-100">
         <td class="py-2">Lease Period</td>
         <td class="text-right">${data.lease_years} years</td>
       </tr>
       <tr>
-        <td class="py-2 text-slate-500 text-xs">Notification</td>
-        <td class="text-right text-slate-500 text-xs">${data.rate_info.notification}</td>
+        <td class="py-2 text-slate-400 text-xs">Notification</td>
+        <td class="text-right text-slate-400 text-xs">${data.rate_info.notification}</td>
       </tr>
     `;
 
