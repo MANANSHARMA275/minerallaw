@@ -337,11 +337,11 @@ def magic_login():
     phone = verify_magic_token(token)
 
     if not phone:
-        return redirect(url_for('main.login_page') + '?error=Link+expired.+Please+log+in+again.')
+        return redirect(url_for('main.login') + '?error=Link+expired.+Please+log+in+again.')
 
     user = User.query.filter_by(phone=phone).first()
     if not user:
-        return redirect(url_for('main.login_page') + '?error=Account+not+found.')
+        return redirect(url_for('main.login') + '?error=Account+not+found.')
 
     login_user(user, remember=True)
     user.last_login = datetime.utcnow()
