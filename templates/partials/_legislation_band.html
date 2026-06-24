@@ -1,0 +1,50 @@
+<!-- ============================================================ -->
+<!-- SECTION 4: THE RULES, KEPT CURRENT (legislation band)         -->
+<!-- ============================================================ -->
+<section class="py-12" data-reveal>
+    <h2 class="text-center text-2xl font-bold text-content mb-2"
+        data-i18n="leg_band_heading">
+        The Rules, Kept Current
+    </h2>
+    <p class="text-center text-faint mb-10" data-i18n="leg_band_subhead">
+        Rajasthan's mining regulations change often. We read every amendment and explain it plainly.
+    </p>
+
+    {% if key_legislation %}
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+        {% for item in key_legislation %}
+        <div class="bg-surface border border-edge rounded-xl p-5 shadow-sm">
+            <div class="flex items-start gap-3 flex-wrap mb-2">
+                <span class="font-semibold text-content text-sm leading-snug">
+                    {{ item.title }}
+                </span>
+                {% if item.source_reference %}
+                <span class="text-xs bg-accentSoft text-accentSoftTx border border-accentSoftEdge
+                             px-2 py-0.5 rounded font-mono flex-shrink-0">
+                    {{ item.source_reference }}
+                </span>
+                {% endif %}
+            </div>
+            <p class="text-muted text-sm leading-relaxed">
+                <span class="leg-en">{{ item.summary_en or '' }}</span>
+                <span class="leg-hi hidden">{{ item.summary_hi or item.summary_en or '' }}</span>
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-faint text-sm mb-8"
+       data-i18n="leg_band_empty">
+        Our legislation library is being verified by our expert and goes live shortly.
+    </p>
+    {% endif %}
+
+    <div class="text-center">
+        <a href="{{ url_for('main.legislation') }}"
+           class="inline-block bg-accent text-onAccent px-8 py-3 rounded-lg
+                  font-semibold text-base hover:bg-accentHover transition"
+           data-i18n="leg_band_cta">
+            Browse the Legislation Library →
+        </a>
+    </div>
+</section>

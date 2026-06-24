@@ -1,0 +1,68 @@
+<!-- ============================================================ -->
+<!-- SECTION 5: PRICING PREVIEW                                    -->
+<!-- ============================================================ -->
+<section class="py-12" data-reveal>
+    <h2 class="text-center text-2xl font-bold text-content mb-2"
+        data-i18n="pricing_heading">
+        Simple, Transparent Pricing
+    </h2>
+    <p class="text-center text-faint mb-10" data-i18n="pricing_subhead">
+        Less than the cost of a single penalty notice.
+    </p>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
+
+        <div class="bg-surface rounded-xl p-6 border border-edge shadow-sm text-center card-lift">
+            <p class="text-faint text-sm font-semibold uppercase mb-2">Free</p>
+            <p class="text-3xl font-bold text-content mb-1">₹0</p>
+            <p class="text-faint text-xs mb-4">Forever</p>
+            <ul class="text-muted text-sm text-left space-y-2 mb-6">
+                <li>✓ 5 calculations/month</li>
+                <li>✓ Compliance checklist</li>
+                <li class="text-faint">✗ Expert consultation</li>
+            </ul>
+            <a href="{{ url_for('main.login') }}"
+               class="block text-center border border-edgeStrong text-muted
+                      py-2 rounded hover:border-accent hover:text-accentTx transition text-sm">
+                Get Started
+            </a>
+        </div>
+
+        <div class="bg-accent rounded-xl p-6 border border-accentHover text-center relative card-lift">
+            <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-surface
+                         text-accentSoftTx text-xs font-semibold px-3 py-1 rounded-full
+                         border border-accent shadow-sm">
+                Most Popular
+            </span>
+            <p class="text-onAccent text-sm font-semibold uppercase mb-2">Pro</p>
+            <p class="text-3xl font-bold text-onAccent mb-1">₹999</p>
+            <p class="text-muted text-xs mb-4">per month</p>
+            <ul class="text-onAccent text-sm text-left space-y-2 mb-6">
+                <li>✓ Unlimited calculations</li>
+                <li>✓ Compliance calendar</li>
+                <li>✓ 2 expert queries/month</li>
+            </ul>
+            <a href="{{ url_for('main.login') }}"
+               class="block text-center bg-onAccent text-accent
+                      py-2 rounded font-semibold hover:bg-onAccentHover transition text-sm">
+                Start Free Trial
+            </a>
+        </div>
+
+        <div class="bg-surface rounded-xl p-6 border border-edge shadow-sm text-center card-lift">
+            <p class="text-faint text-sm font-semibold uppercase mb-2">Expert</p>
+            <p class="text-3xl font-bold text-content mb-1">₹2,999</p>
+            <p class="text-faint text-xs mb-4">per month</p>
+            <ul class="text-muted text-sm text-left space-y-2 mb-6">
+                <li>✓ Everything in Pro</li>
+                <li>✓ Unlimited consultations</li>
+                <li>✓ Document review</li>
+            </ul>
+            <a href="{{ url_for('main.pricing') }}"
+               class="block text-center border border-edgeStrong text-muted
+                      py-2 rounded hover:border-accent hover:text-accentTx transition text-sm">
+                Learn More
+            </a>
+        </div>
+
+    </div>
+</section>

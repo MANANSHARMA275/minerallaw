@@ -1,0 +1,78 @@
+/* ============================================================
+   MineralLaw.in — Motion & polish (Chunk C)
+   CSS-only effects for C1–C3. Scroll-reveal classes added at C4.
+   All values use existing colour tokens from theme.css — zero
+   new CSS custom properties in this file.
+   ============================================================ */
+
+/* ── C1: Background depth ─────────────────────────────────── */
+body {
+  background: linear-gradient(
+    180deg,
+    rgb(var(--canvas))   0%,
+    rgb(var(--surface2)) 100%
+  );
+  background-attachment: fixed;
+}
+
+/* ── C2: Card hover-lift ──────────────────────────────────── */
+.card-lift {
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+@media (hover: hover) {
+  .card-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgb(var(--edgeStrong) / 0.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-lift,
+  .card-lift:hover {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── C3: Toggle button micro-transitions ──────────────────── */
+#theme-toggle-btn,
+#lang-toggle-btn {
+  transition: color 180ms ease,
+              background-color 180ms ease,
+              border-color 180ms ease;
+}
+
+#theme-toggle-btn:hover,
+#lang-toggle-btn:hover {
+  background-color: rgb(var(--surface2));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #theme-toggle-btn,
+  #lang-toggle-btn {
+    transition: none !important;
+  }
+}
+
+/* ── C4: Scroll-reveal ────────────────────────────────────── */
+[data-reveal].reveal-pending {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 380ms ease, transform 380ms ease;
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 380ms ease, transform 380ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal].reveal-pending,
+  [data-reveal].is-revealed {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
