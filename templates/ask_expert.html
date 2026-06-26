@@ -6,15 +6,15 @@
 <div class="max-w-2xl mx-auto px-4 py-10">
 
     <div class="mb-8">
-        <h1 class="text-2xl font-bold text-slate-900 mb-2" data-i18n="expert_title">Ask an Expert</h1>
-        <p class="text-slate-500 text-sm" data-i18n="expert_subtitle">
+        <h1 class="text-2xl font-bold text-content mb-2" data-i18n="expert_title">Ask an Expert</h1>
+        <p class="text-faint text-sm" data-i18n="expert_subtitle">
             Get a response from a mining law specialist within 24 hours.
             Your query will open a pre-filled Gmail draft — just hit Send.
         </p>
     </div>
 
     <!-- Advocates Act disclaimer — amber, high-contrast -->
-    <div class="bg-amber-50 border border-amber-500 rounded-lg p-4 mb-8 text-xs text-amber-900">
+    <div class="bg-accentSoft border border-accent rounded-lg p-4 mb-8 text-xs text-accentSoftTx">
         <strong>Note:</strong> This is a compliance consultation service, not legal representation.
         As required under the Advocates Act 1961, responses constitute expert guidance
         only — not legal advice.
@@ -24,31 +24,31 @@
     <input type="hidden" id="csrf-token" name="csrf_token" value="{{ csrf_token() }}">
 
     <!-- Query form — updates Gmail link live via JS -->
-    <div class="bg-white border border-slate-200 rounded-xl p-6 mb-6 shadow-sm">
+    <div class="bg-surface border border-edge rounded-xl p-6 mb-6 shadow-sm">
         <div class="space-y-5">
 
             <div>
-                <label class="block text-slate-700 text-sm font-medium mb-1"
+                <label class="block text-muted text-sm font-medium mb-1"
                        data-i18n="expert_mineral">Mineral / Mine Type</label>
                 <input id="mineral-input"
                        type="text"
                        placeholder="e.g. Limestone, Sandstone, Sand"
                        value="{{ mineral }}"
-                       class="w-full bg-white border border-slate-300 text-slate-900
-                              rounded-lg px-4 py-2.5 text-sm placeholder-slate-400
-                              focus:outline-none focus:border-amber-400 transition">
+                       class="w-full bg-surface border border-edgeStrong text-content
+                              rounded-lg px-4 py-2.5 text-sm placeholder-faint
+                              focus:outline-none focus:border-accent transition">
             </div>
 
             <div>
-                <label class="block text-slate-700 text-sm font-medium mb-1"
+                <label class="block text-muted text-sm font-medium mb-1"
                        data-i18n="expert_question">Your Question</label>
                 <textarea id="query-input"
                           rows="5"
                           placeholder="Describe your compliance question in detail…"
-                          class="w-full bg-white border border-slate-300 text-slate-900
-                                 rounded-lg px-4 py-2.5 text-sm placeholder-slate-400
-                                 focus:outline-none focus:border-amber-400 transition resize-none">{{ query }}</textarea>
-                <p class="text-slate-400 text-xs mt-1">
+                          class="w-full bg-surface border border-edgeStrong text-content
+                                 rounded-lg px-4 py-2.5 text-sm placeholder-faint
+                                 focus:outline-none focus:border-accent transition resize-none">{{ query }}</textarea>
+                <p class="text-faint text-xs mt-1">
                     Include your mine area, production volume, and the specific deadline
                     or calculation you're unsure about.
                 </p>
@@ -64,9 +64,9 @@
     <div class="flex flex-col sm:flex-row gap-3 mb-3">
         <!-- Log Query (primary) -->
         <button id="log-query-btn"
-                class="flex items-center justify-center gap-2 flex-1 bg-amber-400
-                       text-slate-900 px-6 py-4 rounded-xl font-bold text-base
-                       hover:bg-amber-300 transition">
+                class="flex items-center justify-center gap-2 flex-1 bg-accent
+                       text-onAccent px-6 py-4 rounded-xl font-bold text-base
+                       hover:bg-accentHover transition">
             ✅ Log Query for Expert <span class="text-xs font-normal opacity-70">(Recommended)</span>
         </button>
 
@@ -75,40 +75,40 @@
            href="{{ gmail_link }}"
            target="_blank"
            rel="noopener noreferrer"
-           class="flex items-center justify-center gap-2 flex-1 border border-slate-300
-                  text-slate-600 px-6 py-4 rounded-xl font-semibold text-base
-                  hover:border-amber-500 hover:text-amber-600 transition">
+           class="flex items-center justify-center gap-2 flex-1 border border-edgeStrong
+                  text-muted px-6 py-4 rounded-xl font-semibold text-base
+                  hover:border-accent hover:text-accentTx transition">
             <span>📧</span>
             <span data-i18n="expert_gmail">Open Gmail</span>
         </a>
     </div>
 
     <!-- Method explanation -->
-    <p class="text-slate-400 text-xs text-center mb-10">
-        <strong class="text-slate-600">Log Query</strong> — saved directly to the expert's
+    <p class="text-faint text-xs text-center mb-10">
+        <strong class="text-muted">Log Query</strong> — saved directly to the expert's
         queue with deadline tracking.&nbsp;&nbsp;
-        <strong class="text-slate-600">Open Gmail</strong> — send from your own email if you prefer.
+        <strong class="text-muted">Open Gmail</strong> — send from your own email if you prefer.
     </p>
 
     <!-- What happens next -->
-    <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-        <h2 class="text-slate-900 font-semibold mb-4" data-i18n="expert_next">What Happens Next</h2>
-        <ol class="space-y-3 text-sm text-slate-500">
+    <div class="bg-surface border border-edge rounded-xl p-6 shadow-sm">
+        <h2 class="text-content font-semibold mb-4" data-i18n="expert_next">What Happens Next</h2>
+        <ol class="space-y-3 text-sm text-faint">
             <li class="flex gap-3">
-                <span class="text-amber-600 font-bold shrink-0">1.</span>
+                <span class="text-accentTx font-bold shrink-0">1.</span>
                 Your Gmail draft opens pre-filled with your query and contact details.
             </li>
             <li class="flex gap-3">
-                <span class="text-amber-600 font-bold shrink-0">2.</span>
+                <span class="text-accentTx font-bold shrink-0">2.</span>
                 Review and hit Send. The expert receives it immediately.
             </li>
             <li class="flex gap-3">
-                <span class="text-amber-600 font-bold shrink-0">3.</span>
-                First response within <strong class="text-slate-800">24 hours</strong>
+                <span class="text-accentTx font-bold shrink-0">3.</span>
+                First response within <strong class="text-content">24 hours</strong>
                 on working days.
             </li>
             <li class="flex gap-3">
-                <span class="text-amber-600 font-bold shrink-0">4.</span>
+                <span class="text-accentTx font-bold shrink-0">4.</span>
                 Complex matters may require a follow-up call — the expert will
                 suggest a time.
             </li>
@@ -167,17 +167,17 @@
             const data = await resp.json();
 
             if (resp.ok) {
-                feedback.className = 'mb-4 px-4 py-3 rounded-lg text-sm bg-green-50 border border-green-500 text-green-800';
+                feedback.className = 'mb-4 px-4 py-3 rounded-lg text-sm bg-success border border-successEdge text-successTx';
                 feedback.textContent = data.status;
                 logBtn.textContent = '✅ Query Logged';
             } else {
-                feedback.className = 'mb-4 px-4 py-3 rounded-lg text-sm bg-red-50 border border-red-400 text-red-800';
+                feedback.className = 'mb-4 px-4 py-3 rounded-lg text-sm bg-danger border border-dangerEdgeStrong text-dangerTxStrong';
                 feedback.textContent = data.error || 'Something went wrong. Try again.';
                 logBtn.disabled = false;
                 logBtn.innerHTML = '✅ Log Query for Expert <span class="text-xs font-normal opacity-70">(Recommended)</span>';
             }
         } catch {
-            feedback.className = 'mb-4 px-4 py-3 rounded-lg text-sm bg-red-50 border border-red-400 text-red-800';
+            feedback.className = 'mb-4 px-4 py-3 rounded-lg text-sm bg-danger border border-dangerEdgeStrong text-dangerTxStrong';
             feedback.textContent = 'Network error. Use the Gmail button as a fallback.';
             logBtn.disabled = false;
             logBtn.innerHTML = '✅ Log Query for Expert <span class="text-xs font-normal opacity-70">(Recommended)</span>';

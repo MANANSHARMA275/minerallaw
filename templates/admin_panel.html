@@ -6,40 +6,45 @@
 <div class="flex gap-0 min-h-screen -mt-8 -mx-4">
 
     <!-- ── Sidebar ─────────────────────────────────────────── -->
-    <aside class="w-48 flex-shrink-0 bg-slate-50 border-r border-slate-200 px-4 py-6">
-        <h2 class="text-amber-600 font-bold text-sm uppercase tracking-widest mb-6">
+    <aside class="w-48 flex-shrink-0 bg-canvas border-r border-edge px-4 py-6">
+        <h2 class="text-accentTx font-bold text-sm uppercase tracking-widest mb-6">
             Admin Panel
         </h2>
         <nav class="space-y-1 text-sm">
             <a href="{{ url_for('admin.overview') }}"
                class="flex items-center gap-2 px-3 py-2 rounded-lg transition
-                      {% if section == 'overview' %}bg-amber-50 text-amber-700 font-medium{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+                      {% if section == 'overview' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
                 📊 Overview
             </a>
             <a href="{{ url_for('admin.rates') }}"
                class="flex items-center gap-2 px-3 py-2 rounded-lg transition
-                      {% if section == 'rates' %}bg-amber-50 text-amber-700 font-medium{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+                      {% if section == 'rates' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
                 📋 Rates
             </a>
             <a href="{{ url_for('admin.tickets') }}"
                class="flex items-center gap-2 px-3 py-2 rounded-lg transition
-                      {% if section == 'tickets' %}bg-amber-50 text-amber-700 font-medium{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+                      {% if section == 'tickets' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
                 🎫 Tickets
             </a>
             <a href="{{ url_for('admin.users') }}"
                class="flex items-center gap-2 px-3 py-2 rounded-lg transition
-                      {% if section == 'users' %}bg-amber-50 text-amber-700 font-medium{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+                      {% if section == 'users' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
                 👤 Users
             </a>
             <a href="{{ url_for('admin.auctions') }}"
                class="flex items-center gap-2 px-3 py-2 rounded-lg transition
-                      {% if section == 'auctions' %}bg-amber-50 text-amber-700 font-medium{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+                      {% if section == 'auctions' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
                 🏛️ Auctions
+            </a>
+            <a href="{{ url_for('admin.legislation_list') }}"
+               class="flex items-center gap-2 px-3 py-2 rounded-lg transition
+                      {% if section == 'legislation' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
+                📜 Legislation
             </a>
         </nav>
         <div class="mt-auto pt-8">
             <a href="{{ url_for('main.dashboard') }}"
-               class="flex items-center gap-2 text-slate-400 hover:text-slate-700
+               class="flex items-center gap-2 text-faint hover:text-muted
                       text-sm transition px-3 py-2">
                 ← Dashboard
             </a>
@@ -53,41 +58,41 @@
         <!-- ============================================ -->
         <!-- OVERVIEW                                     -->
         <!-- ============================================ -->
-        <h1 class="text-xl font-bold text-slate-900 mb-6">Overview</h1>
+        <h1 class="text-xl font-bold text-content mb-6">Overview</h1>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white border border-slate-200 rounded-xl p-6 text-center shadow-sm">
-                <p class="text-4xl font-bold text-amber-600 mb-1">{{ user_count }}</p>
-                <p class="text-slate-500 text-sm">Registered Users</p>
+            <div class="bg-surface border border-edge rounded-xl p-6 text-center shadow-sm">
+                <p class="text-4xl font-bold text-accentTx mb-1">{{ user_count }}</p>
+                <p class="text-faint text-sm">Registered Users</p>
             </div>
-            <div class="bg-white border border-slate-200 rounded-xl p-6 text-center shadow-sm">
-                <p class="text-4xl font-bold text-red-500 mb-1">{{ ticket_count_open }}</p>
-                <p class="text-slate-500 text-sm">Open Tickets</p>
+            <div class="bg-surface border border-edge rounded-xl p-6 text-center shadow-sm">
+                <p class="text-4xl font-bold text-dangerTx mb-1">{{ ticket_count_open }}</p>
+                <p class="text-faint text-sm">Open Tickets</p>
             </div>
-            <div class="bg-white border border-slate-200 rounded-xl p-6 text-center shadow-sm">
-                <p class="text-4xl font-bold text-green-600 mb-1">{{ rate_count_active }}</p>
-                <p class="text-slate-500 text-sm">Active Rates</p>
+            <div class="bg-surface border border-edge rounded-xl p-6 text-center shadow-sm">
+                <p class="text-4xl font-bold text-successTx mb-1">{{ rate_count_active }}</p>
+                <p class="text-faint text-sm">Active Rates</p>
             </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <a href="{{ url_for('admin.rates') }}"
-               class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm
-                      hover:border-amber-400 transition">
-                <p class="text-amber-600 font-semibold mb-1">Manage Rates →</p>
-                <p class="text-slate-400 text-xs">Add or review royalty and DMF rates</p>
+               class="bg-surface border border-edge rounded-xl p-5 shadow-sm
+                      hover:border-accent transition">
+                <p class="text-accentTx font-semibold mb-1">Manage Rates →</p>
+                <p class="text-faint text-xs">Add or review royalty and DMF rates</p>
             </a>
             <a href="{{ url_for('admin.tickets') }}"
-               class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm
-                      hover:border-amber-400 transition">
-                <p class="text-amber-600 font-semibold mb-1">Review Tickets →</p>
-                <p class="text-slate-400 text-xs">Respond to expert consultation requests</p>
+               class="bg-surface border border-edge rounded-xl p-5 shadow-sm
+                      hover:border-accent transition">
+                <p class="text-accentTx font-semibold mb-1">Review Tickets →</p>
+                <p class="text-faint text-xs">Respond to expert consultation requests</p>
             </a>
             <a href="{{ url_for('admin.users') }}"
-               class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm
-                      hover:border-amber-400 transition">
-                <p class="text-amber-600 font-semibold mb-1">View Users →</p>
-                <p class="text-slate-400 text-xs">Review registered mine owners</p>
+               class="bg-surface border border-edge rounded-xl p-5 shadow-sm
+                      hover:border-accent transition">
+                <p class="text-accentTx font-semibold mb-1">View Users →</p>
+                <p class="text-faint text-xs">Review registered mine owners</p>
             </a>
         </div>
 
@@ -96,24 +101,24 @@
         <!-- ============================================ -->
         <!-- RATES                                        -->
         <!-- ============================================ -->
-        <h1 class="text-xl font-bold text-slate-900 mb-4">Rate Management</h1>
+        <h1 class="text-xl font-bold text-content mb-4">Rate Management</h1>
 
         <!-- Warning — amber, high-contrast -->
-        <div class="bg-amber-50 border border-amber-500 rounded-lg p-4 mb-6 text-sm text-amber-900">
+        <div class="bg-accentSoft border border-accent rounded-lg p-4 mb-6 text-sm text-accentSoftTx">
             ⚠️ Adding a rate closes the previous one. Rates are <strong>NEVER deleted</strong>.
             Historical rates are preserved for past calculation audit trail.
         </div>
 
         <!-- Add Rate Form -->
-        <div class="bg-white border border-slate-200 rounded-xl p-6 mb-8 shadow-sm">
-            <h2 class="text-slate-900 font-semibold mb-4">Add New Rate</h2>
+        <div class="bg-surface border border-edge rounded-xl p-6 mb-8 shadow-sm">
+            <h2 class="text-content font-semibold mb-4">Add New Rate</h2>
             <form id="rate-form" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div>
-                    <label class="block text-slate-500 text-xs mb-1">Mineral</label>
+                    <label class="block text-faint text-xs mb-1">Mineral</label>
                     <select name="mineral_id" id="form-mineral-id" required
-                            class="w-full bg-white border border-slate-300 text-slate-900
-                                   rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                            class="w-full bg-surface border border-edgeStrong text-content
+                                   rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent">
                         <option value="">Select mineral…</option>
                         {% for mineral in minerals %}
                         <option value="{{ mineral.id }}">{{ mineral.name }}</option>
@@ -121,45 +126,45 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-slate-500 text-xs mb-1">State</label>
+                    <label class="block text-faint text-xs mb-1">State</label>
                     <input name="state" type="text" value="Rajasthan" required
-                           class="w-full bg-white border border-slate-300 text-slate-900
-                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                           class="w-full bg-surface border border-edgeStrong text-content
+                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent">
                 </div>
                 <div>
-                    <label class="block text-slate-500 text-xs mb-1">Rate Type</label>
+                    <label class="block text-faint text-xs mb-1">Rate Type</label>
                     <select name="rate_type" required
-                            class="w-full bg-white border border-slate-300 text-slate-900
-                                   rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                            class="w-full bg-surface border border-edgeStrong text-content
+                                   rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent">
                         <option value="">Select type…</option>
                         <option value="royalty">Royalty</option>
                         <option value="dmf">DMF</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-slate-500 text-xs mb-1">Value</label>
+                    <label class="block text-faint text-xs mb-1">Value</label>
                     <input name="value" id="form-value" type="number" step="0.01" min="0.01"
                            placeholder="e.g. 90.00" required
-                           class="w-full bg-white border border-slate-300 text-slate-900
-                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                           class="w-full bg-surface border border-edgeStrong text-content
+                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent">
                 </div>
                 <div>
-                    <label class="block text-slate-500 text-xs mb-1">Unit</label>
+                    <label class="block text-faint text-xs mb-1">Unit</label>
                     <input name="unit" type="text" value="per_tonne"
-                           class="w-full bg-white border border-slate-300 text-slate-900
-                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                           class="w-full bg-surface border border-edgeStrong text-content
+                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent">
                 </div>
                 <div>
-                    <label class="block text-slate-500 text-xs mb-1">Notification Number</label>
+                    <label class="block text-faint text-xs mb-1">Notification Number</label>
                     <input name="notification_number" type="text"
                            placeholder="e.g. DMG/2026/01"
-                           class="w-full bg-white border border-slate-300 text-slate-900
-                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                           class="w-full bg-surface border border-edgeStrong text-content
+                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent">
                 </div>
                 <div class="sm:col-span-2">
                     <button type="submit"
-                            class="bg-amber-400 text-slate-900 px-6 py-2 rounded-lg
-                                   font-semibold text-sm hover:bg-amber-300 transition">
+                            class="bg-accent text-onAccent px-6 py-2 rounded-lg
+                                   font-semibold text-sm hover:bg-accentHover transition">
                         Add New Rate
                     </button>
                     <span id="rate-msg" class="ml-3 text-sm hidden"></span>
@@ -168,11 +173,11 @@
         </div>
 
         <!-- Rate History Table -->
-        <h2 class="text-slate-900 font-semibold mb-3">Rate History</h2>
+        <h2 class="text-content font-semibold mb-3">Rate History</h2>
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>
-                    <tr class="text-slate-500 text-left border-b border-slate-200">
+                    <tr class="text-faint text-left border-b border-edge">
                         <th class="pb-3 pr-4">Mineral</th>
                         <th class="pb-3 pr-4">State</th>
                         <th class="pb-3 pr-4">Type</th>
@@ -185,8 +190,8 @@
                 </thead>
                 <tbody>
                     {% for rate in rates %}
-                    <tr class="border-b border-slate-100
-                               {% if rate.effective_to is none %}text-slate-900{% else %}text-slate-400{% endif %}">
+                    <tr class="border-b border-edge
+                               {% if rate.effective_to is none %}text-content{% else %}text-faint{% endif %}">
                         <td class="py-3 pr-4">{{ rate.mineral.name }}</td>
                         <td class="py-3 pr-4">{{ rate.state }}</td>
                         <td class="py-3 pr-4 capitalize">{{ rate.rate_type }}</td>
@@ -196,16 +201,16 @@
                         <td class="py-3 pr-4 text-xs">{{ rate.notification_number or '—' }}</td>
                         <td class="py-3">
                             {% if rate.effective_to is none %}
-                            <span class="bg-amber-400 text-slate-900 text-xs font-semibold
+                            <span class="bg-accent text-onAccent text-xs font-semibold
                                          px-2 py-0.5 rounded-full">Active</span>
                             {% else %}
-                            <span class="text-slate-400 text-xs">Closed</span>
+                            <span class="text-faint text-xs">Closed</span>
                             {% endif %}
                         </td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="8" class="py-8 text-center text-slate-400">
+                        <td colspan="8" class="py-8 text-center text-faint">
                             No rates found. Add one above.
                         </td>
                     </tr>
@@ -219,15 +224,15 @@
         <!-- ============================================ -->
         <!-- TICKETS                                      -->
         <!-- ============================================ -->
-        <h1 class="text-xl font-bold text-slate-900 mb-6">Expert Consultation Requests</h1>
+        <h1 class="text-xl font-bold text-content mb-6">Expert Consultation Requests</h1>
 
         {% if not tickets %}
-        <div class="text-center py-16 text-slate-400">No open tickets.</div>
+        <div class="text-center py-16 text-faint">No open tickets.</div>
         {% else %}
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>
-                    <tr class="text-slate-500 text-left border-b border-slate-200">
+                    <tr class="text-faint text-left border-b border-edge">
                         <th class="pb-3 pr-4">#ID</th>
                         <th class="pb-3 pr-4">User Phone</th>
                         <th class="pb-3 pr-4">Subject</th>
@@ -238,38 +243,38 @@
                 </thead>
                 <tbody>
                     {% for ticket in tickets %}
-                    <tr class="border-b border-slate-100 text-slate-700">
-                        <td class="py-3 pr-4 text-slate-400">#{{ ticket.id }}</td>
+                    <tr class="border-b border-edge text-muted">
+                        <td class="py-3 pr-4 text-faint">#{{ ticket.id }}</td>
                         <td class="py-3 pr-4 font-mono text-xs">
                             ****{{ ticket.user.phone[-4:] if ticket.user else '????' }}
                         </td>
                         <td class="py-3 pr-4 max-w-xs truncate">{{ ticket.subject }}</td>
                         <td class="py-3 pr-4">
                             {% if ticket.status == 'open' %}
-                            <span class="bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-full">open</span>
+                            <span class="bg-danger text-dangerTx text-xs px-2 py-0.5 rounded-full">open</span>
                             {% elif ticket.status == 'in_progress' %}
-                            <span class="bg-amber-100 text-amber-700 text-xs px-2 py-0.5 rounded-full">in progress</span>
+                            <span class="bg-accentSoft text-accentSoftTx text-xs px-2 py-0.5 rounded-full">in progress</span>
                             {% elif ticket.status == 'resolved' %}
-                            <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">resolved</span>
+                            <span class="bg-success text-successTx text-xs px-2 py-0.5 rounded-full">resolved</span>
                             {% elif ticket.status == 'escalated' %}
-                            <span class="bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-full">escalated</span>
+                            <span class="bg-danger text-dangerTx text-xs px-2 py-0.5 rounded-full">escalated</span>
                             {% else %}
-                            <span class="text-slate-400 text-xs">{{ ticket.status }}</span>
+                            <span class="text-faint text-xs">{{ ticket.status }}</span>
                             {% endif %}
                         </td>
-                        <td class="py-3 pr-4 text-slate-400 text-xs">
+                        <td class="py-3 pr-4 text-faint text-xs">
                             {{ ticket.created_at.strftime('%d %b %Y') if ticket.created_at else '—' }}
                         </td>
                         <td class="py-3">
                             {% if ticket.status != 'resolved' %}
-                            <button class="resolve-btn border border-slate-300 text-slate-600 text-xs
-                                           px-3 py-1 rounded hover:border-green-500
-                                           hover:text-green-700 transition"
+                            <button class="resolve-btn border border-edgeStrong text-muted text-xs
+                                           px-3 py-1 rounded hover:border-successEdge
+                                           hover:text-successTx transition"
                                     data-ticket-id="{{ ticket.id }}">
                                 Mark Resolved
                             </button>
                             {% else %}
-                            <span class="text-slate-400 text-xs">—</span>
+                            <span class="text-faint text-xs">—</span>
                             {% endif %}
                         </td>
                     </tr>
@@ -284,15 +289,15 @@
         <!-- ============================================ -->
         <!-- USERS                                        -->
         <!-- ============================================ -->
-        <h1 class="text-xl font-bold text-slate-900 mb-2">Registered Users</h1>
-        <p class="text-slate-400 text-xs mb-6">
+        <h1 class="text-xl font-bold text-content mb-2">Registered Users</h1>
+        <p class="text-faint text-xs mb-6">
             Phone numbers masked per DPDP Act 2023 — last 4 digits only.
         </p>
 
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>
-                    <tr class="text-slate-500 text-left border-b border-slate-200">
+                    <tr class="text-faint text-left border-b border-edge">
                         <th class="pb-3 pr-6">Phone</th>
                         <th class="pb-3 pr-6">Tier</th>
                         <th class="pb-3 pr-6">Joined</th>
@@ -301,31 +306,31 @@
                 </thead>
                 <tbody>
                     {% for user in users %}
-                    <tr class="border-b border-slate-100 text-slate-700">
-                        <td class="py-3 pr-6 font-mono text-xs text-slate-500">
+                    <tr class="border-b border-edge text-muted">
+                        <td class="py-3 pr-6 font-mono text-xs text-faint">
                             ****{{ user.phone[-4:] }}
                         </td>
                         <td class="py-3 pr-6 capitalize">
                             {% if user.subscription_tier == 'free' %}
-                            <span class="text-slate-500">free</span>
+                            <span class="text-faint">free</span>
                             {% elif user.subscription_tier == 'pro' %}
-                            <span class="text-amber-600 font-medium">pro</span>
+                            <span class="text-accentTx font-medium">pro</span>
                             {% elif user.subscription_tier == 'expert' %}
-                            <span class="text-amber-700 font-medium">expert</span>
+                            <span class="text-accentSoftTx font-medium">expert</span>
                             {% else %}
-                            <span class="text-blue-600">{{ user.subscription_tier }}</span>
+                            <span class="text-infoTx">{{ user.subscription_tier }}</span>
                             {% endif %}
                         </td>
-                        <td class="py-3 pr-6 text-slate-400 text-xs">
+                        <td class="py-3 pr-6 text-faint text-xs">
                             {{ user.created_at.strftime('%d %b %Y') if user.created_at else '—' }}
                         </td>
-                        <td class="py-3 text-slate-400 text-xs">
+                        <td class="py-3 text-faint text-xs">
                             {{ user.last_login.strftime('%d %b %Y') if user.last_login else 'Never' }}
                         </td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="4" class="py-8 text-center text-slate-400">
+                        <td colspan="4" class="py-8 text-center text-faint">
                             No users registered yet.
                         </td>
                     </tr>
@@ -339,49 +344,49 @@
         <!-- ============================================ -->
         <!-- AUCTIONS                                     -->
         <!-- ============================================ -->
-        <h1 class="text-xl font-bold text-slate-900 mb-2">Auction Status</h1>
-        <p class="text-slate-400 text-xs mb-6">
+        <h1 class="text-xl font-bold text-content mb-2">Auction Status</h1>
+        <p class="text-faint text-xs mb-6">
             Toggle whether auctions are live and set the banner text shown on
             the public /auctions page. Status text is plain text — no HTML.
         </p>
 
         <!-- Current status -->
-        <div class="bg-white border border-slate-200 rounded-xl p-5 mb-6 shadow-sm">
-            <p class="text-slate-500 text-xs mb-1">Current status</p>
+        <div class="bg-surface border border-edge rounded-xl p-5 mb-6 shadow-sm">
+            <p class="text-faint text-xs mb-1">Current status</p>
             {% if auction.is_live %}
-            <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-0.5 rounded-full">
+            <span class="bg-success text-successTx text-xs font-semibold px-2 py-0.5 rounded-full">
                 🟢 Live
             </span>
             {% else %}
-            <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded-full">
+            <span class="bg-surface2 text-muted text-xs font-semibold px-2 py-0.5 rounded-full">
                 ⚫ Not live
             </span>
             {% endif %}
             {% if auction.status_text %}
-            <p class="text-slate-700 text-sm mt-2">{{ auction.status_text | e }}</p>
+            <p class="text-muted text-sm mt-2">{{ auction.status_text | e }}</p>
             {% endif %}
             {% if auction.updated_at %}
-            <p class="text-slate-400 text-xs mt-2">
+            <p class="text-faint text-xs mt-2">
                 Last updated {{ auction.updated_at.strftime('%d %b %Y, %H:%M UTC') }}
             </p>
             {% endif %}
         </div>
 
         <!-- Update form -->
-        <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-            <h2 class="text-slate-900 font-semibold mb-4">Update Auction Status</h2>
+        <div class="bg-surface border border-edge rounded-xl p-6 shadow-sm">
+            <h2 class="text-content font-semibold mb-4">Update Auction Status</h2>
             <form id="auction-form" class="space-y-4">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div>
-                    <label class="block text-slate-500 text-xs mb-2">Auctions Live?</label>
+                    <label class="block text-faint text-xs mb-2">Auctions Live?</label>
                     <div class="flex gap-4">
-                        <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                        <label class="flex items-center gap-2 text-sm text-muted cursor-pointer">
                             <input type="radio" name="is_live" value="1"
                                    {% if auction.is_live %}checked{% endif %}
                                    class="accent-amber-400">
                             Yes — show green banner
                         </label>
-                        <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                        <label class="flex items-center gap-2 text-sm text-muted cursor-pointer">
                             <input type="radio" name="is_live" value="0"
                                    {% if not auction.is_live %}checked{% endif %}
                                    class="accent-amber-400">
@@ -390,34 +395,206 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-slate-500 text-xs mb-1">
+                    <label class="block text-faint text-xs mb-1">
                         Status Text (English) — plain text, max 300 chars
                     </label>
                     <input name="status_text" type="text" maxlength="300"
                            value="{{ auction.status_text | e if auction.status_text else '' }}"
                            placeholder="e.g. ML(03) 2026 — bids close 15 July"
-                           class="w-full bg-white border border-slate-300 text-slate-900
-                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                           class="w-full bg-surface border border-edgeStrong text-content
+                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent">
                 </div>
                 <div>
-                    <label class="block text-slate-500 text-xs mb-1">
+                    <label class="block text-faint text-xs mb-1">
                         Status Text (Hindi) — optional, plain text, max 300 chars
                     </label>
                     <input name="status_text_hi" type="text" maxlength="300"
                            value="{{ auction.status_text_hi | e if auction.status_text_hi else '' }}"
                            placeholder="e.g. ML(03) 2026 — बोलियाँ 15 जुलाई तक"
-                           class="w-full bg-white border border-slate-300 text-slate-900
-                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400">
+                           class="w-full bg-surface border border-edgeStrong text-content
+                                  rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent">
                 </div>
                 <div>
                     <button type="submit"
-                            class="bg-amber-400 text-slate-900 px-6 py-2 rounded-lg
-                                   font-semibold text-sm hover:bg-amber-300 transition">
+                            class="bg-accent text-onAccent px-6 py-2 rounded-lg
+                                   font-semibold text-sm hover:bg-accentHover transition">
                         Update Status
                     </button>
                     <span id="auction-msg" class="ml-3 text-sm hidden"></span>
                 </div>
             </form>
+        </div>
+
+        {% elif section == 'legislation' %}
+        <!-- ============================================ -->
+        <!-- LEGISLATION                                  -->
+        <!-- ============================================ -->
+        <h1 class="text-xl font-bold text-content mb-1">Legislation Entries</h1>
+        <p class="text-faint text-xs mb-6">
+            All entries are <strong>is_published=False</strong> by default and invisible on the public page.
+            Toggle published only after domain expert verification.
+        </p>
+
+        <!-- Create / Edit form -->
+        <div class="bg-surface border border-edge rounded-xl p-6 mb-8 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <h2 id="leg-form-heading" class="text-content font-semibold">Add New Entry</h2>
+                <button type="button" id="leg-reset-btn"
+                        class="hidden text-xs text-faint hover:text-muted transition">
+                    ← New entry
+                </button>
+            </div>
+            <form id="leg-form" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="sm:col-span-2">
+                    <label class="block text-faint text-xs mb-1">Title <span class="text-dangerTx">*</span></label>
+                    <input name="title" type="text" required maxlength="300"
+                           placeholder="e.g. [PLACEHOLDER] MMDR Amendment 2025"
+                           class="w-full bg-surface border border-edgeStrong rounded-lg px-3 py-2 text-sm text-content
+                                  focus:outline-none focus:border-accent">
+                </div>
+                <div>
+                    <label class="block text-faint text-xs mb-1">Category <span class="text-dangerTx">*</span></label>
+                    <input name="category" type="text" required maxlength="100"
+                           list="leg-category-list"
+                           placeholder="e.g. 2025 Amendment"
+                           class="w-full bg-surface border border-edgeStrong rounded-lg px-3 py-2 text-sm text-content
+                                  focus:outline-none focus:border-accent">
+                    <datalist id="leg-category-list">
+                        {% for e in legislation %}
+                        <option value="{{ e.category }}">
+                        {% endfor %}
+                    </datalist>
+                </div>
+                <div>
+                    <label class="block text-faint text-xs mb-1">Source Reference</label>
+                    <input name="source_reference" type="text" maxlength="200"
+                           placeholder="e.g. Rule 73A or G.S.R. 93"
+                           class="w-full bg-surface border border-edgeStrong rounded-lg px-3 py-2 text-sm text-content
+                                  focus:outline-none focus:border-accent">
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="block text-faint text-xs mb-1">Official URL (optional)</label>
+                    <input name="official_url" type="url" maxlength="500"
+                           placeholder="https://mines.rajasthan.gov.in/…"
+                           class="w-full bg-surface border border-edgeStrong rounded-lg px-3 py-2 text-sm text-content
+                                  focus:outline-none focus:border-accent">
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="block text-faint text-xs mb-1">Summary (English)</label>
+                    <textarea name="summary_en" rows="3"
+                              placeholder="[PLACEHOLDER] Plain-language English summary…"
+                              class="w-full bg-surface border border-edgeStrong rounded-lg px-3 py-2 text-sm text-content
+                                     focus:outline-none focus:border-accent resize-y"></textarea>
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="block text-faint text-xs mb-1">Summary (Hindi)</label>
+                    <textarea name="summary_hi" rows="3"
+                              placeholder="[PLACEHOLDER — पिता जी से सत्यापित करना है]"
+                              class="w-full bg-surface border border-edgeStrong rounded-lg px-3 py-2 text-sm text-content
+                                     focus:outline-none focus:border-accent resize-y"></textarea>
+                </div>
+                <div>
+                    <label class="block text-faint text-xs mb-1">Last Verified On</label>
+                    <input name="last_verified_on" type="date"
+                           class="w-full bg-surface border border-edgeStrong rounded-lg px-3 py-2 text-sm text-content
+                                  focus:outline-none focus:border-accent">
+                </div>
+                <div>
+                    <label class="block text-faint text-xs mb-1">Display Order</label>
+                    <input name="display_order" type="number" value="0" min="0" max="9999"
+                           class="w-full bg-surface border border-edgeStrong rounded-lg px-3 py-2 text-sm text-content
+                                  focus:outline-none focus:border-accent">
+                </div>
+                <div class="sm:col-span-2 flex items-center gap-3">
+                    <label class="flex items-center gap-2 text-sm text-muted cursor-pointer select-none">
+                        <input name="is_published" type="checkbox" value="1"
+                               class="accent-amber-400 w-4 h-4">
+                        Publish immediately (only tick after domain expert verification)
+                    </label>
+                </div>
+                <div class="sm:col-span-2">
+                    <button id="leg-submit-btn" type="submit"
+                            class="bg-accent text-onAccent px-6 py-2 rounded-lg
+                                   font-semibold text-sm hover:bg-accentHover transition">
+                        Save Entry
+                    </button>
+                    <span id="leg-msg" class="ml-3 text-sm hidden"></span>
+                </div>
+            </form>
+        </div>
+
+        <!-- Entries table -->
+        <h2 class="text-content font-semibold mb-3">All Entries</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="text-faint text-left border-b border-edge">
+                        <th class="pb-3 pr-4">Title</th>
+                        <th class="pb-3 pr-4">Category</th>
+                        <th class="pb-3 pr-4">Source Ref</th>
+                        <th class="pb-3 pr-4">Last Verified</th>
+                        <th class="pb-3 pr-4">Published</th>
+                        <th class="pb-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in legislation %}
+                    <tr class="border-b border-edge text-muted"
+                        id="leg-row-{{ entry.id }}">
+                        <td class="py-3 pr-4 max-w-xs">
+                            <span class="block truncate" title="{{ entry.title }}">
+                                {{ entry.title }}
+                            </span>
+                        </td>
+                        <td class="py-3 pr-4 whitespace-nowrap">{{ entry.category }}</td>
+                        <td class="py-3 pr-4 text-xs font-mono text-faint">
+                            {{ entry.source_reference or '—' }}
+                        </td>
+                        <td class="py-3 pr-4 text-xs text-faint whitespace-nowrap">
+                            {{ entry.last_verified_on.strftime('%d %b %Y') if entry.last_verified_on else '—' }}
+                        </td>
+                        <td class="py-3 pr-4">
+                            <button class="leg-toggle-btn text-xs px-2 py-0.5 rounded-full font-semibold
+                                           {% if entry.is_published %}bg-accentSoft text-accentSoftTx{% else %}bg-surface2 text-faint{% endif %}"
+                                    data-id="{{ entry.id }}"
+                                    data-published="{{ 'true' if entry.is_published else 'false' }}">
+                                {{ '✓ Published' if entry.is_published else 'Unpublished' }}
+                            </button>
+                        </td>
+                        <td class="py-3 whitespace-nowrap">
+                            <button class="leg-edit-btn text-xs border border-edgeStrong
+                                           text-muted px-2 py-1 rounded
+                                           hover:border-accent hover:text-accentSoftTx transition mr-1"
+                                    data-id="{{ entry.id }}"
+                                    data-title="{{ entry.title }}"
+                                    data-category="{{ entry.category }}"
+                                    data-source-ref="{{ entry.source_reference or '' }}"
+                                    data-official-url="{{ entry.official_url or '' }}"
+                                    data-summary-en="{{ entry.summary_en or '' }}"
+                                    data-summary-hi="{{ entry.summary_hi or '' }}"
+                                    data-last-verified="{{ entry.last_verified_on.strftime('%Y-%m-%d') if entry.last_verified_on else '' }}"
+                                    data-display-order="{{ entry.display_order }}"
+                                    data-published="{{ 'true' if entry.is_published else 'false' }}">
+                                Edit
+                            </button>
+                            <button class="leg-delete-btn text-xs border border-edgeStrong
+                                           text-faint px-2 py-1 rounded
+                                           hover:border-dangerEdgeStrong hover:text-dangerTx transition"
+                                    data-id="{{ entry.id }}">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="py-8 text-center text-faint">
+                            No legislation entries yet. Add one above.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
 
         {% endif %}
@@ -434,7 +611,7 @@
 async function submitAdminForm(form, url, msgEl) {
     const btn = form.querySelector('button[type="submit"]');
     btn.disabled = true;
-    msgEl.className = 'ml-3 text-sm text-slate-500';
+    msgEl.className = 'ml-3 text-sm text-faint';
     msgEl.textContent = 'Saving…';
     msgEl.classList.remove('hidden');
 
@@ -443,15 +620,15 @@ async function submitAdminForm(form, url, msgEl) {
         let data = {};
         try { data = await resp.json(); } catch { /* non-JSON body — CSRF or 5xx HTML */ }
         if (resp.ok) {
-            msgEl.className = 'ml-3 text-sm text-green-700';
+            msgEl.className = 'ml-3 text-sm text-successTx';
             msgEl.textContent = data.status || 'Saved.';
             setTimeout(() => location.reload(), 1200);
         } else {
-            msgEl.className = 'ml-3 text-sm text-red-700';
+            msgEl.className = 'ml-3 text-sm text-dangerTx';
             msgEl.textContent = data.error || `Server error ${resp.status}. Try again.`;
         }
     } catch {
-        msgEl.className = 'ml-3 text-sm text-red-700';
+        msgEl.className = 'ml-3 text-sm text-dangerTx';
         msgEl.textContent = 'Network error. Check your connection and try again.';
     }
     btn.disabled = false;
@@ -475,7 +652,128 @@ if (auctionForm) {
     });
 }
 
-// Ticket resolve — single delegated handler over all .resolve-btn elements
+// ── Legislation CRUD ──────────────────────────────────────────────────────────
+
+const legForm = document.getElementById('leg-form');
+
+// Submit: create (no data-edit-id) or update (data-edit-id set by edit button)
+if (legForm) {
+    legForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const editId  = legForm.dataset.editId || '';
+        const url     = editId
+            ? `/admin/legislation/${editId}/update`
+            : '/admin/legislation/create';
+        const btn     = document.getElementById('leg-submit-btn');
+        const msgEl   = document.getElementById('leg-msg');
+        btn.disabled  = true;
+        msgEl.className = 'ml-3 text-sm text-faint';
+        msgEl.textContent = 'Saving…';
+        msgEl.classList.remove('hidden');
+        try {
+            const resp = await fetch(url, { method: 'POST', body: new FormData(legForm) });
+            let data = {};
+            try { data = await resp.json(); } catch {}
+            if (resp.ok) {
+                msgEl.className = 'ml-3 text-sm text-successTx';
+                msgEl.textContent = data.message || 'Saved.';
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                msgEl.className = 'ml-3 text-sm text-dangerTx';
+                msgEl.textContent = data.message || `Error ${resp.status}.`;
+                btn.disabled = false;
+            }
+        } catch {
+            msgEl.className = 'ml-3 text-sm text-dangerTx';
+            msgEl.textContent = 'Network error. Try again.';
+            btn.disabled = false;
+        }
+    });
+}
+
+// Reset button: clears form back to "create" mode
+const legResetBtn = document.getElementById('leg-reset-btn');
+if (legResetBtn) {
+    legResetBtn.addEventListener('click', () => {
+        legForm.reset();
+        delete legForm.dataset.editId;
+        document.getElementById('leg-form-heading').textContent = 'Add New Entry';
+        document.getElementById('leg-submit-btn').textContent  = 'Save Entry';
+        legResetBtn.classList.add('hidden');
+    });
+}
+
+// Edit buttons: populate form fields and switch to update mode
+document.querySelectorAll('.leg-edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const d = btn.dataset;
+        legForm.dataset.editId = d.id;
+        legForm.querySelector('[name="title"]').value           = d.title;
+        legForm.querySelector('[name="category"]').value        = d.category;
+        legForm.querySelector('[name="source_reference"]').value= d.sourceRef;
+        legForm.querySelector('[name="official_url"]').value    = d.officialUrl;
+        legForm.querySelector('[name="summary_en"]').value      = d.summaryEn;
+        legForm.querySelector('[name="summary_hi"]').value      = d.summaryHi;
+        legForm.querySelector('[name="last_verified_on"]').value= d.lastVerified;
+        legForm.querySelector('[name="display_order"]').value   = d.displayOrder;
+        legForm.querySelector('[name="is_published"]').checked  = d.published === 'true';
+        document.getElementById('leg-form-heading').textContent = 'Edit Entry';
+        document.getElementById('leg-submit-btn').textContent  = 'Update Entry';
+        legResetBtn.classList.remove('hidden');
+        legForm.scrollIntoView({ behavior: 'smooth' });
+    });
+});
+
+// Toggle publish — reads CSRF token from the form's hidden input
+document.querySelectorAll('.leg-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const id   = btn.dataset.id;
+        const csrf = legForm.querySelector('[name="csrf_token"]').value;
+        const fd   = new FormData();
+        fd.append('csrf_token', csrf);
+        btn.disabled = true;
+        try {
+            const resp = await fetch(`/admin/legislation/${id}/toggle`, { method: 'POST', body: fd });
+            const data = await resp.json();
+            if (resp.ok) {
+                const pub = data.is_published;
+                btn.textContent = pub ? '✓ Published' : 'Unpublished';
+                btn.className   = btn.className.replace(
+                    pub ? /bg-surface2 text-faint/ : /bg-accentSoft text-accentSoftTx/,
+                    pub ? 'bg-accentSoft text-accentSoftTx' : 'bg-surface2 text-faint'
+                );
+                btn.dataset.published = pub ? 'true' : 'false';
+            } else {
+                alert(data.message || 'Toggle failed.');
+            }
+        } catch { alert('Network error.'); }
+        btn.disabled = false;
+    });
+});
+
+// Delete — confirms, then removes the row from DOM on success
+document.querySelectorAll('.leg-delete-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        if (!confirm('Delete this entry? This cannot be undone.')) return;
+        const id   = btn.dataset.id;
+        const csrf = legForm.querySelector('[name="csrf_token"]').value;
+        const fd   = new FormData();
+        fd.append('csrf_token', csrf);
+        btn.disabled = true;
+        try {
+            const resp = await fetch(`/admin/legislation/${id}/delete`, { method: 'POST', body: fd });
+            const data = await resp.json();
+            if (resp.ok) {
+                document.getElementById(`leg-row-${id}`)?.remove();
+            } else {
+                alert(data.message || 'Delete failed.');
+                btn.disabled = false;
+            }
+        } catch { alert('Network error.'); btn.disabled = false; }
+    });
+});
+
+// ── Ticket resolve — single delegated handler over all .resolve-btn elements
 document.querySelectorAll('.resolve-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
         const ticketId = btn.dataset.ticketId;
@@ -493,7 +791,7 @@ document.querySelectorAll('.resolve-btn').forEach(btn => {
             const data = await resp.json();
             if (resp.ok) {
                 btn.closest('tr').querySelector('td:last-child').innerHTML =
-                    '<span class="text-green-700 text-xs">Resolved</span>';
+                    '<span class="text-successTx text-xs">Resolved</span>';
             } else {
                 btn.disabled = false;
                 btn.textContent = 'Mark Resolved';

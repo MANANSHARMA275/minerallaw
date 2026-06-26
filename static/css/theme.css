@@ -1,0 +1,99 @@
+/* ============================================================
+   MineralLaw.in — Semantic colour-token system (Chunk B1)
+   All values are space-separated RGB channels so Tailwind's
+   opacity modifiers (e.g. bg-surface/50) keep working.
+   ============================================================ */
+
+/* ---- Light theme (default) --------------------------------- */
+:root {
+  /* Canvas / surfaces */
+  --canvas:           248 250 252;   /* slate-50  #F8FAFC */
+  --surface:          255 255 255;   /* white     #FFFFFF */
+  --surface2:         241 245 249;   /* slate-100 #F1F5F9 */
+
+  /* Text */
+  --content:          15 23 42;      /* slate-900 #0F172A */
+  --muted:            71 85 105;     /* slate-600 #475569 */
+  --faint:            100 116 139;   /* slate-500 #64748B  AA-adjusted: #94A3B8 → #64748B (4.59:1 on white) */
+
+  /* Borders */
+  --edge:             226 232 240;   /* slate-200 #E2E8F0 */
+  --edgeStrong:       203 213 225;   /* slate-300 #CBD5E1 */
+
+  /* Amber accent system */
+  --accent:           251 191 36;    /* amber-400 #FBBF24 */
+  --accentHover:      252 211 77;    /* amber-300 #FCD34D */
+  --onAccent:         15 23 42;      /* slate-900 #0F172A — text/bg placed on amber */
+  --onAccentHover:    30 41 59;      /* slate-800 #1E293B — hover of inverted btn */
+  --accentSoft:       255 251 235;   /* amber-50  #FFFBEB */
+  --accentSoftTx:     180 83 9;      /* amber-700 #B45309 */
+  --accentSoftEdge:   253 230 138;   /* amber-200 #FDE68A */
+  --accentTx:         217 119 6;     /* amber-600 #D97706 — amber text on surfaces */
+
+  /* Status — danger (red) */
+  --danger:           254 242 242;   /* red-50  #FEF2F2 */
+  --dangerEdge:       254 202 202;   /* red-200 #FECACA */
+  --dangerEdgeStrong: 252 165 165;   /* red-300 #FCA5A5 */
+  --dangerTx:         220 38 38;     /* red-600 #DC2626 */
+  --dangerTxStrong:   153 27 27;     /* red-800 #991B1B */
+
+  /* Status — info (blue) */
+  --info:             239 246 255;   /* blue-50  #EFF6FF */
+  --infoEdge:         191 219 254;   /* blue-300 #BFDBFE */
+  --infoTx:           30 64 175;     /* blue-800 #1E40AF */
+
+  /* Status — success (green) */
+  --success:          240 253 244;   /* green-50  #F0FDF4 */
+  --successEdge:      134 239 172;   /* green-300 #86EFAC */
+  --successTx:        22 101 52;     /* green-800 #166534 */
+}
+
+/* ---- Dark theme -------------------------------------------- */
+[data-theme="dark"] {
+  /* Canvas / surfaces */
+  --canvas:           11 18 32;      /* #0B1220 */
+  --surface:          21 31 51;      /* #151F33 */
+  --surface2:         15 23 41;      /* #0F1729 */
+
+  /* Text */
+  --content:          230 237 246;   /* #E6EDF6 */
+  --muted:            148 163 184;   /* slate-400 #94A3B8 */
+  --faint:            148 163 184;   /* slate-400 #94A3B8  lighter in dark for legibility (~7.8:1 on canvas) */
+
+  /* Borders */
+  --edge:             36 48 73;      /* #243049 */
+  --edgeStrong:       51 65 92;      /* #33415C */
+
+  /* Amber — same in both themes */
+  --accent:           251 191 36;
+  --accentHover:      252 211 77;
+  --onAccent:         15 23 42;
+  --onAccentHover:    30 41 59;
+  --accentSoft:       41 36 15;      /* #29240F */
+  --accentSoftTx:     252 211 77;    /* #FCD34D */
+  --accentSoftEdge:   70 58 20;      /* #463A14 */
+  --accentTx:         251 191 36;    /* amber-400 — amber text reads well on dark surfaces */
+
+  /* Status — danger */
+  --danger:           45 10 10;      /* #2D0A0A */
+  --dangerEdge:       91 26 26;      /* #5B1A1A */
+  --dangerEdgeStrong: 127 29 29;     /* #7F1D1D */
+  --dangerTx:         252 165 165;   /* red-300 #FCA5A5 */
+  --dangerTxStrong:   252 165 165;
+
+  /* Status — info */
+  --info:             15 36 68;      /* #0F2444 */
+  --infoEdge:         30 58 95;      /* #1E3A5F */
+  --infoTx:           147 197 253;   /* blue-300 #93C5FD */
+
+  /* Status — success */
+  --success:          6 41 18;       /* #062912 */
+  --successEdge:      15 61 31;      /* #0F3D1F */
+  --successTx:        74 222 128;    /* green-400 #4ADE80 */
+}
+
+/* ---- Theme toggle icon visibility -------------------------- */
+.theme-sun  { display: none; }
+.theme-moon { display: block; }
+[data-theme="dark"] .theme-sun  { display: block; }
+[data-theme="dark"] .theme-moon { display: none; }

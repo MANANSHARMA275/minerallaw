@@ -8,38 +8,38 @@
 
     <!-- Logo -->
     <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-amber-600">MineralLaw.in</h1>
-      <p class="text-slate-500 mt-2 text-sm">Mining compliance, simplified.</p>
+      <h1 class="text-3xl font-bold text-accentTx">MineralLaw.in</h1>
+      <p class="text-faint mt-2 text-sm">Mining compliance, simplified.</p>
     </div>
 
     <!-- Error banner -->
     {% if error %}
-    <div class="mb-4 bg-red-50 border border-red-300 text-red-800 rounded px-4 py-3 text-sm">
+    <div class="mb-4 bg-danger border border-dangerEdgeStrong text-dangerTxStrong rounded px-4 py-3 text-sm">
       {{ error }}
     </div>
     {% endif %}
 
     <!-- Card -->
-    <div class="bg-white rounded-lg shadow-md p-8 border border-slate-200">
+    <div class="bg-surface rounded-lg shadow-md p-8 border border-edge">
 
       <!-- STEP 1: Phone input -->
       <div id="step-phone">
-        <h2 class="text-xl font-semibold text-slate-900 mb-1">Sign In</h2>
-        <p class="text-slate-500 text-sm mb-6">
+        <h2 class="text-xl font-semibold text-content mb-1">Sign In</h2>
+        <p class="text-faint text-sm mb-6">
           Enter your mobile number to receive an OTP.
         </p>
 
         <div id="phone-error"
-             class="hidden mb-4 bg-red-50 border border-red-300 text-red-800
+             class="hidden mb-4 bg-danger border border-dangerEdgeStrong text-dangerTxStrong
                     rounded px-4 py-3 text-sm">
         </div>
 
         <div class="mb-4">
-          <label class="block text-slate-700 text-sm mb-2" for="phone-input">
+          <label class="block text-muted text-sm mb-2" for="phone-input">
             Mobile Number
           </label>
           <div class="flex">
-            <span class="bg-slate-100 text-slate-500 border border-r-0 border-slate-300
+            <span class="bg-surface2 text-faint border border-r-0 border-edgeStrong
                          rounded-l px-3 flex items-center text-sm">
               +91
             </span>
@@ -49,19 +49,19 @@
               inputmode="numeric"
               maxlength="10"
               placeholder="9876543210"
-              class="flex-1 bg-white text-slate-900 border border-slate-300 rounded-r px-4 py-3
-                     focus:outline-none focus:ring-2 focus:ring-amber-400
+              class="flex-1 bg-surface text-content border border-edgeStrong rounded-r px-4 py-3
+                     focus:outline-none focus:ring-2 focus:ring-accent
                      text-lg tracking-widest"
             />
           </div>
-          <p class="text-slate-400 text-xs mt-1">
+          <p class="text-faint text-xs mt-1">
             10-digit mobile number, without country code.
           </p>
         </div>
 
         <button
           id="send-otp-btn"
-          class="w-full bg-amber-400 hover:bg-amber-300 text-slate-900
+          class="w-full bg-accent hover:bg-accentHover text-onAccent
                  font-semibold py-3 rounded transition-colors duration-150
                  disabled:opacity-50 disabled:cursor-not-allowed">
           Send OTP
@@ -70,18 +70,18 @@
 
       <!-- STEP 2: OTP input -->
       <div id="step-otp" class="hidden">
-        <h2 class="text-xl font-semibold text-slate-900 mb-1">Enter OTP</h2>
-        <p id="otp-subtitle" class="text-slate-500 text-sm mb-6">
+        <h2 class="text-xl font-semibold text-content mb-1">Enter OTP</h2>
+        <p id="otp-subtitle" class="text-faint text-sm mb-6">
           OTP sent to your mobile number.
         </p>
 
         <div id="otp-error"
-             class="hidden mb-4 bg-red-50 border border-red-300 text-red-800
+             class="hidden mb-4 bg-danger border border-dangerEdgeStrong text-dangerTxStrong
                     rounded px-4 py-3 text-sm">
         </div>
 
         <div class="mb-4">
-          <label class="block text-slate-700 text-sm mb-2" for="otp-input">
+          <label class="block text-muted text-sm mb-2" for="otp-input">
             6-Digit OTP
           </label>
           <input
@@ -90,16 +90,16 @@
             inputmode="numeric"
             maxlength="6"
             placeholder="_ _ _ _ _ _"
-            class="w-full bg-white text-slate-900 border border-slate-300 rounded px-4 py-3
-                   focus:outline-none focus:ring-2 focus:ring-amber-400
+            class="w-full bg-surface text-content border border-edgeStrong rounded px-4 py-3
+                   focus:outline-none focus:ring-2 focus:ring-accent
                    text-2xl tracking-widest text-center"
           />
-          <p class="text-slate-400 text-xs mt-1">OTP is valid for 5 minutes.</p>
+          <p class="text-faint text-xs mt-1">OTP is valid for 5 minutes.</p>
         </div>
 
         <button
           id="verify-otp-btn"
-          class="w-full bg-amber-400 hover:bg-amber-300 text-slate-900
+          class="w-full bg-accent hover:bg-accentHover text-onAccent
                  font-semibold py-3 rounded transition-colors duration-150
                  disabled:opacity-50 disabled:cursor-not-allowed">
           Verify & Login
@@ -107,7 +107,7 @@
 
         <button
           id="resend-btn"
-          class="w-full mt-3 text-slate-500 hover:text-amber-600 text-sm
+          class="w-full mt-3 text-faint hover:text-accentTx text-sm
                  py-2 transition-colors duration-150">
           Resend OTP
         </button>
@@ -115,11 +115,11 @@
 
     </div>
 
-    <p class="text-center text-slate-400 text-xs mt-6">
+    <p class="text-center text-faint text-xs mt-6">
       By signing in you agree to our
-      <a href="/terms" class="text-amber-600 hover:underline">Terms of Service</a>
+      <a href="/terms" class="text-accentTx hover:underline">Terms of Service</a>
       and
-      <a href="/privacy" class="text-amber-600 hover:underline">Privacy Policy</a>.
+      <a href="/privacy" class="text-accentTx hover:underline">Privacy Policy</a>.
     </p>
 
   </div>

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}News &amp; Events | MineralLaw.in{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+
+    <h1 class="text-2xl font-bold text-content mb-1"
+        data-i18n="news_title">News &amp; Events</h1>
+
+    <!-- Attribution block -->
+    <div class="bg-surface border border-edge rounded-xl px-5 py-3 mb-6 shadow-sm text-sm">
+        <p class="font-medium text-muted"
+           data-i18n="news_source">Source: Department of Mines &amp; Geology, Govt. of Rajasthan</p>
+        <p class="text-faint text-xs mt-1"
+           data-i18n="news_updated">Updated daily from the official DMG portal.</p>
+        {% if items %}
+        <a href="{{ items[0].source_url }}" target="_blank" rel="noopener noreferrer"
+           class="text-xs text-accentSoftTx hover:text-accentSoftTx underline mt-1 inline-block">
+            mines.rajasthan.gov.in ↗
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Category filter tabs -->
+    <div class="flex gap-2 flex-wrap mb-6">
+        <a href="{{ url_for('main.news') }}"
+           class="px-3 py-1 rounded-full text-sm font-medium transition
+                  {{ 'bg-accent text-onAccent' if active == 'all'
+                     else 'bg-surface text-muted border border-edge hover:border-accent' }}"
+           data-i18n="filter_all">All</a>
+        {% for cat in categories %}
+        <a href="{{ url_for('main.news', category=cat) }}"
+           class="px-3 py-1 rounded-full text-sm font-medium transition
+                  {{ 'bg-accent text-onAccent' if active == cat
+                     else 'bg-surface text-muted border border-edge hover:border-accent' }}"
+           data-i18n="filter_{{ cat }}">{{ cat }}</a>
+        {% endfor %}
+    </div>
+
+    <!-- Item list -->
+    {% if items %}
+    <div class="space-y-4">
+        {% for item in items %}
+        <div class="bg-surface border border-edge rounded-xl px-5 py-4 shadow-sm">
+            <div class="flex items-start gap-3">
+                <div class="flex-1 min-w-0">
+                    <p class="text-content font-semibold text-sm leading-snug">{{ item.heading }}</p>
+                    <p class="text-xs text-faint mt-1">{{ item.order_date.strftime('%d %b %Y') }}</p>
+                </div>
+                <span class="flex-shrink-0 text-xs bg-accentSoft text-accentSoftTx border border-accentSoftEdge
+                             px-2 py-0.5 rounded-full font-medium">{{ item.category }}</span>
+            </div>
+            {% if item.documents %}
+            <div class="mt-3 flex flex-col gap-1">
+                {% for doc in item.documents %}
+                <a href="{{ doc.url }}" target="_blank" rel="noopener"
+                   class="inline-flex items-center gap-1 text-xs font-medium
+                          text-accentSoftTx hover:text-accentSoftTx underline transition">
+                    {{ doc.title }}
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <!-- Empty state -->
+    <div class="bg-surface border border-edge rounded-xl px-5 py-10 shadow-sm text-center">
+        <p class="text-faint text-sm" data-i18n="news_empty">No items in this category.</p>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

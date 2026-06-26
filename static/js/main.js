@@ -18,22 +18,47 @@ const translations = {
         nav_admin:      "Admin",
         nav_logout:     "Logout",
         nav_login:      "Login",
-        nav_pricing:    "Pricing",
+        nav_pricing:      "Pricing",
+        nav_legislation:  "Legislation",
+
+        // Legislation page
+        leg_page_title:   "Legislation & Rule-Change Digest",
+        leg_page_subtitle:"Plain-language summaries of Rajasthan mining rule changes. Always verify with an expert before acting on any summary.",
+        leg_official_link:"View Official Document",
+        leg_source:       "Source",
+        leg_verified_prefix: "Verified:",
+        leg_pending_verify:  "Pending verification",
+        leg_verify_note:  "information only, please verify with expert",
+        leg_empty:        "No legislation entries published yet. Check back soon.",
 
         // Home page
-        hero_title:     "Rajasthan Mining Compliance",
-        hero_subtitle:  "Never miss a government deadline. Never pay a penalty.",
-        hero_desc:      "Track EC reports, calculate royalty fees, and get expert guidance — all in one place. Built for Rajasthan mine owners.",
-        hero_cta:       "Get Started Free",
-        hero_pricing:   "View Pricing",
-        problem_title:  "⚠️ The Cost of Missing a Deadline",
-        feature1_title: "Compliance Calendar",
-        feature1_desc:  "Automatic reminders 7 days and 1 day before every EC report, annual return, and government deadline. Delivered to your WhatsApp.",
-        feature2_title: "Fee Calculator",
-        feature2_desc:  "Calculate exact royalty, DMF, and NPV amounts using verified Rajasthan government rates. Historical rates for past lease dates.",
-        feature3_title: "Expert Consultation",
-        feature3_desc:  "30 years of Rajasthan mining law expertise. Get answers to complex compliance questions within 24 hours.",
-        trusted_by:     "Trusted by mine owners across Rajasthan",
+        hero_headline:     "Rajasthan Mining Compliance, Done Right the First Time",
+        hero_subhead:      "Royalty, DMF, and NPV calculated on verified historical rates. Deadlines tracked automatically. Regulatory changes explained in plain language. And a 30-year mining-law expert one message away — so an outdated rate or a missed return never becomes a lakhs-rupee penalty.",
+        hero_cta_calc:     "Calculate My Fees →",
+        hero_cta_pricing:  "See Pricing",
+        pain_heading:      "Where Compliance Goes Wrong",
+        pain1_title:       "Wrong Rate Applied",
+        pain1_body:        "Royalty and DMF rates are revised by notification every few years. Apply last year's rate to this year's dispatch — or a current rate to a back-period — and you invite recovery notices, interest, and an inspector's scrutiny.",
+        pain2_title:       "Missed Deadlines",
+        pain2_body:        "Six-monthly environmental compliance reports, annual returns, DMF contributions — each runs on its own calendar. A single lapsed deadline can stall dispatch permissions and freeze a working mine.",
+        pain3_title:       "Unexpected Penalties",
+        pain3_body:        "NPV and dead-rent computations for lease grant and renewal are unforgiving. A single error in the calculation can swing the figure by ₹10 lakh or more — and the department's number is the one that counts.",
+        features_heading:  "Everything Your Mine's Compliance Demands — In One Platform",
+        features_subhead:  "Purpose-built for Rajasthan's minor-mineral regime. Not generic compliance software.",
+        feat_calc_title:   "Instant Fee Calculator",
+        feat_calc_body:    "Compute royalty, DMF, and NPV against the rate legally in force on any date — current or historical. Change the lease year and the calculator applies the exact notified rate that governed it, with the source notification shown on every result.",
+        feat_cal_title:    "Compliance Calendar",
+        feat_cal_body:     "Every statutory deadline — six-monthly EC reports, annual returns, DMF submissions — tracked from your lease and EC grant dates. Automatic reminders seven days and one day before each due date, so nothing lapses.",
+        feat_expert_title: "Ask an Expert",
+        feat_expert_body:  "A direct line to a mining-law consultant with 30 years of Rajasthan practice. Your query reaches the expert pre-filled with your mine's details, with a first response within 24 hours — judgement on the grey areas no software can settle.",
+        feat_leg_title:    "Legislation Digest",
+        feat_leg_body:     "Every amendment to Rajasthan's minor-mineral rules, read closely and rewritten in plain Hindi and English. Know exactly what changed, which rule it touches, and what it means for your operation — before it reaches an inspector's checklist.",
+        pricing_heading:   "Simple, Transparent Pricing",
+        pricing_subhead:   "Less than the cost of a single penalty notice.",
+        leg_band_heading:  "The Rules, Kept Current",
+        leg_band_subhead:  "Rajasthan's mining regulations change often. We read every amendment and explain it plainly.",
+        leg_band_empty:    "Our legislation library is being verified by our expert and goes live shortly.",
+        leg_band_cta:      "Browse the Legislation Library →",
 
         // Login page
         login_title:    "Login to MineralLaw.in",
@@ -109,6 +134,18 @@ const translations = {
         auction_gis_title:       "DMG Mineral Map (GIS)",
         auction_gis_desc:        "Official map of mines, leases, and auction blocks in Rajasthan.",
         auction_disclaimer:      "MineralLaw.in is not affiliated with MSTC or DMG. These links open official government portals. Always verify auction details on the official portal before bidding.",
+
+        // News & Events page
+        news_title:    "News & Events",
+        news_source:   "Source: Department of Mines & Geology, Govt. of Rajasthan",
+        news_updated:  "Updated daily from the official DMG portal.",
+        filter_all:    "All",
+        filter_auction:"Auctions",
+        filter_tender: "Tenders",
+        filter_mineral:"Minerals",
+        filter_notice: "Notices",
+        news_empty:    "No items in this category.",
+        nav_news:      "News",
     },
 
     // ⚠️ PLACEHOLDER HINDI — father must verify all legal/technical terms before launch (Phase 2 per project spec).
@@ -122,22 +159,47 @@ const translations = {
         nav_admin:      "एडमिन",
         nav_logout:     "लॉगआउट",
         nav_login:      "लॉगिन",
-        nav_pricing:    "मूल्य",
+        nav_pricing:      "मूल्य",
+        nav_legislation:  "कानून",
+
+        // Legislation page
+        leg_page_title:   "कानून एवं नियम परिवर्तन",
+        leg_page_subtitle:"राजस्थान खनन नियम परिवर्तनों के सरल-भाषा सारांश। कोई भी कदम उठाने से पहले विशेषज्ञ से सत्यापित करें।",
+        leg_official_link:"आधिकारिक दस्तावेज़ देखें",
+        leg_source:       "स्रोत",
+        leg_verified_prefix: "सत्यापित:",
+        leg_pending_verify:  "सत्यापन लंबित",
+        leg_verify_note:  "केवल जानकारी — विशेषज्ञ से सत्यापित करें",
+        leg_empty:        "अभी कोई प्रविष्टि प्रकाशित नहीं। शीघ्र वापस देखें।",
 
         // Home page
-        hero_title:     "राजस्थान खनन अनुपालन",
-        hero_subtitle:  "कोई सरकारी समय-सीमा न चूकें। कोई जुर्माना न भरें।",
-        hero_desc:      "EC रिपोर्ट ट्रैक करें, रॉयल्टी शुल्क की गणना करें, और विशेषज्ञ मार्गदर्शन पाएं — सब एक जगह। राजस्थान के खनन मालिकों के लिए।",
-        hero_cta:       "मुफ्त शुरू करें",
-        hero_pricing:   "मूल्य देखें",
-        problem_title:  "⚠️ समय-सीमा चूकने की कीमत",
-        feature1_title: "अनुपालन कैलेंडर",
-        feature1_desc:  "हर EC रिपोर्ट, वार्षिक रिटर्न और सरकारी समय-सीमा से 7 दिन और 1 दिन पहले WhatsApp पर स्वचालित अनुस्मारक।",
-        feature2_title: "शुल्क कैलकुलेटर",
-        feature2_desc:  "सत्यापित राजस्थान सरकारी दरों का उपयोग करके सटीक रॉयल्टी, DMF और NPV राशि की गणना करें।",
-        feature3_title: "विशेषज्ञ परामर्श",
-        feature3_desc:  "30 साल का राजस्थान खनन कानून अनुभव। 24 घंटे के भीतर जटिल अनुपालन प्रश्नों के उत्तर पाएं।",
-        trusted_by:     "राजस्थान भर के खनन मालिकों द्वारा विश्वसनीय",
+        hero_headline:     "राजस्थान खनन अनुपालन — पहली बार में, सही तरीके से।",
+        hero_subhead:      "रॉयल्टी, DMF और NPV — सत्यापित ऐतिहासिक दरों पर सटीक गणना। हर समय-सीमा की स्वतः निगरानी। नियमों में बदलाव सरल भाषा में। और 30 वर्षों के अनुभवी खनन-विधि विशेषज्ञ बस एक संदेश दूर — ताकि कोई पुरानी दर या छूटी हुई विवरणी कभी लाखों के जुर्माने में न बदले।",
+        hero_cta_calc:     "मेरी फ़ीस की गणना करें →",
+        hero_cta_pricing:  "मूल्य निर्धारण देखें",
+        pain_heading:      "अनुपालन में चूक कहाँ होती है",
+        pain1_title:       "गलत दर का प्रयोग",
+        pain1_body:        "रॉयल्टी और DMF की दरें हर कुछ वर्षों में अधिसूचना द्वारा संशोधित होती हैं। इस वर्ष के निर्गमन पर पिछले वर्ष की दर — या किसी पूर्व-अवधि पर वर्तमान दर — लगाने का अर्थ है वसूली नोटिस, ब्याज और निरीक्षक की जाँच।",
+        pain2_title:       "छूटी हुई समय-सीमाएँ",
+        pain2_body:        "छह-माही पर्यावरण अनुपालन रिपोर्ट, वार्षिक विवरणी, DMF अंशदान — प्रत्येक की अपनी समय-सारणी है। एक भी समय-सीमा चूकने पर निर्गमन अनुमति रुक सकती है और चालू खदान ठप पड़ सकती है।",
+        pain3_title:       "अप्रत्याशित जुर्माने",
+        pain3_body:        "पट्टा स्वीकृति और नवीनीकरण के लिए NPV और डेड-रेंट की गणना में कोई छूट नहीं। गणना में एक त्रुटि आँकड़े को ₹10 लाख या उससे अधिक तक बदल सकती है — और मान्य वही होता है जो विभाग का आँकड़ा हो।",
+        features_heading:  "आपकी खदान के अनुपालन की हर ज़रूरत — एक ही मंच पर",
+        features_subhead:  "राजस्थान के गौण खनिज तंत्र के लिए विशेष रूप से निर्मित। कोई सामान्य अनुपालन सॉफ़्टवेयर नहीं।",
+        feat_calc_title:   "त्वरित शुल्क कैलकुलेटर",
+        feat_calc_body:    "किसी भी तिथि — वर्तमान या ऐतिहासिक — पर विधिक रूप से प्रभावी दर के अनुसार रॉयल्टी, DMF और NPV की गणना करें। पट्टा वर्ष बदलें और कैलकुलेटर उसी अधिसूचित दर को लागू करेगा जो उस समय प्रभावी थी, और हर परिणाम पर स्रोत अधिसूचना दर्शाई जाएगी।",
+        feat_cal_title:    "अनुपालन कैलेंडर",
+        feat_cal_body:     "हर वैधानिक समय-सीमा — छह-माही EC रिपोर्ट, वार्षिक विवरणी, DMF जमा — आपके पट्टा और EC स्वीकृति तिथि से ट्रैक की जाती है। प्रत्येक नियत तिथि से सात दिन और एक दिन पूर्व स्वतः अनुस्मारक, ताकि कुछ न छूटे।",
+        feat_expert_title: "विशेषज्ञ से पूछें",
+        feat_expert_body:  "राजस्थान में 30 वर्षों के अनुभवी खनन-विधि सलाहकार से सीधा संपर्क। आपका प्रश्न आपकी खदान के विवरण सहित विशेषज्ञ तक पहुँचता है, और पहला उत्तर 24 घंटे के भीतर — उन पेचीदा पहलुओं पर निर्णय जो कोई सॉफ़्टवेयर नहीं दे सकता।",
+        feat_leg_title:    "विधान सार-संग्रह",
+        feat_leg_body:     "राजस्थान के गौण-खनिज नियमों के हर संशोधन का बारीकी से अध्ययन कर सरल हिंदी और अंग्रेज़ी में प्रस्तुत। जानें कि वास्तव में क्या बदला, कौन-सा नियम प्रभावित हुआ, और आपके संचालन के लिए इसका क्या अर्थ है — इससे पहले कि यह किसी निरीक्षक की सूची तक पहुँचे।",
+        pricing_heading:   "सरल, पारदर्शी मूल्य निर्धारण",
+        pricing_subhead:   "एक जुर्माना नोटिस की लागत से भी कम।",
+        leg_band_heading:  "नियम, सदैव अद्यतन",
+        leg_band_subhead:  "राजस्थान के खनन नियम अक्सर बदलते हैं। हम हर संशोधन को पढ़ते हैं और उसे सरल भाषा में समझाते हैं।",
+        leg_band_empty:    "हमारी विधान लाइब्रेरी विशेषज्ञ द्वारा सत्यापित की जा रही है और शीघ्र ही उपलब्ध होगी।",
+        leg_band_cta:      "विधान लाइब्रेरी देखें →",
 
         // Login page
         login_title:    "MineralLaw.in में लॉगिन करें",
@@ -213,6 +275,18 @@ const translations = {
         auction_gis_title:       "DMG खनिज मानचित्र (GIS)",
         auction_gis_desc:        "राजस्थान में खानों, पट्टों और नीलामी ब्लॉकों का आधिकारिक मानचित्र।",
         auction_disclaimer:      "MineralLaw.in का MSTC या DMG से कोई संबंध नहीं है। ये लिंक आधिकारिक सरकारी पोर्टल खोलते हैं। बोली लगाने से पहले नीलामी विवरण की पुष्टि आधिकारिक पोर्टल पर करें।",
+
+        // News & Events page
+        news_title:    "समाचार एवं कार्यक्रम",
+        news_source:   "स्रोत: खान एवं भूविज्ञान विभाग, राजस्थान सरकार",
+        news_updated:  "आधिकारिक DMG पोर्टल से प्रतिदिन अद्यतन।",
+        filter_all:    "सभी",
+        filter_auction:"नीलामी",
+        filter_tender: "निविदा",
+        filter_mineral:"खनिज",
+        filter_notice: "सूचनाएं",
+        news_empty:    "इस श्रेणी में कोई आइटम नहीं।",
+        nav_news:      "समाचार",
     }
 };
 
@@ -230,6 +304,11 @@ function applyLanguage(lang) {
     if (btn) btn.textContent = lang === 'en' ? 'हि' : 'EN';
     localStorage.setItem('minerallaw_lang', lang);
     document.documentElement.lang = lang;
+
+    // Legislation page: toggle DB-stored bilingual content
+    const isHi = lang === 'hi';
+    document.querySelectorAll('.leg-en').forEach(el => el.classList.toggle('hidden', isHi));
+    document.querySelectorAll('.leg-hi').forEach(el => el.classList.toggle('hidden', !isHi));
 }
 
 function toggleLanguage() {
@@ -237,7 +316,18 @@ function toggleLanguage() {
     applyLanguage(current === 'en' ? 'hi' : 'en');
 }
 
+// ------------------------------------------------------------
+// SECTION 3: THEME TOGGLE
+// ------------------------------------------------------------
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('minerallaw_theme', next);
+}
+
 // Apply saved language on every page load
+// (Theme is applied by the pre-paint inline script in <head> — no re-application needed here)
 document.addEventListener('DOMContentLoaded', () => {
     const saved = localStorage.getItem('minerallaw_lang') || 'en';
     applyLanguage(saved);

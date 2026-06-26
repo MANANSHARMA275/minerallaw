@@ -14,7 +14,7 @@ from decimal import Decimal
 from flask import Blueprint, abort, jsonify, render_template, request
 from flask_login import current_user, login_required
 
-from app.models import AuditLog, AuctionStatus, Mineral, Rate, Ticket, User, db, get_auction_status
+from app.models import AuditLog, AuctionStatus, Legislation, Mineral, Rate, Ticket, User, db, get_auction_status
 from app.helpers import log_audit
 
 
@@ -280,6 +280,187 @@ def auction_update():
     )
 
     return jsonify({'status': 'Auction status updated.'})
+
+
+@admin_bp.route('/legislation')
+@login_required
+@role_required('superadmin')
+def legislation_list():
+    """
+    PURPOSE  : List all Legislation entries (published and unpublished) for admin
+    RECEIVES : None
+    RETURNS  : admin_panel.html with section='legislation'
+    SECURITY : superadmin only
+    LEGAL    : Unpublished entries are shown here but never on the public page
+    """
+    entries = (
+        Legislation.query
+        .order_by(Legislation.category, Legislation.display_order)
+        .all()
+    )
+    return render_template('admin_panel.html', section='legislation', legislation=entries)
+
+
+def _parse_leg_form():
+    """
+    PURPOSE  : Coerce Legislation form fields from request.form to column types
+    RECEIVES : None — reads current request context
+    RETURNS  : (dict, None) on success; (None, error_str) on validation failure
+    SECURITY : ORM parameterised queries prevent injection; no raw SQL used
+    LEGAL    : last_verified_on is informational — domain expert sets this manually
+    """
+    title = request.form.get('title', '').strip()
+    category = request.form.get('category', '').strip()
+    if not title or not category:
+        return None, 'title and category are required.'
+
+    date_str = request.form.get('last_verified_on', '').strip()
+    last_verified_on = None
+    if date_str:
+        try:
+            last_verified_on = date.fromisoformat(date_str)
+        except ValueError:
+            return None, 'last_verified_on must be YYYY-MM-DD.'
+
+    try:
+        display_order = int(request.form.get('display_order') or 0)
+    except ValueError:
+        display_order = 0
+
+    return {
+        'title':            title,
+        'category':         category,
+        'summary_en':       request.form.get('summary_en', '').strip() or None,
+        'summary_hi':       request.form.get('summary_hi', '').strip() or None,
+        'source_reference': request.form.get('source_reference', '').strip() or None,
+        'official_url':     request.form.get('official_url', '').strip() or None,
+        'last_verified_on': last_verified_on,
+        'is_published':     request.form.get('is_published') in ('1', 'on', 'true'),
+        'display_order':    display_order,
+    }, None
+
+
+@admin_bp.route('/legislation/create', methods=['POST'])
+@login_required
+@role_required('superadmin')
+def legislation_create():
+    """
+    PURPOSE  : Create a new Legislation entry
+    RECEIVES : form — title, category, summary_en, summary_hi, source_reference,
+               official_url, last_verified_on, is_published, display_order
+    RETURNS  : JSON {ok, message, id}
+    SECURITY : superadmin only. CSRF enforced by Flask-WTF CSRFProtect middleware.
+    LEGAL    : is_published defaults False — domain expert controls public visibility
+    """
+    fields, err = _parse_leg_form()
+    if err:
+        return jsonify({'ok': False, 'message': err}), 400
+
+    entry = Legislation(**fields)
+    db.session.add(entry)
+    db.session.commit()
+
+    log_audit(
+        user_id=current_user.id,
+        action='LEGISLATION_CREATED',
+        table_affected='legislation',
+        record_id=entry.id,
+        new_value=f"title={entry.title!r}, category={entry.category!r}",
+    )
+    return jsonify({'ok': True, 'message': 'Entry created.', 'id': entry.id})
+
+
+@admin_bp.route('/legislation/<int:leg_id>/update', methods=['POST'])
+@login_required
+@role_required('superadmin')
+def legislation_update(leg_id):
+    """
+    PURPOSE  : Update an existing Legislation entry
+    RECEIVES : leg_id (URL), same form fields as create
+    RETURNS  : JSON {ok, message}
+    SECURITY : superadmin only. CSRF enforced. 404 if entry is missing.
+    LEGAL    : Every update logged to AuditLog for audit trail
+    """
+    entry = db.session.get(Legislation, leg_id)
+    if not entry:
+        return jsonify({'ok': False, 'message': 'Entry not found.'}), 404
+
+    fields, err = _parse_leg_form()
+    if err:
+        return jsonify({'ok': False, 'message': err}), 400
+
+    old_title = entry.title
+    for k, v in fields.items():
+        setattr(entry, k, v)
+    entry.updated_at = datetime.now(timezone.utc)
+    db.session.commit()
+
+    log_audit(
+        user_id=current_user.id,
+        action='LEGISLATION_UPDATED',
+        table_affected='legislation',
+        record_id=leg_id,
+        old_value=f"title={old_title!r}",
+        new_value=f"title={entry.title!r}",
+    )
+    return jsonify({'ok': True, 'message': 'Entry updated.'})
+
+
+@admin_bp.route('/legislation/<int:leg_id>/delete', methods=['POST'])
+@login_required
+@role_required('superadmin')
+def legislation_delete(leg_id):
+    """
+    PURPOSE  : Delete a Legislation entry
+    RECEIVES : leg_id (URL)
+    RETURNS  : JSON {ok, message}
+    SECURITY : superadmin only. CSRF enforced by middleware.
+    LEGAL    : Deletion logged to AuditLog before the row is removed
+    """
+    entry = db.session.get(Legislation, leg_id)
+    if not entry:
+        return jsonify({'ok': False, 'message': 'Entry not found.'}), 404
+
+    log_audit(
+        user_id=current_user.id,
+        action='LEGISLATION_DELETED',
+        table_affected='legislation',
+        record_id=leg_id,
+        old_value=f"title={entry.title!r}",
+    )
+    db.session.delete(entry)
+    db.session.commit()
+    return jsonify({'ok': True, 'message': 'Entry deleted.'})
+
+
+@admin_bp.route('/legislation/<int:leg_id>/toggle', methods=['POST'])
+@login_required
+@role_required('superadmin')
+def legislation_toggle(leg_id):
+    """
+    PURPOSE  : Flip is_published on a Legislation entry
+    RECEIVES : leg_id (URL)
+    RETURNS  : JSON {ok, message, is_published}
+    SECURITY : superadmin only. CSRF enforced by middleware.
+    LEGAL    : Unpublished entries never appear on the public /legislation page
+    """
+    entry = db.session.get(Legislation, leg_id)
+    if not entry:
+        return jsonify({'ok': False, 'message': 'Entry not found.'}), 404
+
+    entry.is_published = not entry.is_published
+    entry.updated_at = datetime.now(timezone.utc)
+    db.session.commit()
+
+    log_audit(
+        user_id=current_user.id,
+        action='LEGISLATION_TOGGLED',
+        table_affected='legislation',
+        record_id=leg_id,
+        new_value=f"is_published={entry.is_published}",
+    )
+    label = 'Published.' if entry.is_published else 'Unpublished.'
+    return jsonify({'ok': True, 'message': label, 'is_published': entry.is_published})
 
 
 @admin_bp.route('/users')

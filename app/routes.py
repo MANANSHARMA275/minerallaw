@@ -14,7 +14,7 @@ from decimal import Decimal, ROUND_HALF_UP
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_required, current_user, logout_user
 
-from app.models import AuditLog, Mineral, db, get_auction_status
+from app.models import AuditLog, Legislation, Mineral, NewsItem, db, get_auction_status
 from app.fee_calculator import get_rate_for_date, calculate_royalty, calculate_dmf, get_calculation_disclaimer
 from app.helpers import gmail_prefill, log_audit
 from app.validators import validate_mineral_query, validate_rate_date
@@ -31,13 +31,20 @@ main = Blueprint('main', __name__)
 @main.route('/')
 def home():
     """
-    PURPOSE  : Landing page — compliance assessment form
+    PURPOSE  : Landing page — compliance overview and feature entry points
     RECEIVES : None
-    RETURNS  : home.html template
+    RETURNS  : home.html with key_legislation (up to 3 newest published Legislation rows)
     SECURITY : Public route — no login required
     LEGAL    : Disclaimer shown on every page via base.html
     """
-    return render_template('home.html')
+    key_legislation = (
+        Legislation.query
+        .filter_by(is_published=True)
+        .order_by(Legislation.created_at.desc())
+        .limit(3)
+        .all()
+    )
+    return render_template('home.html', key_legislation=key_legislation)
 
 
 @main.route('/auctions')
@@ -81,6 +88,75 @@ def logout():
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.home'))
+
+
+@main.route('/legislation')
+def legislation():
+    """
+    PURPOSE  : Public Legislation Digest — plain-language summaries of mining rule changes
+    RECEIVES : None
+    RETURNS  : legislation.html with entries grouped by category, ordered by display_order
+    SECURITY : Public route — no login required. Only is_published=True rows are shown.
+    LEGAL    : All content is informational only. last_verified_on surfaces when the
+               domain expert last confirmed accuracy. Disclaimer shown on every card.
+    """
+    rows = (
+        Legislation.query
+        .filter_by(is_published=True)
+        .order_by(Legislation.category, Legislation.display_order)
+        .all()
+    )
+    grouped: dict = {}
+    for row in rows:
+        grouped.setdefault(row.category, []).append(row)
+    return render_template('legislation.html', grouped=grouped)
+
+
+@main.route('/news')
+def news():
+    """
+    PURPOSE  : Public DMG News & Events feed — ministry notices with PDF links
+    RECEIVES : ?category= (optional GET param; unknown/staff values fall back to 'all')
+    RETURNS  : news.html with published items ordered by order_date DESC; filter tabs
+    SECURITY : Public route — no login required. Only is_published=True rows are shown.
+               ?category=staff (or any unknown value) resolves to 'all'; cannot expose
+               unpublished items.
+    LEGAL    : Content is publicly available government information. source_url
+               preserved for attribution; PDF links open directly on the DMG server.
+    """
+    category_rows = (
+        NewsItem.query
+        .filter_by(is_published=True)
+        .with_entities(NewsItem.category)
+        .distinct()
+        .all()
+    )
+    present_categories = sorted(row[0] for row in category_rows)
+
+    category = request.args.get('category', '').strip()
+    if category and category in present_categories:
+        active = category
+        items = (
+            NewsItem.query
+            .filter_by(is_published=True, category=category)
+            .order_by(NewsItem.order_date.desc())
+            .all()
+        )
+    else:
+        active = 'all'
+        items = (
+            NewsItem.query
+            .filter_by(is_published=True)
+            .order_by(NewsItem.order_date.desc())
+            .all()
+        )
+
+    return render_template(
+        'news.html',
+        items=items,
+        categories=present_categories,
+        active=active,
+    )
 
 
 @main.route('/pricing')
@@ -217,7 +293,7 @@ def calculate():
             'effective_from': str(royalty_rate.effective_from),
         },
         'disclaimer': disclaimer,
-        'warning': '⚠️ All rates are placeholders. Father must verify before sharing with any real client.',
+        'warning': '⚠️ All rates are placeholders. Our expert must verify before sharing with any real client.',
         'dmf_warning': dmf_warning,
     })
 

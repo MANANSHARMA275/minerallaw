@@ -20,7 +20,7 @@
 import os
 from datetime import date
 from app import create_app, db
-from app.models import Mineral, Rate, User
+from app.models import Legislation, Mineral, Rate, User
 
 
 # ------------------------------------------------------------
@@ -70,6 +70,88 @@ def insert_rate_if_absent(notification_number: str, **kwargs) -> None:
     rate = Rate(notification_number=notification_number, **kwargs)
     db.session.add(rate)
     print(f"  Rate '{notification_number}' inserted")
+
+
+def seed_legislation() -> None:
+    """
+    PURPOSE  : Insert 3 PLACEHOLDER Legislation entries for dev/demo purposes.
+               Idempotent — skips any entry whose title already exists.
+    RECEIVES : None — runs inside an active app context
+    RETURNS  : None
+    SECURITY : No user-supplied input; dev-only seed
+    LEGAL    : ⚠️ ALL summaries are PLACEHOLDER text.
+               Domain expert (father) must verify every entry before publishing.
+               All entries seeded with is_published=False so they never appear
+               on the public page until explicitly toggled in the admin panel.
+    """
+    _ENTRIES = [
+        {
+            'title':            '[PLACEHOLDER] MMDR Amendment 2025 — Star-Rated Mining',
+            'category':         '2025 Amendment',
+            'summary_en':       (
+                '[PLACEHOLDER — father to verify] The Mines and Minerals (Development '
+                'and Regulation) Amendment 2025 introduces a mandatory star-rating '
+                'system for mine operations. Higher-rated mines receive preference in '
+                'lease renewals. Exact provisions and effective date to be confirmed.'
+            ),
+            'summary_hi':       (
+                '[PLACEHOLDER — पिता जी से सत्यापित करना है] खान एवं खनिज '
+                '(विकास और विनियमन) संशोधन 2025 खनन परिचालन के लिए अनिवार्य '
+                'स्टार-रेटिंग प्रणाली प्रस्तुत करता है।'
+            ),
+            'source_reference': 'MMDR Amendment 2025',
+            'official_url':     None,
+            'last_verified_on': None,
+            'is_published':     False,
+            'display_order':    1,
+        },
+        {
+            'title':            '[PLACEHOLDER] Rajasthan Minor Mineral Royalty Revision — G.S.R. 93',
+            'category':         'Fees & Royalty',
+            'summary_en':       (
+                '[PLACEHOLDER — father to verify] Rajasthan government revised royalty '
+                'rates for minor minerals via G.S.R. 93. New rates applicable from the '
+                'notification date. Exact per-mineral figures and effective date to be '
+                'confirmed against the official DMG notification.'
+            ),
+            'summary_hi':       (
+                '[PLACEHOLDER — पिता जी से सत्यापित करना है] राजस्थान सरकार ने '
+                'G.S.R. 93 के माध्यम से लघु खनिजों के लिए रॉयल्टी दरें संशोधित '
+                'की हैं। सटीक दरें आधिकारिक DMG अधिसूचना से सत्यापित करें।'
+            ),
+            'source_reference': 'G.S.R. 93',
+            'official_url':     None,
+            'last_verified_on': None,
+            'is_published':     False,
+            'display_order':    1,
+        },
+        {
+            'title':            '[PLACEHOLDER] Annual Return Filing Deadline — Rule 44(7)',
+            'category':         'Deadlines & Filing',
+            'summary_en':       (
+                '[PLACEHOLDER — father to verify] Under Rule 44(7) of the Rajasthan '
+                'Minor Mineral Concession Rules, lessees must file an annual return of '
+                'mineral production by 31 January each year. Failure to file attracts '
+                'penalties. Current penalty amount to be confirmed.'
+            ),
+            'summary_hi':       (
+                '[PLACEHOLDER — पिता जी से सत्यापित करना है] राजस्थान लघु खनिज '
+                'रियायत नियम 44(7) के तहत पट्टेदारों को प्रति वर्ष 31 जनवरी '
+                'तक वार्षिक उत्पादन रिटर्न दाखिल करनी होती है।'
+            ),
+            'source_reference': 'Rule 44(7)',
+            'official_url':     None,
+            'last_verified_on': None,
+            'is_published':     False,
+            'display_order':    1,
+        },
+    ]
+    for data in _ENTRIES:
+        if Legislation.query.filter_by(title=data['title']).first():
+            print(f"  Legislation '{data['title'][:50]}…' already exists — skipping")
+            continue
+        db.session.add(Legislation(**data))
+        print(f"  Legislation '{data['title'][:50]}…' inserted (is_published=False)")
 
 
 def seed_superadmin() -> None:
@@ -136,6 +218,9 @@ def seed() -> None:
 
         print("\n── Superadmin ────────────────────────────────────────")
         seed_superadmin()
+
+        print("\n── Legislation (PLACEHOLDER — father to verify) ──────")
+        seed_legislation()
 
         print("\n── Minerals ──────────────────────────────────────────")
         limestone       = get_or_create_mineral('Limestone',     'minor')
@@ -246,16 +331,19 @@ def seed() -> None:
         db.session.commit()
 
         # ── Final count report ─────────────────────────────────
-        mineral_count = Mineral.query.count()
-        rate_count = Rate.query.count()
-        user_count = User.query.count()
+        mineral_count     = Mineral.query.count()
+        rate_count        = Rate.query.count()
+        user_count        = User.query.count()
+        legislation_count = Legislation.query.count()
         print(f"\n── Done ──────────────────────────────────────────────")
-        print(f"  Mineral rows : {mineral_count}")
-        print(f"  Rate rows    : {rate_count}")
-        print(f"  User rows    : {user_count}")
-        print(f"  (11 Rajasthan minor minerals: 1 existing + 10 new PLACEHOLDER)")
+        print(f"  Mineral rows     : {mineral_count}")
+        print(f"  Rate rows        : {rate_count}")
+        print(f"  User rows        : {user_count}")
+        print(f"  Legislation rows : {legislation_count}")
         print(f"\n⚠️  All rate values are PLACEHOLDERS — father must verify")
-        print(f"   against DMG notifications before client-facing use.\n")
+        print(f"   against DMG notifications before client-facing use.")
+        print(f"⚠️  All legislation entries are PLACEHOLDER and is_published=False.")
+        print(f"   Father must verify and publish via the admin panel.\n")
 
 
 if __name__ == '__main__':

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Legislation & Rule-Change Digest | MineralLaw.in{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+
+    <!-- ── Page heading ──────────────────────────────────────── -->
+    <h1 class="text-2xl font-bold text-content mb-2"
+        data-i18n="leg_page_title">Legislation &amp; Rule-Change Digest</h1>
+    <p class="text-faint text-sm mb-8"
+       data-i18n="leg_page_subtitle">
+        Plain-language summaries of Rajasthan mining rule changes.
+        Always verify with an expert before acting on any summary.
+    </p>
+
+    {% if grouped %}
+        {% for category, entries in grouped.items() %}
+        <div class="mb-8">
+
+            <!-- Category badge header -->
+            <div class="flex items-center gap-3 mb-3">
+                <span class="bg-accent text-onAccent text-xs font-bold px-2.5 py-1 rounded-full">
+                    {{ category }}
+                </span>
+            </div>
+
+            <!-- Accordion entries for this category -->
+            <div class="space-y-2">
+            {% for entry in entries %}
+            <details class="group bg-surface border border-edge rounded-xl shadow-sm overflow-hidden">
+
+                <summary class="flex items-center justify-between px-5 py-4
+                               cursor-pointer select-none hover:bg-canvas transition"
+                         style="list-style:none">
+
+                    <div class="flex items-start gap-3 flex-1 min-w-0">
+                        <span class="font-semibold text-content text-sm leading-snug">
+                            {{ entry.title }}
+                        </span>
+                        {% if entry.source_reference %}
+                        <span class="flex-shrink-0 text-xs bg-accentSoft text-accentSoftTx
+                                     border border-accentSoftEdge px-2 py-0.5 rounded font-mono">
+                            {{ entry.source_reference }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Chevron rotates when open -->
+                    <svg class="w-4 h-4 ml-3 flex-shrink-0 text-faint
+                                group-open:rotate-180 transition-transform duration-200"
+                         fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                         aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </summary>
+
+                <div class="px-5 py-4 border-t border-edge">
+
+                    <!-- Bilingual summary.
+                         .leg-hi falls back to summary_en when Hindi text is absent,
+                         so the user never sees a blank card in either language. -->
+                    <p class="text-muted text-sm leading-relaxed mb-3">
+                        <span class="leg-en">{{ entry.summary_en or '' }}</span>
+                        <span class="leg-hi hidden">{{ entry.summary_hi or entry.summary_en or '' }}</span>
+                    </p>
+
+                    <!-- Official government link -->
+                    {% if entry.official_url %}
+                    <p class="mb-3">
+                        <a href="{{ entry.official_url }}"
+                           target="_blank" rel="noopener noreferrer"
+                           class="inline-flex items-center gap-1 text-xs font-medium
+                                  text-accentSoftTx hover:text-accentSoftTx underline transition">
+                            <span data-i18n="leg_official_link">View Official Document</span>
+                            <svg class="w-3 h-3 flex-shrink-0" fill="none"
+                                 stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4
+                                         M14 4h6m0 0v6m0-6L10 14"/>
+                            </svg>
+                        </a>
+                    </p>
+                    {% endif %}
+
+                    <!-- Verified date + disclaimer -->
+                    <p class="text-xs text-faint border-t border-edge pt-2 mt-1">
+                        <span data-i18n="leg_verified_prefix">Verified:</span>
+                        {% if entry.last_verified_on %}
+                            {{ entry.last_verified_on.strftime('%d %B %Y') }}
+                        {% else %}
+                            <span data-i18n="leg_pending_verify">Pending verification</span>
+                        {% endif %}
+                        —
+                        <span data-i18n="leg_verify_note">information only, please verify with expert</span>
+                    </p>
+
+                </div>
+            </details>
+            {% endfor %}
+            </div>
+
+        </div>
+        {% endfor %}
+
+    {% else %}
+    <!-- Empty state — all entries unpublished or table empty -->
+    <div class="bg-surface border border-edge rounded-xl px-5 py-10 shadow-sm text-center">
+        <p class="text-faint text-sm" data-i18n="leg_empty">
+            No legislation entries published yet. Check back soon.
+        </p>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style nonce="{{ csp_nonce() }}">
+    /* Remove WebKit disclosure triangle from summary elements on this page */
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+</style>
+{% endblock %}

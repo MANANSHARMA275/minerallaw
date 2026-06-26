@@ -8,6 +8,7 @@
 # SECTION 1: IMPORTS
 # ------------------------------------------------------------
 from datetime import datetime, timezone
+from hashlib import sha256
 from flask_login import UserMixin
 from app import db
 
@@ -408,3 +409,112 @@ class ComplianceResponse(db.Model):
     def __repr__(self):
         return f'<ComplianceResponse report={self.report_id} cond={self.condition_id}>'
 
+
+# ------------------------------------------------------------
+# SECTION 15: LEGISLATION TABLE — Rule-Change Digest
+# ------------------------------------------------------------
+class Legislation(db.Model):
+    """
+    PURPOSE  : Plain-language summaries of mining rule changes for public display
+    SECURITY : is_published=False entries never appear on the public page.
+               Only superadmin can create/edit/delete via admin panel.
+    LEGAL    : All content is informational only. last_verified_on tracks when
+               the domain expert last confirmed accuracy. Never delete entries —
+               supersede with updated text so audit trail is preserved in AuditLog.
+    """
+    __tablename__ = 'legislation'
+
+    id               = db.Column(db.Integer, primary_key=True)
+    title            = db.Column(db.String(300), nullable=False)
+    category         = db.Column(db.String(100), nullable=False)   # e.g. "2025 Amendment"
+    summary_en       = db.Column(db.Text, nullable=True)
+    summary_hi       = db.Column(db.Text, nullable=True)
+    source_reference = db.Column(db.String(200), nullable=True)    # e.g. "Rule 73A"
+    official_url     = db.Column(db.String(500), nullable=True)    # link to gov PDF
+    last_verified_on = db.Column(db.Date, nullable=True)
+    is_published     = db.Column(db.Boolean, nullable=False, default=False)
+    display_order    = db.Column(db.Integer, nullable=False, default=0)
+    created_at       = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at       = db.Column(db.DateTime,
+                                 default=lambda: datetime.now(timezone.utc),
+                                 onupdate=lambda: datetime.now(timezone.utc))
+
+    def __repr__(self):
+        return f'<Legislation {self.title[:40]!r} published={self.is_published}>'
+
+
+# ------------------------------------------------------------
+# SECTION 16: NEWS ITEM TABLE — DMG News & Events postings
+# ------------------------------------------------------------
+class NewsItem(db.Model):
+    """
+    PURPOSE  : One DMG "News & Events" posting — heading, date, category, dedup key
+    SECURITY : Populated only by the importer (not user-supplied input).
+               dedup_hash prevents double-inserts from the source page.
+    LEGAL    : source_url preserved for attribution; content is publicly available
+               government information. is_published controls public visibility.
+    """
+    __tablename__ = 'news_item'
+
+    id           = db.Column(db.Integer, primary_key=True)
+    heading      = db.Column(db.Text, nullable=False)
+    order_date   = db.Column(db.Date, nullable=False)
+    category     = db.Column(db.String(20), nullable=False, default='notice')
+    source_url   = db.Column(db.String(500), nullable=False)
+    dedup_hash   = db.Column(db.String(64), unique=True, nullable=False, index=True)
+    is_published = db.Column(db.Boolean, nullable=False, default=True)
+    fetched_at   = db.Column(db.DateTime, nullable=False)           # set by importer
+    created_at   = db.Column(db.DateTime, nullable=False,
+                             default=lambda: datetime.now(timezone.utc))
+
+    documents    = db.relationship('NewsDocument', back_populates='news_item',
+                                   cascade='all, delete-orphan')
+
+    __table_args__ = (
+        db.Index('ix_news_item_order_date', 'order_date'),
+    )
+
+    @staticmethod
+    def compute_dedup_hash(heading: str, order_date) -> str:
+        """
+        PURPOSE  : Stable dedup key so the same DMG posting is never inserted twice
+        RECEIVES : heading (str) — raw heading text; order_date (datetime.date)
+        RETURNS  : str — 64-char lowercase sha256 hex digest
+        SECURITY : Importer-only path; no user-supplied input reaches this method
+        LEGAL    : N/A
+        """
+        normalized = ' '.join(heading.split()).lower()
+        key = normalized + '|' + order_date.isoformat()
+        return sha256(key.encode()).hexdigest()
+
+    def __repr__(self):
+        return f'<NewsItem {self.order_date} {self.heading[:40]!r}>'
+
+
+# ------------------------------------------------------------
+# SECTION 17: NEWS DOCUMENT TABLE — PDFs attached to a NewsItem
+# ------------------------------------------------------------
+class NewsDocument(db.Model):
+    """
+    PURPOSE  : One PDF attachment for a DMG news item (0–N documents per item)
+    SECURITY : url is an official government PDF link; importer-only write path
+    LEGAL    : UniqueConstraint on (news_item_id, url) prevents the same PDF
+               being attached twice to one item.
+    """
+    __tablename__ = 'news_document'
+
+    id           = db.Column(db.Integer, primary_key=True)
+    news_item_id = db.Column(db.Integer, db.ForeignKey('news_item.id'), nullable=False)
+    title        = db.Column(db.String(300), nullable=False)
+    url          = db.Column(db.String(1000), nullable=False)
+    created_at   = db.Column(db.DateTime, nullable=False,
+                             default=lambda: datetime.now(timezone.utc))
+
+    news_item    = db.relationship('NewsItem', back_populates='documents')
+
+    __table_args__ = (
+        db.UniqueConstraint('news_item_id', 'url', name='uq_news_document_item_url'),
+    )
+
+    def __repr__(self):
+        return f'<NewsDocument item={self.news_item_id} {self.title[:30]!r}>'

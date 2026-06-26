@@ -1,0 +1,33 @@
+<!-- ============================================================ -->
+<!-- SECTION 1: HERO                                               -->
+<!-- ============================================================ -->
+<section class="text-center py-16 px-4">
+    <p class="text-accentTx text-sm font-semibold uppercase tracking-widest mb-4">
+        Rajasthan Mining Compliance
+    </p>
+    <h1 class="text-4xl sm:text-5xl font-bold text-content leading-tight mb-6"
+        data-i18n="hero_headline">
+        Rajasthan Mining Compliance, Done Right the First Time
+    </h1>
+    <p class="text-muted text-lg max-w-2xl mx-auto mb-8"
+       data-i18n="hero_subhead">
+        Royalty, DMF, and NPV calculated on verified historical rates. Deadlines tracked
+        automatically. Regulatory changes explained in plain language. And a 30-year mining-law
+        expert one message away — so an outdated rate or a missed return never becomes a
+        lakhs-rupee penalty.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="{{ url_for('main.login') }}"
+           class="bg-accent text-onAccent px-8 py-3 rounded-lg font-semibold
+                  text-base hover:bg-accentHover transition"
+           data-i18n="hero_cta_calc">
+            Calculate My Fees →
+        </a>
+        <a href="{{ url_for('main.pricing') }}"
+           class="border border-edgeStrong text-muted px-8 py-3 rounded-lg
+                  font-semibold text-base hover:border-accent hover:text-accentTx transition"
+           data-i18n="hero_cta_pricing">
+            See Pricing
+        </a>
+    </div>
+</section>
