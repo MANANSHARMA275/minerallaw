@@ -92,3 +92,16 @@ def verify_daily_backup_exists() -> dict:
             logger.error(f"BACKUP MISSING: {key} not found in S3 bucket {bucket}")
             return {"status": "missing", "file": key}
         raise
+
+
+@shared_task
+def import_dmg_news_task() -> dict:
+    """
+    PURPOSE  : Celery task wrapper — trigger DMG News & Events import
+    RECEIVES : None
+    RETURNS  : dict — {"status", "new", "skipped", "message"}
+    SECURITY : Delegates fully to run_news_import(); no direct DB access here
+    LEGAL    : Fetches publicly available government information from DMG portal
+    """
+    from app.news_importer import run_news_import
+    return run_news_import()
