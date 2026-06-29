@@ -6,7 +6,8 @@
 <div class="max-w-4xl mx-auto px-4 py-8">
 
     <!-- ── Header ─────────────────────────────────────────── -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between
+                pb-6 mb-6 border-b border-edge gap-4">
         <div>
             <h1 class="text-2xl font-bold text-content">
                 Welcome{% if user.name %}, {{ user.name }}{% endif %}
@@ -39,31 +40,11 @@
         </div>
     </div>
 
-    <!-- ── Compliance Health (placeholder) ────────────────── -->
-    <div class="bg-surface border border-edge rounded-xl p-6 mb-6 shadow-sm">
-        <h2 class="text-content font-semibold mb-3" data-i18n="dash_health">Compliance Health</h2>
-        <div class="flex items-center gap-4">
-            <div class="w-16 h-16 rounded-full border-4 border-accent flex items-center
-                        justify-center text-accentTx font-bold text-xl flex-shrink-0">
-                —
-            </div>
-            <div>
-                <p class="text-muted text-sm">
-                    Add your mine details to enable compliance tracking.
-                </p>
-                <p class="text-faint text-xs mt-1">
-                    Deadline tracking, overdue alerts, and automated reminders
-                    will appear here once your mine profile is set up.
-                </p>
-            </div>
-        </div>
-    </div>
-
     <!-- ── Quick Actions ──────────────────────────────────── -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <a href="{{ url_for('main.calculator') }}"
            class="bg-surface border border-edge rounded-xl p-5 shadow-sm
-                  hover:border-accent transition group">
+                  hover:border-accent transition card-lift group">
             <div class="text-accentTx text-2xl mb-2">🧮</div>
             <h3 class="text-content font-medium group-hover:text-accentTx transition"
                 data-i18n="dash_calculator">Fee Calculator</h3>
@@ -72,7 +53,7 @@
 
         <a href="{{ url_for('main.ask_expert') }}"
            class="bg-surface border border-edge rounded-xl p-5 shadow-sm
-                  hover:border-accent transition group">
+                  hover:border-accent transition card-lift group">
             <div class="text-accentTx text-2xl mb-2">👨‍💼</div>
             <h3 class="text-content font-medium group-hover:text-accentTx transition"
                 data-i18n="dash_expert">Ask Expert</h3>
@@ -81,7 +62,7 @@
 
         <a href="{{ url_for('main.checklist') }}"
            class="bg-surface border border-edge rounded-xl p-5 shadow-sm
-                  hover:border-accent transition group">
+                  hover:border-accent transition card-lift group">
             <div class="text-accentTx text-2xl mb-2">✅</div>
             <h3 class="text-content font-medium group-hover:text-accentTx transition"
                 data-i18n="dash_checklist">Compliance Checklist</h3>
@@ -89,28 +70,71 @@
         </a>
     </div>
 
+    <!-- ── Compliance Health (onboarding empty state) ─────── -->
+    <div class="bg-surface border border-edge rounded-xl p-6 mb-6 shadow-sm" data-reveal>
+        <h2 class="text-content font-semibold mb-4" data-i18n="dash_health">Compliance Health</h2>
+        <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-full bg-accentSoft flex items-center
+                        justify-center text-2xl flex-shrink-0" aria-hidden="true">⛏</div>
+            <div class="flex-1">
+                <p class="text-content font-semibold text-base mb-1">
+                    Set up your compliance profile
+                </p>
+                <p class="text-muted text-sm mb-3">Your mine details unlock:</p>
+                <ul class="space-y-1.5 mb-4">
+                    <li class="flex items-center gap-2 text-muted text-sm">
+                        <span class="text-accentTx font-semibold">✓</span>
+                        Deadline tracking for EC &amp; lease renewals
+                    </li>
+                    <li class="flex items-center gap-2 text-muted text-sm">
+                        <span class="text-accentTx font-semibold">✓</span>
+                        Overdue alerts before penalty windows
+                    </li>
+                    <li class="flex items-center gap-2 text-muted text-sm">
+                        <span class="text-accentTx font-semibold">✓</span>
+                        WhatsApp reminders for filing dates
+                    </li>
+                </ul>
+                <a href="{{ url_for('main.ask_expert') }}"
+                   class="inline-flex items-center gap-1 text-sm font-medium
+                          text-accentTx hover:text-accent transition-colors">
+                    Talk to an expert to get started →
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- ── Recent Activity ────────────────────────────────── -->
-    <div class="bg-surface border border-edge rounded-xl p-6 mb-6 shadow-sm">
+    <div class="bg-surface border border-edge rounded-xl p-6 mb-6 shadow-sm" data-reveal>
         <h2 class="text-content font-semibold mb-4" data-i18n="dash_activity">Recent Activity</h2>
 
         {% if recent_activity %}
-        <ul class="space-y-3">
+        <ul class="space-y-0">
             {% for log in recent_activity %}
-            <li class="flex items-start justify-between gap-4 py-3 border-b
-                        border-edge last:border-0">
-                <div>
-                    <p class="text-content text-sm font-medium">
-                        {{ log.action.replace('_', ' ').title() }}
-                    </p>
-                    {% if log.new_value %}
-                    <p class="text-faint text-xs mt-0.5 truncate max-w-xs">
-                        {{ log.new_value[:80] }}{% if log.new_value|length > 80 %}…{% endif %}
-                    </p>
-                    {% endif %}
-                </div>
-                <p class="text-faint text-xs shrink-0">
+            <li class="flex items-center gap-3 py-3 border-b border-edge last:border-0">
+                <span class="text-lg flex-shrink-0" aria-hidden="true">
+                    {%- if log.action == 'FEE_CALCULATION' %}🧮
+                    {%- elif log.action == 'RATE_UPDATED' %}📊
+                    {%- elif log.action == 'LEGISLATION_CREATED' %}📜
+                    {%- elif log.action == 'LEGISLATION_TOGGLED' %}👁
+                    {%- elif log.action == 'LEGISLATION_DELETED' %}🗑
+                    {%- elif log.action == 'TICKET_CREATED' %}💬
+                    {%- else %}📝{%- endif %}
+                </span>
+                <span class="text-content text-sm flex-1">
+                    {%- if log.action == 'FEE_CALCULATION' %}
+                        {%- if log.new_value and not log.new_value.startswith('mineral_id=') %}{{ log.new_value }}
+                        {%- else %}Ran a fee calculation{%- endif %}
+                    {%- elif log.action == 'RATE_UPDATED' %}Rate updated
+                    {%- elif log.action == 'LEGISLATION_CREATED' %}Legislation entry added
+                    {%- elif log.action == 'LEGISLATION_TOGGLED' %}Legislation entry updated
+                    {%- elif log.action == 'LEGISLATION_DELETED' %}Legislation entry removed
+                    {%- elif log.action == 'TICKET_CREATED' %}Submitted an expert question
+                    {%- else %}{{ log.action.replace('_', ' ').title() }}{%- endif %}
+                </span>
+                <span class="text-faint text-xs shrink-0">
                     {{ log.timestamp.strftime('%d %b, %H:%M') if log.timestamp else '' }}
-                </p>
+                </span>
             </li>
             {% endfor %}
         </ul>
@@ -129,7 +153,7 @@
     <div class="bg-surface border border-edge rounded-xl p-6 shadow-sm">
         <h2 class="text-content font-semibold mb-4" data-i18n="dash_account">Account</h2>
 
-        <div class="space-y-0 text-sm">
+        <div class="text-sm">
             <div class="flex justify-between items-center py-3 border-b border-edge">
                 <span class="text-faint" data-i18n="dash_phone">Phone</span>
                 <span class="text-content">{{ user.phone }}</span>

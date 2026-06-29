@@ -16,7 +16,7 @@ from flask_login import login_required, current_user, logout_user
 
 from app.models import AuditLog, Legislation, Mineral, NewsItem, db, get_auction_status
 from app.fee_calculator import get_rate_for_date, calculate_royalty, calculate_dmf, get_calculation_disclaimer
-from app.helpers import gmail_prefill, log_audit
+from app.helpers import format_inr, gmail_prefill, log_audit
 from app.validators import validate_mineral_query, validate_rate_date
 from app.tickets import create_ticket
 
@@ -271,10 +271,7 @@ def calculate():
         action='FEE_CALCULATION',
         table_affected='Rate',
         record_id=royalty_rate.id,
-        new_value=(
-            f"mineral_id={mineral_id}, production={production}, "
-            f"area={area_ha}ha, date={target_date}, royalty={royalty_annual}"
-        ),
+        new_value=f"{mineral.name} · {area_ha} ha · {production:,.0f} t · {format_inr(royalty_annual)}",
     )
 
     return jsonify({
