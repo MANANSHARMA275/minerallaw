@@ -127,11 +127,11 @@ class TestNewsPdfLinks:
         resp = client.get('/news')
         assert b'target="_blank"' in resp.data
 
-    def test_pdf_link_has_rel_noopener(self, app, client):
-        """PDF document links must carry rel=noopener for security."""
+    def test_pdf_link_has_rel_noopener_noreferrer(self, app, client):
+        """PDF document links must carry rel=noopener noreferrer for security."""
         _seed(app)
         resp = client.get('/news')
-        assert b'rel="noopener"' in resp.data
+        assert b'rel="noopener noreferrer"' in resp.data
 
     def test_pdf_link_url_is_rendered(self, app, client):
         """The document's URL must appear as an href in the response."""

@@ -242,6 +242,7 @@ class TestNewsDocuments:
         for doc in item.documents:
             assert ' ' not in doc.url
             assert '%20' in doc.url
+            assert doc.url.startswith('https://')
 
 
 # ── Test 7: fetch failure — seeded item survives ──────────────────────────────
@@ -297,3 +298,47 @@ class TestMissingTableResilience:
         ):
             run_news_import()
         assert NewsItem.query.count() == 0
+
+
+# ── Test 9: absolute URL resolution ──────────────────────────────────────────
+
+_REL_SOURCE = 'https://mines.rajasthan.gov.in/dmgcms/page?menuName=test'
+_GOV_ORIGIN = 'https://mines.rajasthan.gov.in'
+
+
+class TestAbsoluteUrlResolution:
+    """parse_news_html must always store absolute government URLs, never relative paths."""
+
+    _REL_HTML = '''<table>
+        <tr><th>Sr. No.</th><th>News Heading</th><th>News Content</th><th>Order Date</th></tr>
+        <tr><td>1</td><td>Test Notice</td>
+            <td><a href="/dmgcms/link_to_external_file/test file.pdf">test file.pdf</a></td>
+            <td>2026-01-01</td></tr>
+    </table>'''
+
+    _ABS_HTML = '''<table>
+        <tr><th>Sr. No.</th><th>News Heading</th><th>News Content</th><th>Order Date</th></tr>
+        <tr><td>1</td><td>Test Notice</td>
+            <td><a href="https://mines.rajasthan.gov.in/dmgcms/link_to_external_file/abs.pdf">abs.pdf</a></td>
+            <td>2026-01-01</td></tr>
+    </table>'''
+
+    def test_relative_href_resolved_to_absolute(self):
+        rows = parse_news_html(self._REL_HTML, _REL_SOURCE)
+        url = rows[0]['documents'][0]['url']
+        assert url.startswith(_GOV_ORIGIN), f'expected absolute URL, got: {url!r}'
+
+    def test_relative_href_resolves_to_correct_path(self):
+        rows = parse_news_html(self._REL_HTML, _REL_SOURCE)
+        url = rows[0]['documents'][0]['url']
+        assert url == f'{_GOV_ORIGIN}/dmgcms/link_to_external_file/test%20file.pdf'
+
+    def test_already_absolute_href_unchanged(self):
+        rows = parse_news_html(self._ABS_HTML, _REL_SOURCE)
+        url = rows[0]['documents'][0]['url']
+        assert url == f'{_GOV_ORIGIN}/dmgcms/link_to_external_file/abs.pdf'
+
+    def test_stored_url_never_starts_with_slash(self, app):
+        import_news_items(_parsed())
+        for doc in __import__('app.models', fromlist=['NewsDocument']).NewsDocument.query.all():
+            assert not doc.url.startswith('/'), f'relative URL stored: {doc.url!r}'

@@ -5,7 +5,7 @@
 # ============================================================
 
 from datetime import datetime, timezone
-from urllib.parse import urlsplit, urlunsplit, quote
+from urllib.parse import urlsplit, urlunsplit, quote, urljoin
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -168,7 +168,8 @@ def parse_news_html(html: str, source_url: str) -> list:
         for a in cells[2].find_all('a', href=True):
             href = a['href']
             title = a.get_text(strip=True) or _filename_from_href(href)
-            documents.append({'title': title, 'url': _encode_pdf_url(href)})
+            abs_href = urljoin(source_url, href)   # no-op when href is already absolute
+            documents.append({'title': title, 'url': _encode_pdf_url(abs_href)})
 
         results.append({
             'heading': heading,
