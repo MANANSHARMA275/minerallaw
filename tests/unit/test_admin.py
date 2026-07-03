@@ -3,6 +3,7 @@ Tests for app/admin.py — role_required decorator and rate update logic.
 """
 import pytest
 from datetime import date
+from unittest.mock import patch
 
 from flask_login import login_user
 
@@ -118,3 +119,39 @@ class TestRateUpdate:
 
         count = AuditLog.query.filter_by(action='RATE_UPDATED').count()
         assert count == 1
+
+
+class TestNewsRefresh:
+
+    def test_news_refresh_blocks_non_superadmin(self, app, client):
+        """POST /admin/news/refresh as role='user' must return 403."""
+        user = make_user('+910000099001')
+        _login(client, app, user)
+        resp = client.post('/admin/news/refresh')
+        assert resp.status_code == 403
+
+    def test_news_refresh_calls_importer_and_logs(self, app, client):
+        """POST /admin/news/refresh as superadmin triggers import and writes AuditLog."""
+        admin = make_user('+910000099002', role='superadmin')
+        _login(client, app, admin)
+        fake_result = {
+            'status': 'ok', 'new': 5, 'skipped': 43, 'errors': 0,
+            'message': '5 new, 43 skipped, 0 errors.',
+        }
+        with patch('app.admin.run_news_import', return_value=fake_result):
+            resp = client.post('/admin/news/refresh')
+        assert resp.status_code == 200
+        data = resp.get_json()
+        assert '5 new' in data['status']
+        assert AuditLog.query.filter_by(action='NEWS_IMPORT_TRIGGERED').count() == 1
+
+    def test_news_refresh_csrf_enforced(self, app, client):
+        """POST /admin/news/refresh without csrf_token must return 400."""
+        admin = make_user('+910000099003', role='superadmin')
+        _login(client, app, admin)
+        app.config['WTF_CSRF_ENABLED'] = True
+        try:
+            resp = client.post('/admin/news/refresh')
+            assert resp.status_code == 400
+        finally:
+            app.config['WTF_CSRF_ENABLED'] = False

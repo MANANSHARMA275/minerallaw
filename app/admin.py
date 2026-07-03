@@ -16,6 +16,7 @@ from flask_login import current_user, login_required
 
 from app.models import AuditLog, AuctionStatus, Legislation, Mineral, Rate, Ticket, User, db, get_auction_status
 from app.helpers import log_audit
+from app.news_importer import run_news_import
 
 
 def role_required(required_role: str):
@@ -461,6 +462,48 @@ def legislation_toggle(leg_id):
     )
     label = 'Published.' if entry.is_published else 'Unpublished.'
     return jsonify({'ok': True, 'message': label, 'is_published': entry.is_published})
+
+
+@admin_bp.route('/news')
+@login_required
+@role_required('superadmin')
+def news():
+    """
+    PURPOSE  : Admin news management — manual refresh only, no auto-scraping
+    RECEIVES : None
+    RETURNS  : admin_panel.html with section='news'
+    SECURITY : superadmin only
+    LEGAL    : Fetch is user-initiated; no scheduled scraping (Q64 posture)
+    """
+    return render_template('admin_panel.html', section='news')
+
+
+@admin_bp.route('/news/refresh', methods=['POST'])
+@login_required
+@role_required('superadmin')
+def news_refresh():
+    """
+    PURPOSE  : Manually trigger the DMG news importer — one page, one fetch, no schedule
+    RECEIVES : None (CSRF token only)
+    RETURNS  : JSON {"status": "..."} on success, {"error": "..."} on failure
+    SECURITY : superadmin only. CSRF enforced by Flask-WTF middleware.
+    LEGAL    : User-initiated fetch of a public government page (Q64 posture).
+               Every trigger logged to AuditLog with result summary.
+    WARNING  : Synchronous network I/O — may block up to ~60 s on retries.
+               Gunicorn default timeout is 30 s; a maxed-out retry run will 502.
+               Acceptable for a rare manual admin action; configure --timeout 90
+               in production if this becomes a problem.
+    """
+    result = run_news_import()
+    log_audit(
+        user_id=current_user.id,
+        action='NEWS_IMPORT_TRIGGERED',
+        table_affected='NewsItem',
+        new_value=result['message'],
+    )
+    if result['status'] == 'ok':
+        return jsonify({'status': result['message']})
+    return jsonify({'error': result['message']}), 500
 
 
 @admin_bp.route('/users')

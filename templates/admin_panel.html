@@ -41,6 +41,11 @@
                       {% if section == 'legislation' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
                 📜 Legislation
             </a>
+            <a href="{{ url_for('admin.news') }}"
+               class="flex items-center gap-2 px-3 py-2 rounded-lg transition
+                      {% if section == 'news' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
+                📰 News
+            </a>
         </nav>
         <div class="mt-auto pt-8">
             <a href="{{ url_for('main.dashboard') }}"
@@ -597,6 +602,33 @@
             </table>
         </div>
 
+        {% elif section == 'news' %}
+        <!-- ============================================ -->
+        <!-- NEWS                                         -->
+        <!-- ============================================ -->
+        <h1 class="text-xl font-bold text-content mb-2">News Feed</h1>
+        <p class="text-faint text-xs mb-6">
+            Manually fetch the latest news from the DMG portal. No automatic scraping —
+            press the button to trigger a single import run.
+        </p>
+
+        <div class="bg-surface border border-edge rounded-xl p-6 shadow-sm max-w-md">
+            <h2 class="text-content font-semibold mb-1">Refresh from DMG Portal</h2>
+            <p class="text-faint text-xs mb-4">
+                Fetches the DMG News &amp; Events page, inserts new items, and skips duplicates.
+                May take up to 20 seconds on a slow connection.
+            </p>
+            <form id="news-refresh-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit"
+                        class="bg-accent text-onAccent px-6 py-2 rounded-lg
+                               font-semibold text-sm hover:bg-accentHover transition">
+                    Refresh News
+                </button>
+                <span id="news-refresh-msg" class="ml-3 text-sm hidden"></span>
+            </form>
+        </div>
+
         {% endif %}
 
     </main>
@@ -649,6 +681,15 @@ if (auctionForm) {
     auctionForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         await submitAdminForm(auctionForm, '/admin/auctions/update', document.getElementById('auction-msg'));
+    });
+}
+
+// News refresh form
+const newsRefreshForm = document.getElementById('news-refresh-form');
+if (newsRefreshForm) {
+    newsRefreshForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await submitAdminForm(newsRefreshForm, '/admin/news/refresh', document.getElementById('news-refresh-msg'));
     });
 }
 

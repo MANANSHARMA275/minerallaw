@@ -29,3 +29,6 @@ logs/
 # Celery beat schedule
 celerybeat-schedule
 celerybeat.pid
+
+# Claude Code project files
+.claude/
