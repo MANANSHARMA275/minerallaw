@@ -45,10 +45,11 @@ class User(UserMixin, db.Model):
     deletion_request_date    = db.Column(db.DateTime, nullable=True)
 
     # Relationships
-    tickets      = db.relationship('Ticket', foreign_keys='[Ticket.user_id]', backref='user', lazy=True)
-    documents    = db.relationship('Document', backref='user', lazy=True)
-    audit_logs   = db.relationship('AuditLog', backref='user', lazy=True)
-    payments     = db.relationship('Payment', backref='user', lazy=True)
+    tickets           = db.relationship('Ticket', foreign_keys='[Ticket.user_id]', backref='user', lazy=True)
+    documents         = db.relationship('Document', backref='user', lazy=True)
+    audit_logs        = db.relationship('AuditLog', backref='user', lazy=True)
+    payments          = db.relationship('Payment', backref='user', lazy=True)
+    compliance_events = db.relationship('ComplianceEvent', backref='user', lazy=True)
 
     def __repr__(self):
         return f'<User {self.phone}>'
@@ -190,6 +191,7 @@ class ComplianceEvent(db.Model):
     reminder_sent_1_day  = db.Column(db.Boolean, default=False)
     completed_at        = db.Column(db.DateTime, nullable=True)
     proof_document_url  = db.Column(db.String(500), nullable=True)
+    created_at          = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     deleted_at          = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
