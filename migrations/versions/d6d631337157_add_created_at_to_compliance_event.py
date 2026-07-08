@@ -1,4 +1,4 @@
-"""add compliance_event table
+"""add created_at to compliance_event
 
 Revision ID: d6d631337157
 Revises: ee478aeaa67e
