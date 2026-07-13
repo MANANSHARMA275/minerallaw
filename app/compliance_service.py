@@ -67,7 +67,7 @@ def _log_generation_result(user_id: int, ec_grant_date, is_regeneration: bool,
     PURPOSE  : Write the single AuditLog entry for a generation/regeneration call
     RECEIVES : user_id, ec_grant_date, is_regeneration, created, skipped, soft_deleted
     RETURNS  : None
-    SECURITY : Requires an active Flask request context — see log_audit
+    SECURITY : Background-safe as of Chunk 4a — see log_audit; ip/user_agent null for non-request callers
     LEGAL    : see generate_compliance_events LEGAL note
     """
     if is_regeneration:
@@ -96,11 +96,10 @@ def generate_compliance_events(user_id: int, ec_grant_date, lease_period_years: 
     RECEIVES : user_id — int; ec_grant_date — date; lease_period_years — int or None
     RETURNS  : dict — {"status": "ok"|"error", "created": int, "skipped": int,
                "soft_deleted": int, "message": str (only on error)}
-    SECURITY : Writes are scoped to the given user_id only. NOTE:
-               log_audit silently no-ops (writes NO AuditLog row) when
-               called outside a Flask request context — this MUST be
-               resolved before any Celery/background caller uses this
-               service.
+    SECURITY : Writes are scoped to the given user_id only. log_audit is
+               background-safe as of Chunk 4a — ip_address/user_agent are
+               null for callers with no Flask request context (e.g.
+               Celery), but the AuditLog row is always written.
     LEGAL    : Due dates originate from calculate_compliance_deadlines'
                COMPLIANCE_CONFIG, all verified_by_father=False — these are
                estimates pending Phase 0 Interview Session 2, not
@@ -131,7 +130,6 @@ def generate_compliance_events(user_id: int, ec_grant_date, lease_period_years: 
             soft_deleted = 0
 
         db.session.commit()
-        # BLOCKER (Chunk 4): log_audit no-ops without request context — fix before background use
         _log_generation_result(user_id, ec_grant_date, is_regeneration, created, skipped, soft_deleted)
 
         return {"status": "ok", "created": created, "skipped": skipped, "soft_deleted": soft_deleted}

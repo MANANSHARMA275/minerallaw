@@ -38,12 +38,22 @@ def log_audit(user_id, action, table_affected=None, record_id=None,
                record_id (int, optional), old_value (str, optional),
                new_value (str, optional)
     RETURNS  : None
-    SECURITY : IP address and User-Agent captured from the live request context.
-               new_value is cast to str — caller may pass any serialisable value.
+    SECURITY : IP address and User-Agent captured from the live request
+               context when one is active; both are None for callers with
+               no request context (e.g. Celery/background jobs) — the
+               AuditLog row is still always written in that case.
     LEGAL    : AuditLog rows must NEVER be deleted — 7-year retention (GST / DPDP).
     """
-    from flask import request
+    from flask import has_request_context, request
     from app.models import AuditLog, db
+
+    if has_request_context():
+        ip_address = request.remote_addr
+        user_agent = (request.headers.get('User-Agent', '') or '')[:300]
+    else:
+        ip_address = None
+        user_agent = None
+
     try:
         entry = AuditLog(
             user_id=user_id,
@@ -52,8 +62,8 @@ def log_audit(user_id, action, table_affected=None, record_id=None,
             record_id=record_id,
             old_value=old_value,
             new_value=str(new_value) if new_value is not None else None,
-            ip_address=request.remote_addr,
-            user_agent=(request.headers.get('User-Agent', '') or '')[:300],
+            ip_address=ip_address,
+            user_agent=user_agent,
         )
         db.session.add(entry)
         db.session.commit()
