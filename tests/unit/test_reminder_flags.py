@@ -11,8 +11,20 @@ TestReminderTaskAuditLog deliberately avoids the `app`/`client` fixtures —
 same reason as tests/unit/test_audit_log.py and
 tests/unit/test_compliance_service.py's TestNoRequestContext: pytest-flask's
 autouse request-context push would otherwise mask the very thing being
-proven (the task wrapper is safe to call with no Flask request context,
-matching how Celery's ContextTask actually runs it in production).
+proven (the task wrapper is safe to call with no Flask request context).
+
+It calls flag_due_reminders_task.run() rather than flag_due_reminders_task()
+directly. Once anything in the test session imports celery_worker (e.g.
+tests/unit/test_celery_timezone.py), constructing that module's Celery(...)
+registers it as Celery's process-global "current app" (set_as_current=True
+is the default) and activates ContextTask as its Task base. Any @shared_task
+called directly at that point routes through ContextTask.__call__, which
+pushes celery_worker.py's OWN internal flask_app context — a different app
+than this test's standalone_app — regardless of what this test wraps the
+call in. Calling .run() bypasses Task/ContextTask dispatch entirely and
+invokes the plain function body under whatever context is already active
+(this test's own), which is both what's being tested here and immune to
+this cross-test ordering effect.
 """
 from datetime import date, datetime, timedelta, timezone
 
@@ -166,7 +178,7 @@ class TestReminderTaskAuditLog:
                 db.session.add(event)
                 db.session.commit()
 
-                result = flag_due_reminders_task()
+                result = flag_due_reminders_task.run()
 
                 assert result["status"] == "ok"
                 assert result["flagged_7_day"] == 1
