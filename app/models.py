@@ -185,7 +185,7 @@ class ComplianceEvent(db.Model):
     id                  = db.Column(db.Integer, primary_key=True)
     user_id             = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     event_type          = db.Column(db.String(50), nullable=False)
-    due_date            = db.Column(db.Date, nullable=False)
+    due_date            = db.Column(db.Date, nullable=False, index=True)
     status              = db.Column(db.String(20), default='pending')   # pending / completed / overdue
     reminder_sent_7_days = db.Column(db.Boolean, default=False)
     reminder_sent_1_day  = db.Column(db.Boolean, default=False)

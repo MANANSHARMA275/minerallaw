@@ -25,4 +25,9 @@ beat_schedule = {
         'task': 'app.tasks.verify_daily_backup_exists',
         'schedule': crontab(hour=6, minute=0),
     },
+    # Runs after the 6 AM backup check, before typical business hours
+    'flag-due-reminders-daily': {
+        'task': 'app.tasks.flag_due_reminders_task',
+        'schedule': crontab(hour=7, minute=0),
+    },
 }

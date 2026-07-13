@@ -5,8 +5,9 @@
 # ============================================================
 
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from celery import shared_task
+from app.helpers import log_audit
 from app.logger import logger
 
 
@@ -105,3 +106,69 @@ def import_dmg_news_task() -> dict:
     """
     from app.news_importer import run_news_import
     return run_news_import()
+
+
+def flag_due_reminders(today: date = None) -> dict:
+    """
+    PURPOSE  : Flip reminder_sent_7_days/reminder_sent_1_day for events due soon
+    RECEIVES : today — date, injectable for deterministic tests; defaults to date.today()
+    RETURNS  : dict — {"flagged_7_day": int, "flagged_1_day": int}
+    SECURITY : Scoped to active (deleted_at IS NULL), status='pending' events only
+    LEGAL    : due_date values derive from unverified COMPLIANCE_CONFIG
+               placeholders (see app/deadline_calculator.py) — reminder
+               timing inherits that same caveat.
+    """
+    from app.models import ComplianceEvent
+
+    if today is None:
+        today = date.today()
+
+    cutoff = today + timedelta(days=7)
+    candidates = ComplianceEvent.query.filter(
+        ComplianceEvent.deleted_at.is_(None),
+        ComplianceEvent.status == 'pending',
+        ComplianceEvent.due_date <= cutoff,
+    ).all()
+
+    flagged_7_day = 0
+    flagged_1_day = 0
+    for event in candidates:
+        days_until_due = (event.due_date - today).days
+        if days_until_due <= 7 and not event.reminder_sent_7_days:
+            event.reminder_sent_7_days = True
+            flagged_7_day += 1
+        if days_until_due <= 1 and not event.reminder_sent_1_day:
+            event.reminder_sent_1_day = True
+            flagged_1_day += 1
+
+    return {"flagged_7_day": flagged_7_day, "flagged_1_day": flagged_1_day}
+
+
+@shared_task
+def flag_due_reminders_task() -> dict:
+    """
+    PURPOSE  : Celery Beat entry point — flag due compliance reminders daily
+    RECEIVES : None (Celery Beat — daily, see app/celery_config.py beat_schedule)
+    RETURNS  : dict — {"status": "ok"|"error", "flagged_7_day": int,
+               "flagged_1_day": int, "message": str (only on error)}
+    SECURITY : Runs under Flask app context via ContextTask (celery_worker.py);
+               no request context, so log_audit writes null ip_address/user_agent
+               — expected and correct per Chunk 4a.
+    LEGAL    : due_date values derive from unverified COMPLIANCE_CONFIG
+               placeholders — see flag_due_reminders.
+    """
+    from app.models import db
+    try:
+        result = flag_due_reminders()
+        db.session.commit()
+        log_audit(
+            user_id=None,
+            action='REMINDER_FLAGS_UPDATED',
+            table_affected='ComplianceEvent',
+            new_value=f"7d: {result['flagged_7_day']} flipped, 1d: {result['flagged_1_day']} flipped",
+        )
+        return {"status": "ok", **result}
+    except Exception as exc:
+        db.session.rollback()
+        logger.error(f"Reminder flag update failed: {exc}")
+        return {"status": "error", "flagged_7_day": 0, "flagged_1_day": 0, "message": str(exc)}
