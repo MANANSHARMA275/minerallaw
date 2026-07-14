@@ -144,31 +144,114 @@ def flag_due_reminders(today: date = None) -> dict:
     return {"flagged_7_day": flagged_7_day, "flagged_1_day": flagged_1_day}
 
 
-@shared_task
-def flag_due_reminders_task() -> dict:
+def deliver_due_reminders(today: date = None) -> dict:
     """
-    PURPOSE  : Celery Beat entry point — flag due compliance reminders daily
-    RECEIVES : None (Celery Beat — daily, see app/celery_config.py beat_schedule)
+    PURPOSE  : Deliver WhatsApp reminders for events already flagged by
+               flag_due_reminders — the batch layer connecting Chunk 4b's
+               flags to Chunk 4c-i's send_compliance_reminder
+    RECEIVES : today — date, injectable for deterministic tests, same pattern
+               as flag_due_reminders; NOT used to filter (delivery is purely
+               flag-driven — see class docstring below)
+    RETURNS  : dict — {"sent": int, "failed": int, "skipped_no_consent": int,
+               "skipped_kill_switch": int, "already_sent": int, "error": int}
+    SECURITY : Scoped to active (deleted_at IS NULL), status='pending' events
+               with reminder_sent_7_days or reminder_sent_1_day True. Delegates
+               all gating (kill switch/consent/duplicate guard) to
+               send_compliance_reminder — no gate is reimplemented here.
+    LEGAL    : Idempotent via send_compliance_reminder's Gate 3 (a prior
+               status='sent' WhatsAppMessage row) — no parallel dedup
+               mechanism or new flag column is added. Flags never reset once
+               set, so this scan re-matches every previously-flagged event on
+               every run by design; repeat sends are no-ops (already_sent).
+    """
+    from sqlalchemy import or_
+    from app.models import ComplianceEvent
+    from app.whatsapp import send_compliance_reminder
+
+    if today is None:
+        today = date.today()
+
+    candidates = ComplianceEvent.query.filter(
+        ComplianceEvent.deleted_at.is_(None),
+        ComplianceEvent.status == 'pending',
+        or_(ComplianceEvent.reminder_sent_7_days.is_(True),
+            ComplianceEvent.reminder_sent_1_day.is_(True)),
+    ).all()
+
+    counts = {"sent": 0, "failed": 0, "skipped_no_consent": 0,
+              "skipped_kill_switch": 0, "already_sent": 0, "error": 0}
+
+    def _attempt(reminder_type):
+        try:
+            result = send_compliance_reminder(event.user_id, event.id, reminder_type)
+            status = result.get("status", "error")
+        except Exception as exc:
+            logger.error(
+                f"deliver_due_reminders: unexpected error sending {reminder_type} "
+                f"for event {event.id}: {exc}"
+            )
+            status = "error"
+        counts[status] = counts.get(status, 0) + 1
+
+    for event in candidates:
+        if event.reminder_sent_7_days:
+            _attempt('7_day')
+        if event.reminder_sent_1_day:
+            _attempt('1_day')
+
+    return counts
+
+
+@shared_task
+def flag_due_reminders_task(today: date = None) -> dict:
+    """
+    PURPOSE  : Celery Beat entry point — flag due compliance reminders daily,
+               then deliver them via WhatsApp (Chunk 4c-ii)
+    RECEIVES : today — date, injectable for deterministic tests; defaults to
+               None (Beat calls this bare, same as before this chunk)
     RETURNS  : dict — {"status": "ok"|"error", "flagged_7_day": int,
-               "flagged_1_day": int, "message": str (only on error)}
+               "flagged_1_day": int, "delivered": dict, "message": str (only
+               on flag-phase error)}. "delivered" is always a discoverable
+               dict: {"status": "not_attempted"} if the flag phase failed,
+               {"status": "error", "message": str} if delivery itself raised,
+               or the six-count dict from deliver_due_reminders on success —
+               never an empty dict.
     SECURITY : Runs under Flask app context via ContextTask (celery_worker.py);
                no request context, so log_audit writes null ip_address/user_agent
                — expected and correct per Chunk 4a.
     LEGAL    : due_date values derive from unverified COMPLIANCE_CONFIG
-               placeholders — see flag_due_reminders.
+               placeholders — see flag_due_reminders. Flag-phase and
+               delivery-phase failures are isolated into separate try/except
+               blocks so a delivery error can never misreport already-
+               committed flag counts as zero.
     """
     from app.models import db
     try:
-        result = flag_due_reminders()
+        flag_result = flag_due_reminders(today=today)
         db.session.commit()
         log_audit(
             user_id=None,
             action='REMINDER_FLAGS_UPDATED',
             table_affected='ComplianceEvent',
-            new_value=f"7d: {result['flagged_7_day']} flipped, 1d: {result['flagged_1_day']} flipped",
+            new_value=f"7d: {flag_result['flagged_7_day']} flipped, 1d: {flag_result['flagged_1_day']} flipped",
         )
-        return {"status": "ok", **result}
     except Exception as exc:
         db.session.rollback()
         logger.error(f"Reminder flag update failed: {exc}")
-        return {"status": "error", "flagged_7_day": 0, "flagged_1_day": 0, "message": str(exc)}
+        return {"status": "error", "flagged_7_day": 0, "flagged_1_day": 0,
+                "delivered": {"status": "not_attempted"}, "message": str(exc)}
+
+    try:
+        deliver_result = deliver_due_reminders(today=today)
+        summary = ", ".join(f"{k}: {v}" for k, v in deliver_result.items())
+        log_audit(
+            user_id=None,
+            action='REMINDERS_DELIVERED',
+            table_affected='WhatsAppMessage',
+            new_value=summary,
+        )
+    except Exception as exc:
+        logger.error(f"Reminder delivery failed: {exc}")
+        deliver_result = {"status": "error", "message": str(exc)}
+
+    return {"status": "ok", **flag_result, "delivered": deliver_result}
