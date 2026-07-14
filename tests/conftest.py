@@ -17,6 +17,7 @@ source for the URI).
 """
 
 import os
+import socket
 
 # Force in-memory DB BEFORE create_app() reads os.environ.
 # load_dotenv(override=False) inside create_app() will not overwrite this.
@@ -24,6 +25,20 @@ os.environ['DATABASE_URL'] = 'sqlite:///:memory:'
 
 import pytest
 from app import create_app, db as _db
+
+
+@pytest.fixture(autouse=True)
+def _block_real_network_calls(monkeypatch):
+    """
+    PURPOSE  : Tripwire — any test that reaches real socket.connect() aborts loudly.
+    SECURITY : Guarantees no test can ever place a real Twilio/HTTP call, even
+               if a future test forgets to mock a network boundary.
+    LEGAL    : n/a
+    """
+    def _blocked_connect(self, *args, **kwargs):
+        raise RuntimeError("SAFETY: real network call attempted from test suite")
+
+    monkeypatch.setattr(socket.socket, 'connect', _blocked_connect)
 
 
 @pytest.fixture(scope='function')

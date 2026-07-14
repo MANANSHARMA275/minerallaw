@@ -68,6 +68,13 @@ def create_app():
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
     app.config['WTF_CSRF_ENABLED'] = True
 
+    # WhatsApp sending kill switch — STRICT parse: only the exact string 'true'
+    # (any case, incidental whitespace trimmed) enables sending. Unset, '1',
+    # 'yes', or anything else defaults to OFF. Fails safe by design.
+    app.config['WHATSAPP_SENDING_ENABLED'] = (
+        os.environ.get('WHATSAPP_SENDING_ENABLED', '').strip().lower() == 'true'
+    )
+
     # ------------------------------------------------------------
     # SECTION 5: PROXY FIX — DO NOT REMOVE
     # ------------------------------------------------------------

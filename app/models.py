@@ -50,6 +50,7 @@ class User(UserMixin, db.Model):
     audit_logs        = db.relationship('AuditLog', backref='user', lazy=True)
     payments          = db.relationship('Payment', backref='user', lazy=True)
     compliance_events = db.relationship('ComplianceEvent', backref='user', lazy=True)
+    whatsapp_messages = db.relationship('WhatsAppMessage', backref='user', lazy=True)
 
     def __repr__(self):
         return f'<User {self.phone}>'
@@ -520,3 +521,36 @@ class NewsDocument(db.Model):
 
     def __repr__(self):
         return f'<NewsDocument item={self.news_item_id} {self.title[:30]!r}>'
+
+
+# ------------------------------------------------------------
+# SECTION 18: WHATSAPP MESSAGE TABLE — delivery records only, never full phone
+# ------------------------------------------------------------
+class WhatsAppMessage(db.Model):
+    """
+    PURPOSE  : Delivery record for one compliance-reminder WhatsApp send attempt
+               (sent / failed / skipped) — audit trail, not the message queue.
+    SECURITY : to_phone_masked stores ONLY a masked phone (e.g. +91XXXXXX1234) —
+               the full number lives on User.phone alone (DPDP data minimization).
+               error_detail is masked before storage — never raw Twilio exception text.
+    LEGAL    : status is an app-level constant, not a DB enum (matches house
+               convention — see Ticket.status, ComplianceEvent.status). One row
+               is written per real attempt (sent/failed/skipped_*) for
+               compliance-reminder audit evidence.
+    """
+    __tablename__ = 'whatsapp_message'
+
+    id                   = db.Column(db.Integer, primary_key=True)
+    user_id              = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
+    compliance_event_id  = db.Column(db.Integer, db.ForeignKey('compliance_event.id'), nullable=True, index=True)
+    reminder_type        = db.Column(db.String(10), nullable=False)   # '7_day' / '1_day'
+    to_phone_masked      = db.Column(db.String(20), nullable=False)   # e.g. +91XXXXXX1234 — NEVER full number
+    template_key         = db.Column(db.String(50), nullable=False)
+    body_preview         = db.Column(db.String(160), nullable=True)
+    status               = db.Column(db.String(30), nullable=False)   # sent / failed / skipped_no_consent / skipped_kill_switch
+    twilio_sid           = db.Column(db.String(50), nullable=True)
+    error_detail         = db.Column(db.String(300), nullable=True)   # PII-masked
+    created_at           = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
+
+    def __repr__(self):
+        return f'<WhatsAppMessage {self.reminder_type} user={self.user_id} status={self.status}>'
