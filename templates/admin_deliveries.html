@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}WhatsApp Deliveries — Admin — MineralLaw.in{% endblock %}
+
+{% block content %}
+<h1 class="text-xl font-bold text-content mb-2">WhatsApp Delivery Log</h1>
+<p class="text-faint text-xs mb-6">
+    Read-only. Every compliance-reminder send attempt (sent/failed/skipped) is recorded here — see Chunk 4c-i.
+</p>
+
+<div class="flex flex-wrap items-center gap-2 mb-6 text-sm">
+    <a href="{{ url_for('admin.deliveries', user_id=active_user_id) }}"
+       class="px-3 py-1.5 rounded-lg transition
+              {% if not active_status %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
+        All
+    </a>
+    {% for s in known_statuses %}
+    <a href="{{ url_for('admin.deliveries', status=s, user_id=active_user_id) }}"
+       class="px-3 py-1.5 rounded-lg transition
+              {% if active_status == s %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
+        {{ s }}
+    </a>
+    {% endfor %}
+
+    <form method="get" class="flex items-center gap-2 ml-auto">
+        {% if active_status %}<input type="hidden" name="status" value="{{ active_status }}">{% endif %}
+        <label class="text-faint text-xs" for="user_id">User ID</label>
+        <input type="number" id="user_id" name="user_id" value="{{ active_user_id or '' }}"
+               class="w-24 bg-surface border border-edge rounded px-2 py-1 text-content text-sm">
+        <button type="submit"
+                class="border border-edgeStrong text-muted text-xs px-3 py-1.5 rounded
+                       hover:border-accentSoftEdge hover:text-accentSoftTx transition">
+            Filter
+        </button>
+    </form>
+</div>
+
+{% if not rows %}
+<div class="text-center py-16 text-faint">No delivery records found.</div>
+{% else %}
+<div class="overflow-x-auto">
+    <table class="w-full text-sm">
+        <thead>
+            <tr class="text-faint text-left border-b border-edge">
+                <th class="pb-3 pr-4">Created (IST)</th>
+                <th class="pb-3 pr-4">User</th>
+                <th class="pb-3 pr-4">Phone</th>
+                <th class="pb-3 pr-4">Type</th>
+                <th class="pb-3 pr-4">Status</th>
+                <th class="pb-3 pr-4">Template</th>
+                <th class="pb-3 pr-4">Preview / Error</th>
+                <th class="pb-3">Compliance Event</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            {% set msg = row.message %}
+            <tr class="border-b border-edge text-muted">
+                <td class="py-3 pr-4 text-faint text-xs">{{ row.created_at_ist }}</td>
+                <td class="py-3 pr-4">
+                    {% if msg.user %}
+                        {{ msg.user.name or msg.user.company_name or ('****' + msg.user.phone[-4:]) }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td class="py-3 pr-4 font-mono text-xs text-faint">{{ msg.to_phone_masked }}</td>
+                <td class="py-3 pr-4">{{ msg.reminder_type }}</td>
+                <td class="py-3 pr-4">
+                    {% if msg.status == 'sent' %}
+                    <span class="bg-success text-successTx text-xs px-2 py-0.5 rounded-full">sent</span>
+                    {% elif msg.status == 'failed' %}
+                    <span class="bg-danger text-dangerTx text-xs px-2 py-0.5 rounded-full">failed</span>
+                    {% else %}
+                    <span class="bg-surface2 text-faint text-xs px-2 py-0.5 rounded-full">{{ msg.status }}</span>
+                    {% endif %}
+                </td>
+                <td class="py-3 pr-4 text-xs">{{ msg.template_key }}</td>
+                <td class="py-3 pr-4 max-w-xs truncate text-xs">
+                    {{ msg.body_preview if msg.status == 'sent' else (msg.error_detail or '—') }}
+                </td>
+                <td class="py-3 text-xs">
+                    {% if row.event %}
+                    {{ row.event.event_type }} due {{ row.event.due_date.strftime('%d %b %Y') }}
+                    {% else %}
+                    —
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="flex items-center justify-between mt-6 text-sm">
+    {% if pagination.has_prev %}
+    <a href="{{ url_for('admin.deliveries', page=pagination.prev_num, status=active_status, user_id=active_user_id) }}"
+       class="text-muted hover:text-accentTx transition">&larr; Previous</a>
+    {% else %}
+    <span class="text-faint">&larr; Previous</span>
+    {% endif %}
+    <span class="text-faint text-xs">Page {{ pagination.page }} of {{ pagination.pages or 1 }}</span>
+    {% if pagination.has_next %}
+    <a href="{{ url_for('admin.deliveries', page=pagination.next_num, status=active_status, user_id=active_user_id) }}"
+       class="text-muted hover:text-accentTx transition">Next &rarr;</a>
+    {% else %}
+    <span class="text-faint">Next &rarr;</span>
+    {% endif %}
+</div>
+{% endif %}
+
+<div class="mt-8">
+    <a href="{{ url_for('admin.overview') }}"
+       class="flex items-center gap-2 text-faint hover:text-muted text-sm transition">
+        &larr; Back to Admin Panel
+    </a>
+</div>
+{% endblock %}

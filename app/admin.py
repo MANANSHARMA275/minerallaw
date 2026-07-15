@@ -8,13 +8,16 @@
 # SECTION 1: ROLE DECORATOR
 # ------------------------------------------------------------
 from functools import wraps
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 
 from flask import Blueprint, abort, jsonify, render_template, request
 from flask_login import current_user, login_required
 
-from app.models import AuditLog, AuctionStatus, Legislation, Mineral, Rate, Ticket, User, db, get_auction_status
+from app.models import (
+    AuditLog, AuctionStatus, ComplianceEvent, Legislation, Mineral, Rate,
+    Ticket, User, WhatsAppMessage, db, get_auction_status,
+)
 from app.helpers import log_audit
 from app.news_importer import run_news_import
 
@@ -527,4 +530,56 @@ def users():
         'admin_panel.html',
         section='users',
         users=all_users,
+    )
+
+
+IST = timezone(timedelta(hours=5, minutes=30))
+KNOWN_DELIVERY_STATUSES = {'sent', 'failed', 'skipped_no_consent', 'skipped_kill_switch'}
+
+
+@admin_bp.route('/deliveries')
+@login_required
+@role_required('superadmin')
+def deliveries():
+    """
+    PURPOSE  : Read-only log of WhatsApp compliance-reminder delivery attempts
+    RECEIVES : None (GET query args: status, user_id, page — all optional and
+               defensively parsed, never a 500 on junk input)
+    RETURNS  : admin_deliveries.html with a paginated, filterable delivery log
+    SECURITY : superadmin only. No POST/retry/resend/delete — strictly
+               read-only. Only masked phone numbers are ever rendered.
+    LEGAL    : whatsapp_message rows are the durable delivery audit trail
+               (Chunk 4c-i) — this page gives that trail human visibility.
+    """
+    status = request.args.get('status', '')
+    status = status if status in KNOWN_DELIVERY_STATUSES else None
+    user_id = request.args.get('user_id', type=int)
+    page = request.args.get('page', 1, type=int)
+
+    query = WhatsAppMessage.query.order_by(WhatsAppMessage.created_at.desc())
+    if status:
+        query = query.filter_by(status=status)
+    if user_id:
+        query = query.filter_by(user_id=user_id)
+
+    pagination = query.paginate(page=page, per_page=50, error_out=False)
+
+    event_ids = {m.compliance_event_id for m in pagination.items if m.compliance_event_id}
+    events_by_id = {
+        e.id: e for e in ComplianceEvent.query.filter(ComplianceEvent.id.in_(event_ids)).all()
+    } if event_ids else {}
+
+    rows = [{
+        "message": m,
+        "created_at_ist": m.created_at.replace(tzinfo=timezone.utc).astimezone(IST).strftime('%d %b %Y, %I:%M %p IST'),
+        "event": events_by_id.get(m.compliance_event_id),
+    } for m in pagination.items]
+
+    return render_template(
+        'admin_deliveries.html',
+        rows=rows,
+        pagination=pagination,
+        active_status=status,
+        active_user_id=user_id,
+        known_statuses=sorted(KNOWN_DELIVERY_STATUSES),
     )

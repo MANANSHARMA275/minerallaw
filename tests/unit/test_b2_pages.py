@@ -25,6 +25,7 @@ CONVERTED_TEMPLATES = [
     'templates/ask_expert.html',
     'templates/dashboard.html',
     'templates/admin_panel.html',
+    'templates/admin_deliveries.html',
     'templates/errors/403.html',
     'templates/errors/429.html',
 ]

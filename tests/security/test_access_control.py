@@ -61,6 +61,7 @@ class TestAnonymousBlocked:
         '/admin/tickets',
         '/admin/users',
         '/admin/auctions',
+        '/admin/deliveries',
     ])
     def test_anonymous_get_redirected_to_login(self, app, client, url):
         """Anonymous GET on any protected route → 302 to /login."""
@@ -108,6 +109,7 @@ class TestRegularUserBlockedFromAdmin:
         ('/admin/tickets',   'GET'),
         ('/admin/users',     'GET'),
         ('/admin/auctions',  'GET'),
+        ('/admin/deliveries', 'GET'),
     ])
     def test_user_role_gets_403_on_admin_get(self, app, client, url, method):
         user = make_user(f'+9130000{abs(hash(url)) % 90000 + 10000:05d}')
