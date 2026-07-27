@@ -11,6 +11,7 @@ const translations = {
     en: {
         // Navigation
         nav_dashboard:  "Dashboard",
+        nav_compliance: "Compliance",
         nav_calculator: "Calculator",
         nav_checklist:  "Checklist",
         nav_expert:     "Ask Expert",
@@ -20,6 +21,17 @@ const translations = {
         nav_login:      "Login",
         nav_pricing:      "Pricing",
         nav_legislation:  "Legislation",
+
+        // Compliance calendar page
+        compliance_title:          "Compliance Calendar",
+        compliance_subtitle:       "Your compliance deadlines, tracked in one place.",
+        compliance_empty_title:    "No compliance deadlines yet.",
+        compliance_empty_body:     "We generate your deadlines once we have your lease and EC details on record. Share yours with us to get your calendar started.",
+        compliance_empty_cta:      "Talk to an expert →",
+        compliance_badge_overdue:  "Overdue",
+        compliance_badge_due_soon: "Due Soon",
+        compliance_badge_upcoming: "Upcoming",
+        compliance_badge_done:     "Done",
 
         // Legislation page
         leg_page_title:   "Legislation & Rule-Change Digest",
@@ -152,6 +164,7 @@ const translations = {
     hi: {
         // Navigation
         nav_dashboard:  "डैशबोर्ड",
+        nav_compliance: "अनुपालन",
         nav_calculator: "कैलकुलेटर",
         nav_checklist:  "चेकलिस्ट",
         nav_expert:     "विशेषज्ञ से पूछें",
@@ -161,6 +174,17 @@ const translations = {
         nav_login:      "लॉगिन",
         nav_pricing:      "मूल्य",
         nav_legislation:  "कानून",
+
+        // Compliance calendar page
+        compliance_title:          "अनुपालन कैलेंडर",
+        compliance_subtitle:       "आपकी अनुपालन समय-सीमाएँ, एक ही स्थान पर।",
+        compliance_empty_title:    "अभी कोई अनुपालन समय-सीमा नहीं।",
+        compliance_empty_body:     "जैसे ही हमारे पास आपके पट्टे और EC का विवरण होगा, हम आपकी समय-सीमाएँ तैयार कर देंगे। शुरू करने के लिए अपना विवरण साझा करें।",
+        compliance_empty_cta:      "विशेषज्ञ से बात करें →",
+        compliance_badge_overdue:  "विलंबित",
+        compliance_badge_due_soon: "जल्द देय",
+        compliance_badge_upcoming: "आगामी",
+        compliance_badge_done:     "पूर्ण",
 
         // Legislation page
         leg_page_title:   "कानून एवं नियम परिवर्तन",

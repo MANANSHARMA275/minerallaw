@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Compliance Calendar — MineralLaw.in{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-8">
+
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-content" data-i18n="compliance_title">Compliance Calendar</h1>
+    <p class="text-faint text-sm mt-1" data-i18n="compliance_subtitle">Your compliance deadlines, tracked in one place.</p>
+  </div>
+
+  {% if not events %}
+  <div class="bg-surface border border-edge rounded-xl p-6 shadow-sm" data-reveal>
+    <div class="text-center py-8">
+      <div class="text-4xl mb-3">🗓️</div>
+      <p class="text-faint text-sm" data-i18n="compliance_empty_title">No compliance deadlines yet.</p>
+      <p class="text-faint text-xs mt-2" data-i18n="compliance_empty_body">
+        We generate your deadlines once we have your lease and EC details
+        on record. Share yours with us to get your calendar started.
+      </p>
+      <a href="{{ url_for('main.ask_expert') }}"
+         data-i18n="compliance_empty_cta"
+         class="inline-flex items-center gap-1 text-sm font-medium
+                text-accentTx hover:text-accent transition-colors mt-4">
+        Talk to an expert →
+      </a>
+    </div>
+  </div>
+  {% else %}
+  <div class="space-y-3" data-reveal>
+    {% for event in events %}
+    <div class="bg-surface border border-edge rounded-xl p-4 shadow-sm
+                flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <div class="min-w-0">
+        <p class="text-content font-medium text-sm">{{ event.label }}</p>
+        <p class="text-faint text-xs mt-1">
+          Due {{ event.due_date_display }}{% if event.relative_display %} · {{ event.relative_display }}{% endif %}
+        </p>
+      </div>
+      <div class="shrink-0">
+        {% if event.urgency == 'overdue' %}
+          <span class="bg-danger text-dangerTx text-xs font-medium px-2 py-0.5 rounded-full" data-i18n="compliance_badge_overdue">Overdue</span>
+        {% elif event.urgency == 'due_soon' %}
+          <span class="bg-accentSoft text-accentSoftTx text-xs font-medium px-2 py-0.5 rounded-full" data-i18n="compliance_badge_due_soon">Due Soon</span>
+        {% elif event.urgency == 'upcoming' %}
+          <span class="bg-info text-infoTx text-xs font-medium px-2 py-0.5 rounded-full" data-i18n="compliance_badge_upcoming">Upcoming</span>
+        {% else %}
+          <span class="bg-success text-successTx text-xs font-medium px-2 py-0.5 rounded-full" data-i18n="compliance_badge_done">Done</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

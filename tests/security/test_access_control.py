@@ -56,6 +56,7 @@ class TestAnonymousBlocked:
         '/calculator',
         '/checklist',
         '/ask-expert',
+        '/compliance',
         '/admin',
         '/admin/rates',
         '/admin/tickets',

@@ -14,7 +14,8 @@ from decimal import Decimal, ROUND_HALF_UP
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_required, current_user, logout_user
 
-from app.models import AuditLog, Legislation, Mineral, NewsItem, db, get_auction_status
+from app.models import AuditLog, ComplianceEvent, Legislation, Mineral, NewsItem, db, get_auction_status
+from app.deadline_calculator import EVENT_DESCRIPTIONS
 from app.fee_calculator import get_rate_for_date, calculate_royalty, calculate_dmf, get_calculation_disclaimer
 from app.helpers import format_inr, gmail_prefill, log_audit
 from app.validators import validate_mineral_query, validate_rate_date
@@ -186,6 +187,98 @@ def dashboard():
     """
     recent_activity = AuditLog.query.filter_by(user_id=current_user.id).order_by(AuditLog.id.desc()).limit(5).all()
     return render_template('dashboard.html', user=current_user, recent_activity=recent_activity)
+
+
+# ------------------------------------------------------------
+# SECTION 4a: COMPLIANCE CALENDAR
+# ------------------------------------------------------------
+_URGENCY_ORDER = {'overdue': 0, 'due_soon': 1, 'upcoming': 2, 'done': 3}
+
+
+def classify_urgency(due_date: dt.date, status: str, today: dt.date) -> str:
+    """
+    PURPOSE  : Pure classification of one compliance event's urgency band
+    RECEIVES : due_date (date), status (str), today (date) — today is
+               injectable so callers/tests never depend on the real clock
+               (same convention as app/tasks.py's flag_due_reminders)
+    RETURNS  : str — one of 'overdue' | 'due_soon' | 'upcoming' | 'done'
+    SECURITY : n/a — pure function; no I/O, no DB access, no request context
+    LEGAL    : Date arithmetic (due_date vs today) is authoritative for
+               overdue-ness. A stored ComplianceEvent.status value of the
+               literal string 'overdue' (anticipated by the model's own
+               status comment) is deliberately NOT special-cased here —
+               only status == 'completed' short-circuits to 'done'. Any
+               other stored status is re-derived from days_delta so this
+               page never shows an overdue flag that has drifted from the
+               real due_date.
+    """
+    if status == 'completed':
+        return 'done'
+    days_delta = (due_date - today).days
+    if days_delta < 0:
+        return 'overdue'
+    if days_delta <= 7:
+        return 'due_soon'
+    return 'upcoming'
+
+
+def relative_due_display(due_date: dt.date, status: str, today: dt.date) -> str:
+    """
+    PURPOSE  : Human-readable relative-due phrase for a compliance event
+    RECEIVES : due_date (date), status (str), today (date) — today
+               injectable, same convention as classify_urgency
+    RETURNS  : str — '' for completed events; else 'Overdue by N day(s)' /
+               'Due today' / 'Due in N day(s)' (singular when N == 1)
+    SECURITY : n/a — pure function, no I/O, no DB access
+    LEGAL    : n/a
+    """
+    if status == 'completed':
+        return ''
+    days_delta = (due_date - today).days
+    if days_delta < 0:
+        n = -days_delta
+        return f"Overdue by {n} day" + ("s" if n != 1 else "")
+    if days_delta == 0:
+        return "Due today"
+    return f"Due in {days_delta} day" + ("s" if days_delta != 1 else "")
+
+
+@main.route('/compliance')
+@login_required
+def compliance_calendar():
+    """
+    PURPOSE  : Show the current user's own compliance deadlines (read-only)
+    RECEIVES : None — no query parameters are read; ownership comes solely
+               from the logged-in session (current_user.id)
+    RETURNS  : compliance_calendar.html — sorted list of the user's active
+               compliance events, or an empty-state view
+    SECURITY : Scoped strictly to current_user.id via the session; excludes
+               soft-deleted rows (deleted_at IS NULL). There is no user_id
+               request parameter on this route — a user can never view
+               another user's compliance events.
+    LEGAL    : Shows user's own data only — no cross-user data leak
+    """
+    today = dt.date.today()
+    events = ComplianceEvent.query.filter_by(
+        user_id=current_user.id, deleted_at=None,
+    ).all()
+
+    view_events = []
+    for event in events:
+        urgency = classify_urgency(event.due_date, event.status, today)
+        view_events.append({
+            "event_type": event.event_type,
+            "label": EVENT_DESCRIPTIONS.get(event.event_type, event.event_type),
+            "due_date_display": event.due_date.strftime('%d %b %Y'),
+            "due_date": event.due_date,
+            "days_delta": (event.due_date - today).days,
+            "relative_display": relative_due_display(event.due_date, event.status, today),
+            "urgency": urgency,
+        })
+
+    view_events.sort(key=lambda e: (_URGENCY_ORDER[e["urgency"]], e["due_date"]))
+
+    return render_template('compliance_calendar.html', events=view_events)
 
 
 @main.route('/calculator')

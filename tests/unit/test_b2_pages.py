@@ -26,6 +26,7 @@ CONVERTED_TEMPLATES = [
     'templates/dashboard.html',
     'templates/admin_panel.html',
     'templates/admin_deliveries.html',
+    'templates/compliance_calendar.html',
     'templates/errors/403.html',
     'templates/errors/429.html',
 ]
@@ -56,6 +57,9 @@ class TestB2PublicPages:
 
     def test_ask_expert_page_loads(self, client):
         assert client.get('/ask-expert').status_code in (200, 302)
+
+    def test_compliance_calendar_page_loads(self, client):
+        assert client.get('/compliance').status_code in (200, 302)
 
 
 class TestB2NoLiteralColours:
