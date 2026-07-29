@@ -1,33 +1,61 @@
 <!-- ============================================================ -->
 <!-- SECTION 1: HERO                                               -->
 <!-- ============================================================ -->
-<section class="text-center py-16 px-4">
-    <p class="text-accentTx text-sm font-semibold uppercase tracking-widest mb-4">
-        Rajasthan Mining Compliance
-    </p>
-    <h1 class="text-4xl sm:text-5xl font-bold font-display leading-tight tracking-tight text-content mb-6"
-        data-i18n="hero_headline">
-        Rajasthan Mining Compliance, Done Right the First Time
-    </h1>
-    <p class="text-muted text-lg max-w-2xl mx-auto mb-8"
-       data-i18n="hero_subhead">
-        Royalty, DMF, and NPV calculated on verified historical rates. Deadlines tracked
-        automatically. Regulatory changes explained in plain language. And a 30-year mining-law
-        expert one message away — so an outdated rate or a missed return never becomes a
-        lakhs-rupee penalty.
-    </p>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="{{ url_for('main.login') }}"
-           class="bg-accent text-onAccent px-8 py-3 rounded-lg font-semibold
-                  text-base hover:bg-accentHover transition"
-           data-i18n="hero_cta_calc">
-            Calculate My Fees →
-        </a>
-        <a href="{{ url_for('main.pricing') }}"
-           class="border border-edgeStrong text-muted px-8 py-3 rounded-lg
-                  font-semibold text-base hover:border-accent hover:text-accentTx transition"
-           data-i18n="hero_cta_pricing">
-            See Pricing
-        </a>
+<!--
+  Photo: "A massive terraced marble quarry with numerous cut blocks"
+  by Rafael Peier (@rafaelpeier) on Unsplash — unsplash.com/photos/FUOdknzrZEs
+  Unsplash License (free to use). SWAP HERE for a real client photo later:
+  replace static/img/hero-quarry.webp and hero-quarry.jpg (same filenames)
+  below — no template change needed for a same-name replacement.
+-->
+<section class="relative isolate overflow-hidden" data-theme="dark">
+    <div class="absolute inset-0 -z-10 bg-canvas">
+        <picture>
+            <source srcset="{{ url_for('static', filename='img/hero-quarry.webp') }}" type="image/webp">
+            <img src="{{ url_for('static', filename='img/hero-quarry.jpg') }}"
+                 alt="" aria-hidden="true" loading="eager"
+                 class="w-full h-full object-cover brightness-50">
+        </picture>
+        <div class="absolute inset-0" style="background: linear-gradient(
+            100deg,
+            rgb(var(--canvas)) 0px,
+            rgb(var(--canvas)) 720px,
+            rgb(var(--canvas) / 0.75) 920px,
+            rgb(var(--canvas) / 0.40) 1400px
+        );"></div>
+    </div>
+
+    <div class="relative max-w-6xl mx-auto px-4 py-24 sm:py-32">
+        <div class="max-w-xl">
+            <p class="text-accentTx text-sm font-semibold uppercase tracking-widest mb-4">
+                Rajasthan Mining Compliance
+            </p>
+            <h1 class="text-4xl sm:text-5xl font-bold font-display leading-tight tracking-tight
+                       text-content mb-6"
+                data-i18n="hero_headline">
+                Rajasthan Mining Compliance, Done Right the First Time
+            </h1>
+            <p class="text-muted text-lg mb-8"
+               data-i18n="hero_subhead">
+                Royalty, DMF, and NPV calculated on verified historical rates. Deadlines tracked
+                automatically. Regulatory changes explained in plain language. And a 30-year mining-law
+                expert one message away — so an outdated rate or a missed return never becomes a
+                lakhs-rupee penalty.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <a href="{{ url_for('main.login') }}"
+                   class="bg-accent text-onAccent px-8 py-3 rounded-lg font-semibold
+                          text-base hover:bg-accentHover transition text-center"
+                   data-i18n="hero_cta_calc">
+                    Calculate My Fees →
+                </a>
+                <a href="{{ url_for('main.pricing') }}"
+                   class="border border-edgeStrong text-muted px-8 py-3 rounded-lg
+                          font-semibold text-base hover:border-accent hover:text-accentTx transition text-center"
+                   data-i18n="hero_cta_pricing">
+                    See Pricing
+                </a>
+            </div>
+        </div>
     </div>
 </section>

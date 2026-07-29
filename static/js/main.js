@@ -356,3 +356,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const saved = localStorage.getItem('minerallaw_lang') || 'en';
     applyLanguage(saved);
 });
+
+// ------------------------------------------------------------
+// SECTION 4: CONDENSING NAV
+// ------------------------------------------------------------
+// Toggles a class only — all animation lives in CSS (static/css/style.css),
+// including the prefers-reduced-motion override, so this listener itself
+// needs no reduced-motion branching.
+(function () {
+    const nav = document.querySelector('nav');
+    if (!nav) return;
+    function onScroll() {
+        nav.classList.toggle('nav-condensed', window.scrollY > 80);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+}());

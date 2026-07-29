@@ -29,3 +29,26 @@ class TestTheme:
     def test_home_legislation_band_present_after_split(self, client):
         """Legislation band CTA link is rendered after partial extraction."""
         assert b'/legislation' in client.get('/').data
+
+
+class TestScrollRevealProgressiveEnhancement:
+    """
+    Chunk E2 — the scroll-reveal/stagger mechanism must be progressive
+    enhancement: JS ADDS the pre-reveal hidden state, so the raw
+    server-rendered HTML (which the Flask test client never executes JS
+    against) must show every section's content in full, never hidden.
+    """
+
+    def test_home_page_content_visible_without_js(self, client):
+        resp = client.get('/')
+        body = resp.get_data(as_text=True)
+        assert resp.status_code == 200
+        assert 'Where Compliance Goes Wrong' in body
+        assert 'Wrong Rate Applied' in body
+        assert 'Missed Deadlines' in body
+        assert 'Unexpected Penalties' in body
+        # reveal-pending/is-revealed are added exclusively by JS (reveal.js);
+        # their absence here proves the server-rendered page never hides
+        # content by default — a JS failure leaves everything visible.
+        assert 'reveal-pending' not in body
+        assert 'is-revealed' not in body

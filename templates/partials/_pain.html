@@ -1,42 +1,60 @@
 {% from "partials/_icons.html" import icon %}
 <!-- ============================================================ -->
-<!-- SECTION 2: PAIN CARDS                                         -->
+<!-- SECTION 2: PAIN — numbered editorial list, left-anchored      -->
 <!-- ============================================================ -->
-<section class="py-12" data-reveal>
-    <h2 class="text-center text-2xl font-bold font-display leading-tight tracking-tight text-content mb-8"
-        data-i18n="pain_heading">
-        Where Compliance Goes Wrong
-    </h2>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+<section class="py-16 sm:py-20" data-reveal>
+    <div class="max-w-2xl mb-10">
+        <h2 class="text-2xl font-bold font-display leading-tight tracking-tight text-content"
+            data-i18n="pain_heading">
+            Where Compliance Goes Wrong
+        </h2>
+    </div>
 
-        <div class="bg-surface border border-dangerEdge rounded-xl p-6 shadow-sm card-lift">
-            <div class="text-dangerTx mb-3">{{ icon('clipboard-list', 'w-8 h-8') }}</div>
-            <h3 class="text-dangerTx font-semibold mb-2" data-i18n="pain1_title">Wrong Rate Applied</h3>
-            <p class="text-muted text-sm" data-i18n="pain1_body">
-                Royalty and DMF rates are revised by notification every few years. Apply last year's
-                rate to this year's dispatch — or a current rate to a back-period — and you invite
-                recovery notices, interest, and an inspector's scrutiny.
-            </p>
+    <div class="max-w-3xl divide-y divide-edge" data-reveal-stagger>
+
+        <div class="flex gap-4 sm:gap-6 py-6 first:pt-0">
+            <span class="font-display text-3xl text-dangerEdgeStrong flex-shrink-0 w-10 sm:w-12" aria-hidden="true">01</span>
+            <div>
+                <div class="flex items-center gap-2 mb-2 text-dangerTx">
+                    {{ icon('clipboard-list', 'w-5 h-5 flex-shrink-0') }}
+                    <h3 class="text-content font-semibold" data-i18n="pain1_title">Wrong Rate Applied</h3>
+                </div>
+                <p class="text-muted text-sm" data-i18n="pain1_body">
+                    Royalty and DMF rates are revised by notification every few years. Apply last year's
+                    rate to this year's dispatch — or a current rate to a back-period — and you invite
+                    recovery notices, interest, and an inspector's scrutiny.
+                </p>
+            </div>
         </div>
 
-        <div class="bg-surface border border-dangerEdge rounded-xl p-6 shadow-sm card-lift">
-            <div class="text-dangerTx mb-3">{{ icon('clock', 'w-8 h-8') }}</div>
-            <h3 class="text-dangerTx font-semibold mb-2" data-i18n="pain2_title">Missed Deadlines</h3>
-            <p class="text-muted text-sm" data-i18n="pain2_body">
-                Six-monthly environmental compliance reports, annual returns, DMF contributions — each
-                runs on its own calendar. A single lapsed deadline can stall dispatch permissions and
-                freeze a working mine.
-            </p>
+        <div class="flex gap-4 sm:gap-6 py-6">
+            <span class="font-display text-3xl text-dangerEdgeStrong flex-shrink-0 w-10 sm:w-12" aria-hidden="true">02</span>
+            <div>
+                <div class="flex items-center gap-2 mb-2 text-dangerTx">
+                    {{ icon('clock', 'w-5 h-5 flex-shrink-0') }}
+                    <h3 class="text-content font-semibold" data-i18n="pain2_title">Missed Deadlines</h3>
+                </div>
+                <p class="text-muted text-sm" data-i18n="pain2_body">
+                    Six-monthly environmental compliance reports, annual returns, DMF contributions — each
+                    runs on its own calendar. A single lapsed deadline can stall dispatch permissions and
+                    freeze a working mine.
+                </p>
+            </div>
         </div>
 
-        <div class="bg-surface border border-dangerEdge rounded-xl p-6 shadow-sm card-lift">
-            <div class="text-dangerTx mb-3">{{ icon('indian-rupee', 'w-8 h-8') }}</div>
-            <h3 class="text-dangerTx font-semibold mb-2" data-i18n="pain3_title">Unexpected Penalties</h3>
-            <p class="text-muted text-sm" data-i18n="pain3_body">
-                NPV and dead-rent computations for lease grant and renewal are unforgiving. A single
-                error in the calculation can swing the figure by ₹10 lakh or more — and the department's
-                number is the one that counts.
-            </p>
+        <div class="flex gap-4 sm:gap-6 py-6 last:pb-0">
+            <span class="font-display text-3xl text-dangerEdgeStrong flex-shrink-0 w-10 sm:w-12" aria-hidden="true">03</span>
+            <div>
+                <div class="flex items-center gap-2 mb-2 text-dangerTx">
+                    {{ icon('indian-rupee', 'w-5 h-5 flex-shrink-0') }}
+                    <h3 class="text-content font-semibold" data-i18n="pain3_title">Unexpected Penalties</h3>
+                </div>
+                <p class="text-muted text-sm" data-i18n="pain3_body">
+                    NPV and dead-rent computations for lease grant and renewal are unforgiving. A single
+                    error in the calculation can swing the figure by ₹10 lakh or more — and the department's
+                    number is the one that counts.
+                </p>
+            </div>
         </div>
 
     </div>

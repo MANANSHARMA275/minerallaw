@@ -55,22 +55,47 @@ body {
   }
 }
 
+/* ── C5: Condensing nav ───────────────────────────────────── */
+nav .nav-inner {
+  transition: padding 220ms ease;
+}
+
+nav.nav-condensed .nav-inner {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+nav.nav-condensed {
+  border-color: rgb(var(--edgeStrong));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  nav .nav-inner {
+    transition: none;
+  }
+}
+
 /* ── C4: Scroll-reveal ────────────────────────────────────── */
-[data-reveal].reveal-pending {
+/* Selectors cover both whole-block reveal ([data-reveal]) and staggered
+   children ([data-reveal-stagger] > *) — both classes are JS-only, added
+   after confirming an element is off-screen, so broadening from
+   [data-reveal].reveal-pending to plain .reveal-pending changes nothing
+   about existing behaviour. */
+.reveal-pending {
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 380ms ease, transform 380ms ease;
 }
 
-[data-reveal].is-revealed {
+.is-revealed {
   opacity: 1;
   transform: translateY(0);
   transition: opacity 380ms ease, transform 380ms ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-reveal].reveal-pending,
-  [data-reveal].is-revealed {
+  .reveal-pending,
+  .is-revealed {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;

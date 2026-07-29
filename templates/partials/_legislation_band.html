@@ -1,17 +1,19 @@
 <!-- ============================================================ -->
 <!-- SECTION 4: THE RULES, KEPT CURRENT (legislation band)         -->
 <!-- ============================================================ -->
-<section class="py-12" data-reveal>
-    <h2 class="text-center text-2xl font-bold font-display leading-tight tracking-tight text-content mb-2"
-        data-i18n="leg_band_heading">
-        The Rules, Kept Current
-    </h2>
-    <p class="text-center text-faint mb-10" data-i18n="leg_band_subhead">
-        Rajasthan's mining regulations change often. We read every amendment and explain it plainly.
-    </p>
+<section class="py-16 sm:py-20" data-reveal>
+    <div class="max-w-2xl mb-10">
+        <h2 class="text-2xl font-bold font-display leading-tight tracking-tight text-content mb-3"
+            data-i18n="leg_band_heading">
+            The Rules, Kept Current
+        </h2>
+        <p class="text-faint" data-i18n="leg_band_subhead">
+            Rajasthan's mining regulations change often. We read every amendment and explain it plainly.
+        </p>
+    </div>
 
     {% if key_legislation %}
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8" data-reveal-stagger>
         {% for item in key_legislation %}
         <div class="bg-surface border border-edge rounded-xl p-5 shadow-sm">
             <div class="flex items-start gap-3 flex-wrap mb-2">
@@ -33,13 +35,13 @@
         {% endfor %}
     </div>
     {% else %}
-    <p class="text-center text-faint text-sm mb-8"
+    <p class="text-faint text-sm mb-8"
        data-i18n="leg_band_empty">
         Our legislation library is being verified by our expert and goes live shortly.
     </p>
     {% endif %}
 
-    <div class="text-center">
+    <div>
         <a href="{{ url_for('main.legislation') }}"
            class="inline-block bg-accent text-onAccent px-8 py-3 rounded-lg
                   font-semibold text-base hover:bg-accentHover transition"
