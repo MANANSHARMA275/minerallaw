@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "partials/_icons.html" import icon %}
 
 {% block title %}Dashboard — MineralLaw.in{% endblock %}
 
@@ -9,7 +10,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between
                 pb-6 mb-6 border-b border-edge gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-content">
+            <h1 class="text-2xl font-bold font-display leading-tight tracking-tight text-content">
                 Welcome{% if user.name %}, {{ user.name }}{% endif %}
             </h1>
             <p class="text-faint text-sm mt-1">{{ user.phone }}</p>
@@ -45,7 +46,7 @@
         <a href="{{ url_for('main.calculator') }}"
            class="bg-surface border border-edge rounded-xl p-5 shadow-sm
                   hover:border-accent transition card-lift group">
-            <div class="text-accentTx text-2xl mb-2">🧮</div>
+            <div class="text-accentTx mb-2">{{ icon('calculator', 'w-6 h-6') }}</div>
             <h3 class="text-content font-medium group-hover:text-accentTx transition"
                 data-i18n="dash_calculator">Fee Calculator</h3>
             <p class="text-faint text-xs mt-1">Royalty, DMF &amp; NPV estimates</p>
@@ -54,7 +55,7 @@
         <a href="{{ url_for('main.ask_expert') }}"
            class="bg-surface border border-edge rounded-xl p-5 shadow-sm
                   hover:border-accent transition card-lift group">
-            <div class="text-accentTx text-2xl mb-2">👨‍💼</div>
+            <div class="text-accentTx mb-2">{{ icon('briefcase', 'w-6 h-6') }}</div>
             <h3 class="text-content font-medium group-hover:text-accentTx transition"
                 data-i18n="dash_expert">Ask Expert</h3>
             <p class="text-faint text-xs mt-1">30 years of Rajasthan mining expertise</p>
@@ -63,7 +64,7 @@
         <a href="{{ url_for('main.checklist') }}"
            class="bg-surface border border-edge rounded-xl p-5 shadow-sm
                   hover:border-accent transition card-lift group">
-            <div class="text-accentTx text-2xl mb-2">✅</div>
+            <div class="text-accentTx mb-2">{{ icon('check-circle', 'w-6 h-6') }}</div>
             <h3 class="text-content font-medium group-hover:text-accentTx transition"
                 data-i18n="dash_checklist">Compliance Checklist</h3>
             <p class="text-faint text-xs mt-1">Step-by-step EC &amp; lease guidance</p>
@@ -75,7 +76,7 @@
         <h2 class="text-content font-semibold mb-4" data-i18n="dash_health">Compliance Health</h2>
         <div class="flex items-start gap-4">
             <div class="w-12 h-12 rounded-full bg-accentSoft flex items-center
-                        justify-center text-2xl flex-shrink-0" aria-hidden="true">⛏</div>
+                        justify-center text-accentSoftTx flex-shrink-0" aria-hidden="true">{{ icon('pickaxe', 'w-6 h-6') }}</div>
             <div class="flex-1">
                 <p class="text-content font-semibold text-base mb-1">
                     Set up your compliance profile
@@ -83,15 +84,15 @@
                 <p class="text-muted text-sm mb-3">Your mine details unlock:</p>
                 <ul class="space-y-1.5 mb-4">
                     <li class="flex items-center gap-2 text-muted text-sm">
-                        <span class="text-accentTx font-semibold">✓</span>
+                        <span class="text-accentTx font-semibold">{{ icon('check', 'w-4 h-4') }}</span>
                         Deadline tracking for EC &amp; lease renewals
                     </li>
                     <li class="flex items-center gap-2 text-muted text-sm">
-                        <span class="text-accentTx font-semibold">✓</span>
+                        <span class="text-accentTx font-semibold">{{ icon('check', 'w-4 h-4') }}</span>
                         Overdue alerts before penalty windows
                     </li>
                     <li class="flex items-center gap-2 text-muted text-sm">
-                        <span class="text-accentTx font-semibold">✓</span>
+                        <span class="text-accentTx font-semibold">{{ icon('check', 'w-4 h-4') }}</span>
                         WhatsApp reminders for filing dates
                     </li>
                 </ul>
@@ -112,14 +113,14 @@
         <ul class="space-y-0">
             {% for log in recent_activity %}
             <li class="flex items-center gap-3 py-3 border-b border-edge last:border-0">
-                <span class="text-lg flex-shrink-0" aria-hidden="true">
-                    {%- if log.action == 'FEE_CALCULATION' %}🧮
-                    {%- elif log.action == 'RATE_UPDATED' %}📊
-                    {%- elif log.action == 'LEGISLATION_CREATED' %}📜
-                    {%- elif log.action == 'LEGISLATION_TOGGLED' %}👁
-                    {%- elif log.action == 'LEGISLATION_DELETED' %}🗑
-                    {%- elif log.action == 'TICKET_CREATED' %}💬
-                    {%- else %}📝{%- endif %}
+                <span class="text-muted flex-shrink-0" aria-hidden="true">
+                    {%- if log.action == 'FEE_CALCULATION' %}{{ icon('calculator', 'w-4 h-4') }}
+                    {%- elif log.action == 'RATE_UPDATED' %}{{ icon('bar-chart-3', 'w-4 h-4') }}
+                    {%- elif log.action == 'LEGISLATION_CREATED' %}{{ icon('scroll-text', 'w-4 h-4') }}
+                    {%- elif log.action == 'LEGISLATION_TOGGLED' %}{{ icon('eye', 'w-4 h-4') }}
+                    {%- elif log.action == 'LEGISLATION_DELETED' %}{{ icon('trash-2', 'w-4 h-4') }}
+                    {%- elif log.action == 'TICKET_CREATED' %}{{ icon('message-circle', 'w-4 h-4') }}
+                    {%- else %}{{ icon('file-edit', 'w-4 h-4') }}{%- endif %}
                 </span>
                 <span class="text-content text-sm flex-1">
                     {%- if log.action == 'FEE_CALCULATION' %}
@@ -140,7 +141,7 @@
         </ul>
         {% else %}
         <div class="text-center py-8">
-            <div class="text-4xl mb-3">📋</div>
+            <div class="mb-3 flex justify-center text-faint">{{ icon('clipboard-list', 'w-10 h-10') }}</div>
             <p class="text-faint text-sm">No activity yet.</p>
             <p class="text-faint text-xs mt-2">
                 Your fee calculations and other actions will appear here.

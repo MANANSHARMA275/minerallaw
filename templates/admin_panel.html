@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "partials/_icons.html" import icon %}
 
 {% block title %}Admin Panel — MineralLaw.in{% endblock %}
 
@@ -14,42 +15,42 @@
             <a href="{{ url_for('admin.overview') }}"
                class="flex items-center gap-2 px-3 py-2 rounded-lg transition
                       {% if section == 'overview' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
-                📊 Overview
+                {{ icon('bar-chart-3', 'w-4 h-4') }} Overview
             </a>
             <a href="{{ url_for('admin.rates') }}"
                class="flex items-center gap-2 px-3 py-2 rounded-lg transition
                       {% if section == 'rates' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
-                📋 Rates
+                {{ icon('clipboard-list', 'w-4 h-4') }} Rates
             </a>
             <a href="{{ url_for('admin.tickets') }}"
                class="flex items-center gap-2 px-3 py-2 rounded-lg transition
                       {% if section == 'tickets' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
-                🎫 Tickets
+                {{ icon('ticket', 'w-4 h-4') }} Tickets
             </a>
             <a href="{{ url_for('admin.users') }}"
                class="flex items-center gap-2 px-3 py-2 rounded-lg transition
                       {% if section == 'users' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
-                👤 Users
+                {{ icon('user', 'w-4 h-4') }} Users
             </a>
             <a href="{{ url_for('admin.auctions') }}"
                class="flex items-center gap-2 px-3 py-2 rounded-lg transition
                       {% if section == 'auctions' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
-                🏛️ Auctions
+                {{ icon('landmark', 'w-4 h-4') }} Auctions
             </a>
             <a href="{{ url_for('admin.legislation_list') }}"
                class="flex items-center gap-2 px-3 py-2 rounded-lg transition
                       {% if section == 'legislation' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
-                📜 Legislation
+                {{ icon('scroll-text', 'w-4 h-4') }} Legislation
             </a>
             <a href="{{ url_for('admin.news') }}"
                class="flex items-center gap-2 px-3 py-2 rounded-lg transition
                       {% if section == 'news' %}bg-accentSoft text-accentSoftTx font-medium{% else %}text-muted hover:bg-surface2 hover:text-content{% endif %}">
-                📰 News
+                {{ icon('newspaper', 'w-4 h-4') }} News
             </a>
             <a href="{{ url_for('admin.deliveries') }}"
                class="flex items-center gap-2 px-3 py-2 rounded-lg transition
                       text-muted hover:bg-surface2 hover:text-content">
-                📨 Deliveries
+                {{ icon('mail', 'w-4 h-4') }} Deliveries
             </a>
         </nav>
         <div class="mt-auto pt-8">
@@ -113,10 +114,11 @@
         <!-- ============================================ -->
         <h1 class="text-xl font-bold text-content mb-4">Rate Management</h1>
 
-        <!-- Warning — amber, high-contrast -->
-        <div class="bg-accentSoft border border-accent rounded-lg p-4 mb-6 text-sm text-accentSoftTx">
-            ⚠️ Adding a rate closes the previous one. Rates are <strong>NEVER deleted</strong>.
-            Historical rates are preserved for past calculation audit trail.
+        <!-- Warning — brass, high-contrast -->
+        <div class="bg-accentSoft border border-accent rounded-lg p-4 mb-6 text-sm text-accentSoftTx flex items-start gap-2">
+            {{ icon('alert-triangle', 'w-4 h-4 mt-0.5 flex-shrink-0') }}
+            <span>Adding a rate closes the previous one. Rates are <strong>NEVER deleted</strong>.
+            Historical rates are preserved for past calculation audit trail.</span>
         </div>
 
         <!-- Add Rate Form -->
@@ -206,9 +208,9 @@
                         <td class="py-3 pr-4">{{ rate.state }}</td>
                         <td class="py-3 pr-4 capitalize">{{ rate.rate_type }}</td>
                         <td class="py-3 pr-4">{{ rate.value }}</td>
-                        <td class="py-3 pr-4">{{ rate.effective_from }}</td>
-                        <td class="py-3 pr-4">{{ rate.effective_to or '—' }}</td>
-                        <td class="py-3 pr-4 text-xs">{{ rate.notification_number or '—' }}</td>
+                        <td class="py-3 pr-4 font-mono">{{ rate.effective_from }}</td>
+                        <td class="py-3 pr-4 font-mono">{{ rate.effective_to or '—' }}</td>
+                        <td class="py-3 pr-4 text-xs font-mono">{{ rate.notification_number or '—' }}</td>
                         <td class="py-3">
                             {% if rate.effective_to is none %}
                             <span class="bg-accent text-onAccent text-xs font-semibold
@@ -272,7 +274,7 @@
                             <span class="text-faint text-xs">{{ ticket.status }}</span>
                             {% endif %}
                         </td>
-                        <td class="py-3 pr-4 text-faint text-xs">
+                        <td class="py-3 pr-4 text-faint text-xs font-mono">
                             {{ ticket.created_at.strftime('%d %b %Y') if ticket.created_at else '—' }}
                         </td>
                         <td class="py-3">
@@ -331,10 +333,10 @@
                             <span class="text-infoTx">{{ user.subscription_tier }}</span>
                             {% endif %}
                         </td>
-                        <td class="py-3 pr-6 text-faint text-xs">
+                        <td class="py-3 pr-6 text-faint text-xs font-mono">
                             {{ user.created_at.strftime('%d %b %Y') if user.created_at else '—' }}
                         </td>
-                        <td class="py-3 text-faint text-xs">
+                        <td class="py-3 text-faint text-xs font-mono">
                             {{ user.last_login.strftime('%d %b %Y') if user.last_login else 'Never' }}
                         </td>
                     </tr>
@@ -364,12 +366,12 @@
         <div class="bg-surface border border-edge rounded-xl p-5 mb-6 shadow-sm">
             <p class="text-faint text-xs mb-1">Current status</p>
             {% if auction.is_live %}
-            <span class="bg-success text-successTx text-xs font-semibold px-2 py-0.5 rounded-full">
-                🟢 Live
+            <span class="bg-success text-successTx text-xs font-semibold px-2 py-0.5 rounded-full inline-flex items-center gap-1.5">
+                <span class="inline-block w-2 h-2 rounded-full bg-successTx"></span> Live
             </span>
             {% else %}
-            <span class="bg-surface2 text-muted text-xs font-semibold px-2 py-0.5 rounded-full">
-                ⚫ Not live
+            <span class="bg-surface2 text-muted text-xs font-semibold px-2 py-0.5 rounded-full inline-flex items-center gap-1.5">
+                <span class="inline-block w-2 h-2 rounded-full bg-faint"></span> Not live
             </span>
             {% endif %}
             {% if auction.status_text %}
@@ -569,7 +571,7 @@
                                            {% if entry.is_published %}bg-accentSoft text-accentSoftTx{% else %}bg-surface2 text-faint{% endif %}"
                                     data-id="{{ entry.id }}"
                                     data-published="{{ 'true' if entry.is_published else 'false' }}">
-                                {{ '✓ Published' if entry.is_published else 'Unpublished' }}
+                                {% if entry.is_published %}{{ icon('check', 'w-3 h-3 inline-block') }} Published{% else %}Unpublished{% endif %}
                             </button>
                         </td>
                         <td class="py-3 whitespace-nowrap">
@@ -783,7 +785,8 @@ document.querySelectorAll('.leg-toggle-btn').forEach(btn => {
             const data = await resp.json();
             if (resp.ok) {
                 const pub = data.is_published;
-                btn.textContent = pub ? '✓ Published' : 'Unpublished';
+                const checkIcon = '<svg class="w-3 h-3 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>';
+                btn.innerHTML = pub ? checkIcon + ' Published' : 'Unpublished';
                 btn.className   = btn.className.replace(
                     pub ? /bg-surface2 text-faint/ : /bg-accentSoft text-accentSoftTx/,
                     pub ? 'bg-accentSoft text-accentSoftTx' : 'bg-surface2 text-faint'

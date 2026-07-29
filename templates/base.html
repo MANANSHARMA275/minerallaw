@@ -44,14 +44,19 @@
             success:          'rgb(var(--success) / <alpha-value>)',
             successEdge:      'rgb(var(--successEdge) / <alpha-value>)',
             successTx:        'rgb(var(--successTx) / <alpha-value>)',
-          }
+          },
+          fontFamily: {
+            display: ['"Instrument Serif"', '"IBM Plex Sans Devanagari"', 'serif'],
+            sans:    ['"IBM Plex Sans"', '"IBM Plex Sans Devanagari"', 'sans-serif'],
+            mono:    ['"IBM Plex Mono"', 'monospace'],
+          },
         }
       }
     }
     </script>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Self-hosted typefaces (Chunk E1) — no CDN -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fonts.css') }}">
 
     <!-- Theme token variables + toggle icon rules -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
@@ -60,8 +65,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <style>
-        body { font-family: 'Inter', sans-serif; }
-
         @media print {
             nav, footer, .no-print { display: none !important; }
             body { background: white !important; color: black !important; }
@@ -71,7 +74,7 @@
     </style>
 </head>
 
-<body class="bg-canvas text-content min-h-screen flex flex-col">
+<body class="bg-canvas text-content font-sans min-h-screen flex flex-col">
 
     <!-- NAVIGATION -->
     <nav class="bg-surface border-b border-edge shadow-sm no-print">

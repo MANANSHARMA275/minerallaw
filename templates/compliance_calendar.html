@@ -1,17 +1,18 @@
 {% extends "base.html" %}
+{% from "partials/_icons.html" import icon %}
 {% block title %}Compliance Calendar — MineralLaw.in{% endblock %}
 {% block content %}
 <div class="max-w-3xl mx-auto px-4 py-8">
 
   <div class="mb-6">
-    <h1 class="text-2xl font-bold text-content" data-i18n="compliance_title">Compliance Calendar</h1>
+    <h1 class="text-2xl font-bold font-display leading-tight tracking-tight text-content" data-i18n="compliance_title">Compliance Calendar</h1>
     <p class="text-faint text-sm mt-1" data-i18n="compliance_subtitle">Your compliance deadlines, tracked in one place.</p>
   </div>
 
   {% if not events %}
   <div class="bg-surface border border-edge rounded-xl p-6 shadow-sm" data-reveal>
     <div class="text-center py-8">
-      <div class="text-4xl mb-3">🗓️</div>
+      <div class="mb-3 flex justify-center text-faint">{{ icon('calendar-days', 'w-10 h-10') }}</div>
       <p class="text-faint text-sm" data-i18n="compliance_empty_title">No compliance deadlines yet.</p>
       <p class="text-faint text-xs mt-2" data-i18n="compliance_empty_body">
         We generate your deadlines once we have your lease and EC details
@@ -33,7 +34,7 @@
       <div class="min-w-0">
         <p class="text-content font-medium text-sm">{{ event.label }}</p>
         <p class="text-faint text-xs mt-1">
-          Due {{ event.due_date_display }}{% if event.relative_display %} · {{ event.relative_display }}{% endif %}
+          Due <span class="font-mono">{{ event.due_date_display }}</span>{% if event.relative_display %} · {{ event.relative_display }}{% endif %}
         </p>
       </div>
       <div class="shrink-0">

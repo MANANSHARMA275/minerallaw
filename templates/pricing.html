@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "partials/_icons.html" import icon %}
 
 {% block title %}Pricing — MineralLaw.in{% endblock %}
 
@@ -7,16 +8,17 @@
 
     <!-- ── SECTION 1: Header ──────────────────────────────── -->
     <div class="text-center mb-10">
-        <h1 class="text-3xl font-bold text-content mb-3"
+        <h1 class="text-3xl font-bold font-display leading-tight tracking-tight text-content mb-3"
             data-i18n="pricing_title">Simple, Transparent Pricing</h1>
         <p class="text-faint text-base max-w-xl mx-auto"
            data-i18n="pricing_subtitle">Built for Rajasthan mine owners. Less than the cost of one penalty notice.</p>
 
         <!-- Free-period banner -->
         <div class="mt-6 bg-accent text-onAccent rounded-xl px-6 py-4 inline-block">
-            <p class="font-bold text-base">
-                🎉 Payments launch soon — all accounts are currently FREE with full access
-                during our early period.
+            <p class="font-bold text-base flex items-center gap-2">
+                {{ icon('megaphone', 'w-5 h-5 flex-shrink-0') }}
+                <span>Payments launch soon — all accounts are currently FREE with full access
+                during our early period.</span>
             </p>
         </div>
     </div>
@@ -28,26 +30,26 @@
         <div class="bg-surface border border-edge rounded-xl p-6 flex flex-col shadow-sm card-lift">
             <div class="mb-4">
                 <h2 class="text-content font-bold text-lg">Free</h2>
-                <p class="text-3xl font-bold text-content mt-1">₹0
+                <p class="text-3xl font-bold text-content mt-1 font-mono">₹0
                     <span class="text-faint text-sm font-normal">/month</span>
                 </p>
             </div>
             <ul class="space-y-2 text-sm mb-6 flex-grow">
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> Compliance checklist
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> Compliance checklist
                 </li>
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> 5 fee calculations/month
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> 5 fee calculations/month
                 </li>
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> 2 PDF analyses/month
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> 2 PDF analyses/month
                     <span class="text-faint text-xs">(coming Phase 2)</span>
                 </li>
                 <li class="flex items-start gap-2 text-faint">
-                    <span class="mt-0.5">✗</span> WhatsApp reminders
+                    <span class="mt-0.5">{{ icon('x', 'w-4 h-4') }}</span> WhatsApp reminders
                 </li>
                 <li class="flex items-start gap-2 text-faint">
-                    <span class="mt-0.5">✗</span> Expert consultation
+                    <span class="mt-0.5">{{ icon('x', 'w-4 h-4') }}</span> Expert consultation
                 </li>
             </ul>
             <a href="{{ url_for('main.login') }}"
@@ -64,25 +66,25 @@
                          px-3 py-1 rounded-full">Most Popular</span>
             <div class="mb-4">
                 <h2 class="text-accentTx font-bold text-lg">Pro</h2>
-                <p class="text-3xl font-bold text-content mt-1">₹999
+                <p class="text-3xl font-bold text-content mt-1 font-mono">₹999
                     <span class="text-faint text-sm font-normal">/month</span>
                 </p>
             </div>
             <ul class="space-y-2 text-sm mb-6 flex-grow">
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> Everything in Free
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> Everything in Free
                 </li>
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> Unlimited calculations
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> Unlimited calculations
                 </li>
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> 10 PDF analyses/month
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> 10 PDF analyses/month
                 </li>
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> WhatsApp deadline reminders
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> WhatsApp deadline reminders
                 </li>
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> 2 expert queries/month
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> 2 expert queries/month
                 </li>
             </ul>
             <a href="{{ url_for('main.login') }}"
@@ -96,22 +98,22 @@
         <div class="bg-surface border border-edge rounded-xl p-6 flex flex-col shadow-sm card-lift">
             <div class="mb-4">
                 <h2 class="text-content font-bold text-lg">Expert</h2>
-                <p class="text-3xl font-bold text-content mt-1">₹2,999
+                <p class="text-3xl font-bold text-content mt-1 font-mono">₹2,999
                     <span class="text-faint text-sm font-normal">/month</span>
                 </p>
             </div>
             <ul class="space-y-2 text-sm mb-6 flex-grow">
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> Everything in Pro
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> Everything in Pro
                 </li>
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> Unlimited expert consultations
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> Unlimited expert consultations
                 </li>
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> Priority response (same day)
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> Priority response (same day)
                 </li>
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> Document review by specialist
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> Document review by specialist
                 </li>
             </ul>
             <a href="{{ url_for('main.login') }}"
@@ -125,22 +127,22 @@
         <div class="bg-surface border border-edge rounded-xl p-6 flex flex-col shadow-sm card-lift">
             <div class="mb-4">
                 <h2 class="text-content font-bold text-lg">Enterprise</h2>
-                <p class="text-3xl font-bold text-content mt-1">₹49,999
+                <p class="text-3xl font-bold text-content mt-1 font-mono">₹49,999
                     <span class="text-faint text-sm font-normal">/year</span>
                 </p>
             </div>
             <ul class="space-y-2 text-sm mb-6 flex-grow">
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> Everything in Expert
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> Everything in Expert
                 </li>
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> Multiple mines, multiple users
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> Multiple mines, multiple users
                 </li>
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> Dedicated account manager
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> Dedicated account manager
                 </li>
                 <li class="flex items-start gap-2 text-muted">
-                    <span class="text-successTx mt-0.5">✓</span> On-site compliance audit
+                    <span class="text-successTx mt-0.5">{{ icon('check', 'w-4 h-4') }}</span> On-site compliance audit
                     <span class="text-faint text-xs">(Rajasthan)</span>
                 </li>
             </ul>

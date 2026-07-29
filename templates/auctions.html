@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "partials/_icons.html" import icon %}
 
 {% block title %}Mine Auctions — Rajasthan | MineralLaw.in{% endblock %}
 
@@ -6,7 +7,7 @@
 <div class="max-w-3xl mx-auto">
 
     <!-- ── Title ─────────────────────────────────────────────── -->
-    <h1 class="text-2xl font-bold text-content mb-2"
+    <h1 class="text-2xl font-bold font-display leading-tight tracking-tight text-content mb-2"
         data-i18n="auction_title">Mine Auctions — Rajasthan</h1>
     <p class="text-faint text-sm mb-6"
        data-i18n="auction_subtitle">
@@ -17,8 +18,10 @@
     <!-- ── Status Banner ─────────────────────────────────────── -->
     {% if auction.is_live %}
     <div class="bg-success border border-successEdge rounded-xl px-5 py-4 mb-6">
-        <p class="text-successTx font-semibold text-sm mb-1"
-           data-i18n="auction_live_label">🟢 Auctions currently open</p>
+        <p class="text-successTx font-semibold text-sm mb-1 flex items-center gap-1.5">
+            <span class="inline-block w-2 h-2 rounded-full bg-successTx"></span>
+            <span data-i18n="auction_live_label">Auctions currently open</span>
+        </p>
         {% if auction.status_text %}
         <p class="text-successTx text-sm">{{ auction.status_text | e }}</p>
         {% endif %}
@@ -50,7 +53,7 @@
            target="_blank" rel="noopener noreferrer"
            class="flex items-start gap-4 bg-surface border border-edge
                   rounded-xl px-5 py-4 shadow-sm hover:border-accent transition group card-lift">
-            <div class="mt-0.5 text-accentTx text-xl flex-shrink-0">🏛️</div>
+            <div class="mt-0.5 text-accentTx flex-shrink-0">{{ icon('landmark', 'w-5 h-5') }}</div>
             <div>
                 <p class="text-content font-semibold text-sm group-hover:text-accentTx transition"
                    data-i18n="auction_mstc_title">
@@ -72,7 +75,7 @@
            target="_blank" rel="noopener noreferrer"
            class="flex items-start gap-4 bg-surface border border-edge
                   rounded-xl px-5 py-4 shadow-sm hover:border-accent transition group card-lift">
-            <div class="mt-0.5 text-accentTx text-xl flex-shrink-0">📋</div>
+            <div class="mt-0.5 text-accentTx flex-shrink-0">{{ icon('clipboard-list', 'w-5 h-5') }}</div>
             <div>
                 <p class="text-content font-semibold text-sm group-hover:text-accentTx transition"
                    data-i18n="auction_dmg_title">
@@ -94,7 +97,7 @@
            target="_blank" rel="noopener noreferrer"
            class="flex items-start gap-4 bg-surface border border-edge
                   rounded-xl px-5 py-4 shadow-sm hover:border-accent transition group card-lift">
-            <div class="mt-0.5 text-accentTx text-xl flex-shrink-0">🗺️</div>
+            <div class="mt-0.5 text-accentTx flex-shrink-0">{{ icon('map', 'w-5 h-5') }}</div>
             <div>
                 <p class="text-content font-semibold text-sm group-hover:text-accentTx transition"
                    data-i18n="auction_gis_title">

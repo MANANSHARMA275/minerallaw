@@ -5,91 +5,94 @@
    ============================================================ */
 
 /* ---- Light theme (default) --------------------------------- */
+/* Chunk E1 — warm paper / muted brass institutional palette.
+   All contrast ratios verified against these exact values (WCAG AA). */
 :root {
   /* Canvas / surfaces */
-  --canvas:           248 250 252;   /* slate-50  #F8FAFC */
-  --surface:          255 255 255;   /* white     #FFFFFF */
-  --surface2:         241 245 249;   /* slate-100 #F1F5F9 */
+  --canvas:           250 246 238;   /* warm ivory   #FAF6EE */
+  --surface:          255 253 250;   /* near-white, warm #FFFDFA */
+  --surface2:         244 238 228;   /* warm greige  #F4EEE4 */
 
   /* Text */
-  --content:          15 23 42;      /* slate-900 #0F172A */
-  --muted:            71 85 105;     /* slate-600 #475569 */
-  --faint:            100 116 139;   /* slate-500 #64748B  AA-adjusted: #94A3B8 → #64748B (4.59:1 on white) */
+  --content:          38 32 27;      /* warm near-black #26201B */
+  --muted:            93 84 74;      /* warm taupe   #5D544A */
+  --faint:            117 107 96;    /* warm mid-grey #756B60 */
 
   /* Borders */
-  --edge:             226 232 240;   /* slate-200 #E2E8F0 */
-  --edgeStrong:       203 213 225;   /* slate-300 #CBD5E1 */
+  --edge:             228 219 206;   /* #E4DBCE */
+  --edgeStrong:       206 195 179;   /* #CEC3B3 */
 
-  /* Amber accent system */
-  --accent:           251 191 36;    /* amber-400 #FBBF24 */
-  --accentHover:      252 211 77;    /* amber-300 #FCD34D */
-  --onAccent:         15 23 42;      /* slate-900 #0F172A — text/bg placed on amber */
-  --onAccentHover:    30 41 59;      /* slate-800 #1E293B — hover of inverted btn */
-  --accentSoft:       255 251 235;   /* amber-50  #FFFBEB */
-  --accentSoftTx:     180 83 9;      /* amber-700 #B45309 */
-  --accentSoftEdge:   253 230 138;   /* amber-200 #FDE68A */
-  --accentTx:         217 119 6;     /* amber-600 #D97706 — amber text on surfaces */
+  /* Muted brass accent system */
+  --accent:           176 141 87;    /* muted brass  #B08D57 */
+  --accentHover:      191 158 106;   /* #BF9E6A */
+  --onAccent:         38 28 15;      /* dark text on brass #261C0F */
+  --onAccentHover:    30 22 12;      /* #1E160C */
+  --accentSoft:       250 243 231;   /* #FAF3E7 */
+  --accentSoftTx:     124 91 41;     /* #7C5B29 */
+  --accentSoftEdge:   226 202 163;   /* #E2CAA3 */
+  --accentTx:         140 103 47;    /* #8C672F — brass text on surfaces */
 
-  /* Status — danger (red) */
-  --danger:           254 242 242;   /* red-50  #FEF2F2 */
-  --dangerEdge:       254 202 202;   /* red-200 #FECACA */
-  --dangerEdgeStrong: 252 165 165;   /* red-300 #FCA5A5 */
-  --dangerTx:         220 38 38;     /* red-600 #DC2626 */
-  --dangerTxStrong:   153 27 27;     /* red-800 #991B1B */
+  /* Status — danger (red, warm-shifted) */
+  --danger:           253 241 238;   /* #FDF1EE */
+  --dangerEdge:       247 199 190;   /* #F7C7BE */
+  --dangerEdgeStrong: 240 165 152;   /* #F0A598 */
+  --dangerTx:         176 46 38;     /* #B02E26 */
+  --dangerTxStrong:   122 28 22;     /* #7A1C16 */
 
-  /* Status — info (blue) */
-  --info:             239 246 255;   /* blue-50  #EFF6FF */
-  --infoEdge:         191 219 254;   /* blue-300 #BFDBFE */
-  --infoTx:           30 64 175;     /* blue-800 #1E40AF */
+  /* Status — info (blue, unchanged family) */
+  --info:             236 242 247;   /* #ECF2F7 */
+  --infoEdge:         185 209 227;   /* #B9D1E3 */
+  --infoTx:           39 84 138;     /* #27548A */
 
-  /* Status — success (green) */
-  --success:          240 253 244;   /* green-50  #F0FDF4 */
-  --successEdge:      134 239 172;   /* green-300 #86EFAC */
-  --successTx:        22 101 52;     /* green-800 #166534 */
+  /* Status — success (green, warm-shifted) */
+  --success:          237 246 236;   /* #EDF6EC */
+  --successEdge:      163 205 155;   /* #A3CD9B */
+  --successTx:        46 100 42;     /* #2E642A */
 }
 
 /* ---- Dark theme -------------------------------------------- */
+/* Chunk E1 — warm near-black (NOT navy), same muted-brass accent family. */
 [data-theme="dark"] {
   /* Canvas / surfaces */
-  --canvas:           11 18 32;      /* #0B1220 */
-  --surface:          21 31 51;      /* #151F33 */
-  --surface2:         15 23 41;      /* #0F1729 */
+  --canvas:           24 21 18;      /* warm near-black #181512 */
+  --surface:          34 30 26;      /* #221E1A */
+  --surface2:         29 25 22;      /* #1D1916 */
 
   /* Text */
-  --content:          230 237 246;   /* #E6EDF6 */
-  --muted:            148 163 184;   /* slate-400 #94A3B8 */
-  --faint:            148 163 184;   /* slate-400 #94A3B8  lighter in dark for legibility (~7.8:1 on canvas) */
+  --content:          240 233 224;   /* #F0E9E0 */
+  --muted:            176 163 148;   /* #B0A394 */
+  --faint:            163 150 135;   /* #A39687 */
 
   /* Borders */
-  --edge:             36 48 73;      /* #243049 */
-  --edgeStrong:       51 65 92;      /* #33415C */
+  --edge:             58 51 44;      /* #3A332C */
+  --edgeStrong:       76 67 57;      /* #4C4339 */
 
-  /* Amber — same in both themes */
-  --accent:           251 191 36;
-  --accentHover:      252 211 77;
-  --onAccent:         15 23 42;
-  --onAccentHover:    30 41 59;
-  --accentSoft:       41 36 15;      /* #29240F */
-  --accentSoftTx:     252 211 77;    /* #FCD34D */
-  --accentSoftEdge:   70 58 20;      /* #463A14 */
-  --accentTx:         251 191 36;    /* amber-400 — amber text reads well on dark surfaces */
+  /* Muted brass — same family as light, lightened for dark surfaces */
+  --accent:           199 164 105;   /* #C7A469 */
+  --accentHover:      212 180 126;   /* #D4B47E */
+  --onAccent:         33 24 12;      /* #21180C */
+  --onAccentHover:    24 17 8;       /* #181108 */
+  --accentSoft:       44 36 22;      /* #2C2416 */
+  --accentSoftTx:     222 190 133;   /* #DEBE85 */
+  --accentSoftEdge:   74 60 36;      /* #4A3C24 */
+  --accentTx:         216 182 122;   /* #D8B67A */
 
   /* Status — danger */
-  --danger:           45 10 10;      /* #2D0A0A */
-  --dangerEdge:       91 26 26;      /* #5B1A1A */
-  --dangerEdgeStrong: 127 29 29;     /* #7F1D1D */
-  --dangerTx:         252 165 165;   /* red-300 #FCA5A5 */
-  --dangerTxStrong:   252 165 165;
+  --danger:           47 24 21;      /* #2F1815 */
+  --dangerEdge:       94 40 33;      /* #5E2821 */
+  --dangerEdgeStrong: 128 51 42;     /* #80332A */
+  --dangerTx:         237 154 141;   /* #ED9A8D */
+  --dangerTxStrong:   240 176 165;   /* #F0B0A5 */
 
   /* Status — info */
-  --info:             15 36 68;      /* #0F2444 */
-  --infoEdge:         30 58 95;      /* #1E3A5F */
-  --infoTx:           147 197 253;   /* blue-300 #93C5FD */
+  --info:             22 33 46;      /* #16212E */
+  --infoEdge:         36 60 87;      /* #243C57 */
+  --infoTx:           146 190 235;   /* #92BEEB */
 
   /* Status — success */
-  --success:          6 41 18;       /* #062912 */
-  --successEdge:      15 61 31;      /* #0F3D1F */
-  --successTx:        74 222 128;    /* green-400 #4ADE80 */
+  --success:          19 34 20;      /* #132214 */
+  --successEdge:      39 68 38;      /* #274426 */
+  --successTx:        137 202 128;   /* #89CA80 */
 }
 
 /* ---- Theme toggle icon visibility -------------------------- */

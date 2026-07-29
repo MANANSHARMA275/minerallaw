@@ -136,7 +136,7 @@ const translations = {
         // Auctions page
         auction_title:           "Mine Auctions — Rajasthan",
         auction_subtitle:        "Government mine blocks in Rajasthan are allotted via official e-auction. Track open auctions and access the official portals below.",
-        auction_live_label:      "🟢 Auctions currently open",
+        auction_live_label:      "Auctions currently open",
         auction_none_label:      "No auctions currently flagged. Check the official portal below.",
         auction_verified_prefix: "Last updated",
         auction_mstc_title:      "MSTC Minor Mineral Block Auction (Rajasthan)",
@@ -289,7 +289,7 @@ const translations = {
         // Auctions page
         auction_title:           "खान नीलामी — राजस्थान",
         auction_subtitle:        "राजस्थान में सरकारी खान ब्लॉक आधिकारिक ई-नीलामी के माध्यम से आवंटित किए जाते हैं। खुली नीलामियों की जानकारी और आधिकारिक पोर्टल नीचे देखें।",
-        auction_live_label:      "🟢 नीलामियाँ वर्तमान में खुली हैं",
+        auction_live_label:      "नीलामियाँ वर्तमान में खुली हैं",
         auction_none_label:      "अभी कोई नीलामी सक्रिय नहीं। नीचे आधिकारिक पोर्टल देखें।",
         auction_verified_prefix: "अंतिम अपडेट",
         auction_mstc_title:      "MSTC लघु खनिज ब्लॉक नीलामी (राजस्थान)",

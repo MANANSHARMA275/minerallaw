@@ -79,3 +79,31 @@ class TestB2NoLiteralColours:
             "Literal colour utilities remain in converted templates:\n"
             + "\n".join(violations)
         )
+
+
+class TestB2NoEmoji:
+    """Grep gate: zero emoji codepoints across every template — scans all of
+    templates/ recursively (a superset of CONVERTED_TEMPLATES plus base.html,
+    since home.html's partials carry emoji too and aren't in that list)."""
+
+    EMOJI_RE = re.compile(
+        '[\U0001F300-\U0001FAFF\U00002300-\U000023FF\U00002600-\U000027BF\U0000FE0F]'
+    )
+
+    def test_no_emoji_remain_in_any_template(self):
+        violations = []
+        templates_dir = os.path.join(BASE_DIR, 'templates')
+        for root, _, files in os.walk(templates_dir):
+            for fname in files:
+                if not fname.endswith('.html'):
+                    continue
+                full_path = os.path.join(root, fname)
+                with open(full_path, encoding='utf-8') as f:
+                    content = f.read()
+                found = self.EMOJI_RE.findall(content)
+                if found:
+                    rel = os.path.relpath(full_path, BASE_DIR)
+                    violations.append(f"{rel}: {sorted(set(found))}")
+        assert not violations, (
+            "Emoji codepoints remain in templates:\n" + "\n".join(violations)
+        )

@@ -56,7 +56,7 @@
             {% for row in rows %}
             {% set msg = row.message %}
             <tr class="border-b border-edge text-muted">
-                <td class="py-3 pr-4 text-faint text-xs">{{ row.created_at_ist }}</td>
+                <td class="py-3 pr-4 text-faint text-xs font-mono">{{ row.created_at_ist }}</td>
                 <td class="py-3 pr-4">
                     {% if msg.user %}
                         {{ msg.user.name or msg.user.company_name or ('****' + msg.user.phone[-4:]) }}
@@ -81,7 +81,7 @@
                 </td>
                 <td class="py-3 text-xs">
                     {% if row.event %}
-                    {{ row.event.event_type }} due {{ row.event.due_date.strftime('%d %b %Y') }}
+                    {{ row.event.event_type }} due <span class="font-mono">{{ row.event.due_date.strftime('%d %b %Y') }}</span>
                     {% else %}
                     —
                     {% endif %}

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "partials/_icons.html" import icon %}
 
 {% block title %}Ask an Expert — MineralLaw.in{% endblock %}
 
@@ -6,7 +7,7 @@
 <div class="max-w-2xl mx-auto px-4 py-10">
 
     <div class="mb-8">
-        <h1 class="text-2xl font-bold text-content mb-2" data-i18n="expert_title">Ask an Expert</h1>
+        <h1 class="text-2xl font-bold font-display leading-tight tracking-tight text-content mb-2" data-i18n="expert_title">Ask an Expert</h1>
         <p class="text-faint text-sm" data-i18n="expert_subtitle">
             Get a response from a mining law specialist within 24 hours.
             Your query will open a pre-filled Gmail draft — just hit Send.
@@ -67,7 +68,7 @@
                 class="flex items-center justify-center gap-2 flex-1 bg-accent
                        text-onAccent px-6 py-4 rounded-xl font-bold text-base
                        hover:bg-accentHover transition">
-            ✅ Log Query for Expert <span class="text-xs font-normal opacity-70">(Recommended)</span>
+            {{ icon('check-circle', 'w-5 h-5') }} Log Query for Expert <span class="text-xs font-normal opacity-70">(Recommended)</span>
         </button>
 
         <!-- Gmail (secondary fallback) -->
@@ -78,7 +79,7 @@
            class="flex items-center justify-center gap-2 flex-1 border border-edgeStrong
                   text-muted px-6 py-4 rounded-xl font-semibold text-base
                   hover:border-accent hover:text-accentTx transition">
-            <span>📧</span>
+            <span>{{ icon('mail', 'w-4 h-4') }}</span>
             <span data-i18n="expert_gmail">Open Gmail</span>
         </a>
     </div>
@@ -145,6 +146,9 @@
     queryInput.addEventListener('input', updateGmailLink);
 
     // ── Log Query submit ────────────────────────────────────
+    const checkCircleIcon = '<svg class="w-5 h-5 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></svg>';
+    const logQueryDefaultHtml = `${checkCircleIcon} Log Query for Expert <span class="text-xs font-normal opacity-70">(Recommended)</span>`;
+
     logBtn.addEventListener('click', async () => {
         const mineral = mineralInput.value.trim();
         const query   = queryInput.value.trim();
@@ -169,18 +173,18 @@
             if (resp.ok) {
                 feedback.className = 'mb-4 px-4 py-3 rounded-lg text-sm bg-success border border-successEdge text-successTx';
                 feedback.textContent = data.status;
-                logBtn.textContent = '✅ Query Logged';
+                logBtn.innerHTML = `${checkCircleIcon} Query Logged`;
             } else {
                 feedback.className = 'mb-4 px-4 py-3 rounded-lg text-sm bg-danger border border-dangerEdgeStrong text-dangerTxStrong';
                 feedback.textContent = data.error || 'Something went wrong. Try again.';
                 logBtn.disabled = false;
-                logBtn.innerHTML = '✅ Log Query for Expert <span class="text-xs font-normal opacity-70">(Recommended)</span>';
+                logBtn.innerHTML = logQueryDefaultHtml;
             }
         } catch {
             feedback.className = 'mb-4 px-4 py-3 rounded-lg text-sm bg-danger border border-dangerEdgeStrong text-dangerTxStrong';
             feedback.textContent = 'Network error. Use the Gmail button as a fallback.';
             logBtn.disabled = false;
-            logBtn.innerHTML = '✅ Log Query for Expert <span class="text-xs font-normal opacity-70">(Recommended)</span>';
+            logBtn.innerHTML = logQueryDefaultHtml;
         }
     });
 })();
