@@ -69,7 +69,7 @@
         <!-- ============================================ -->
         <!-- OVERVIEW                                     -->
         <!-- ============================================ -->
-        <h1 class="text-xl font-bold text-content mb-6">Overview</h1>
+        <h1 class="text-2xl font-bold font-display leading-tight tracking-tight text-content mb-6">Overview</h1>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
             <div class="bg-surface border border-edge rounded-xl p-6 text-center shadow-sm">
@@ -112,7 +112,7 @@
         <!-- ============================================ -->
         <!-- RATES                                        -->
         <!-- ============================================ -->
-        <h1 class="text-xl font-bold text-content mb-4">Rate Management</h1>
+        <h1 class="text-2xl font-bold font-display leading-tight tracking-tight text-content mb-4">Rate Management</h1>
 
         <!-- Warning — brass, high-contrast -->
         <div class="bg-accentSoft border border-accent rounded-lg p-4 mb-6 text-sm text-accentSoftTx flex items-start gap-2">
@@ -236,7 +236,7 @@
         <!-- ============================================ -->
         <!-- TICKETS                                      -->
         <!-- ============================================ -->
-        <h1 class="text-xl font-bold text-content mb-6">Expert Consultation Requests</h1>
+        <h1 class="text-2xl font-bold font-display leading-tight tracking-tight text-content mb-6">Expert Consultation Requests</h1>
 
         {% if not tickets %}
         <div class="text-center py-16 text-faint">No open tickets.</div>
@@ -301,7 +301,7 @@
         <!-- ============================================ -->
         <!-- USERS                                        -->
         <!-- ============================================ -->
-        <h1 class="text-xl font-bold text-content mb-2">Registered Users</h1>
+        <h1 class="text-2xl font-bold font-display leading-tight tracking-tight text-content mb-2">Registered Users</h1>
         <p class="text-faint text-xs mb-6">
             Phone numbers masked per DPDP Act 2023 — last 4 digits only.
         </p>
@@ -356,7 +356,7 @@
         <!-- ============================================ -->
         <!-- AUCTIONS                                     -->
         <!-- ============================================ -->
-        <h1 class="text-xl font-bold text-content mb-2">Auction Status</h1>
+        <h1 class="text-2xl font-bold font-display leading-tight tracking-tight text-content mb-2">Auction Status</h1>
         <p class="text-faint text-xs mb-6">
             Toggle whether auctions are live and set the banner text shown on
             the public /auctions page. Status text is plain text — no HTML.
@@ -441,7 +441,7 @@
         <!-- ============================================ -->
         <!-- LEGISLATION                                  -->
         <!-- ============================================ -->
-        <h1 class="text-xl font-bold text-content mb-1">Legislation Entries</h1>
+        <h1 class="text-2xl font-bold font-display leading-tight tracking-tight text-content mb-1">Legislation Entries</h1>
         <p class="text-faint text-xs mb-6">
             All entries are <strong>is_published=False</strong> by default and invisible on the public page.
             Toggle published only after domain expert verification.
@@ -563,7 +563,7 @@
                         <td class="py-3 pr-4 text-xs font-mono text-faint">
                             {{ entry.source_reference or '—' }}
                         </td>
-                        <td class="py-3 pr-4 text-xs text-faint whitespace-nowrap">
+                        <td class="py-3 pr-4 text-xs text-faint font-mono whitespace-nowrap">
                             {{ entry.last_verified_on.strftime('%d %b %Y') if entry.last_verified_on else '—' }}
                         </td>
                         <td class="py-3 pr-4">
@@ -613,7 +613,7 @@
         <!-- ============================================ -->
         <!-- NEWS                                         -->
         <!-- ============================================ -->
-        <h1 class="text-xl font-bold text-content mb-2">News Feed</h1>
+        <h1 class="text-2xl font-bold font-display leading-tight tracking-tight text-content mb-2">News Feed</h1>
         <p class="text-faint text-xs mb-6">
             Manually fetch the latest news from the DMG portal. No automatic scraping —
             press the button to trigger a single import run.

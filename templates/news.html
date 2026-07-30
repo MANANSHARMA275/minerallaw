@@ -3,7 +3,7 @@
 {% block title %}News &amp; Events | MineralLaw.in{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto">
+<div class="max-w-3xl">
 
     <h1 class="text-2xl font-bold font-display leading-tight tracking-tight text-content mb-1"
         data-i18n="news_title">News &amp; Events</h1>
@@ -40,13 +40,13 @@
 
     <!-- Item list -->
     {% if items %}
-    <div class="space-y-4">
+    <div class="space-y-4" data-reveal-stagger>
         {% for item in items %}
         <div class="bg-surface border border-edge rounded-xl px-5 py-4 shadow-sm">
             <div class="flex items-start gap-3">
                 <div class="flex-1 min-w-0">
                     <p class="text-content font-semibold text-sm leading-snug">{{ item.heading }}</p>
-                    <p class="text-xs text-faint mt-1">{{ item.order_date.strftime('%d %b %Y') }}</p>
+                    <p class="text-xs text-faint mt-1 font-mono">{{ item.order_date.strftime('%d %b %Y') }}</p>
                 </div>
                 <span class="flex-shrink-0 text-xs bg-accentSoft text-accentSoftTx border border-accentSoftEdge
                              px-2 py-0.5 rounded-full font-medium">{{ item.category }}</span>

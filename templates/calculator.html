@@ -26,7 +26,7 @@
 
       <!-- Mineral dropdown — populated from DB -->
       <div>
-        <label class="block text-muted text-sm mb-2" for="mineral_id"
+        <label class="block text-muted text-sm font-medium mb-2" for="mineral_id"
                data-i18n="calc_mineral">Mineral Type</label>
         <select id="mineral_id" name="mineral_id"
                 class="w-full bg-surface border border-edgeStrong rounded px-3 py-3
@@ -40,7 +40,7 @@
 
       <!-- Target date (optional) -->
       <div>
-        <label class="block text-muted text-sm mb-2" for="target_date">
+        <label class="block text-muted text-sm font-medium mb-2" for="target_date">
           <span data-i18n="calc_date">Rate Date</span>
           <span class="text-faint font-normal">(leave blank for today's rate)</span>
         </label>
@@ -53,7 +53,7 @@
 
       <!-- Area -->
       <div>
-        <label class="block text-muted text-sm mb-2" for="area_ha"
+        <label class="block text-muted text-sm font-medium mb-2" for="area_ha"
                data-i18n="calc_area">Mine Area (hectares)</label>
         <input type="number" id="area_ha" name="area_ha"
                min="0.1" step="0.1" placeholder="e.g. 20"
@@ -63,7 +63,7 @@
 
       <!-- Annual production -->
       <div>
-        <label class="block text-muted text-sm mb-2" for="production_tpa"
+        <label class="block text-muted text-sm font-medium mb-2" for="production_tpa"
                data-i18n="calc_production">Annual Production (tonnes/year)</label>
         <input type="number" id="production_tpa" name="production_tpa"
                min="1" step="1" placeholder="e.g. 50000"
@@ -73,7 +73,7 @@
 
       <!-- Lease period -->
       <div class="sm:col-span-2">
-        <label class="block text-muted text-sm mb-2" for="lease_years">
+        <label class="block text-muted text-sm font-medium mb-2" for="lease_years">
           <span data-i18n="calc_lease">Lease Period (years)</span>
           <span class="text-faint font-normal">(for NPV calculation)</span>
         </label>
@@ -232,11 +232,11 @@ calcBtn.addEventListener('click', async () => {
       </tr>
       <tr class="border-b border-edge">
         <td class="py-2">Area</td>
-        <td class="text-right">${data.area_ha} ha</td>
+        <td class="text-right font-mono">${data.area_ha} ha</td>
       </tr>
       <tr class="border-b border-edge">
         <td class="py-2">Annual Production</td>
-        <td class="text-right">${Number(data.production_tpa).toLocaleString('en-IN')} TPA</td>
+        <td class="text-right font-mono">${Number(data.production_tpa).toLocaleString('en-IN')} TPA</td>
       </tr>
       <tr class="border-b border-edge">
         <td class="py-2">Rate Date</td>
@@ -248,7 +248,7 @@ calcBtn.addEventListener('click', async () => {
       </tr>
       <tr class="border-b border-edge">
         <td class="py-2">Lease Period</td>
-        <td class="text-right">${data.lease_years} years</td>
+        <td class="text-right font-mono">${data.lease_years} years</td>
       </tr>
       <tr>
         <td class="py-2 text-faint text-xs">Notification</td>

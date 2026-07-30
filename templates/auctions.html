@@ -4,7 +4,7 @@
 {% block title %}Mine Auctions — Rajasthan | MineralLaw.in{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto">
+<div class="max-w-3xl">
 
     <!-- ── Title ─────────────────────────────────────────────── -->
     <h1 class="text-2xl font-bold font-display leading-tight tracking-tight text-content mb-2"
@@ -31,7 +31,7 @@
         {% if auction.updated_at %}
         <p class="text-successTx text-xs mt-2"
            data-i18n="auction_verified_prefix">Last updated
-            {{ auction.updated_at.strftime('%d %B %Y') }} — verified by our expert</p>
+            <span class="font-mono">{{ auction.updated_at.strftime('%d %B %Y') }}</span> — verified by our expert</p>
         {% endif %}
     </div>
     {% else %}
@@ -40,13 +40,13 @@
            data-i18n="auction_none_label">No auctions currently flagged. Check the official portal below.</p>
         {% if auction.updated_at %}
         <p class="text-faint text-xs mt-2">Last updated
-            {{ auction.updated_at.strftime('%d %B %Y') }} — verified by our expert</p>
+            <span class="font-mono">{{ auction.updated_at.strftime('%d %B %Y') }}</span> — verified by our expert</p>
         {% endif %}
     </div>
     {% endif %}
 
     <!-- ── Link Cards ─────────────────────────────────────────── -->
-    <div class="space-y-4 mb-8">
+    <div class="space-y-4 mb-8" data-reveal-stagger>
 
         <!-- Card 1: MSTC -->
         <a href="https://www.mstcecommerce.com/auctionhome/mmboth/index.jsp"
