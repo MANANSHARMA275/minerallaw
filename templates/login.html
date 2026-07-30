@@ -127,7 +127,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
+<script nonce="{{ csp_nonce() }}">
 let currentPhone = '';
 
 const phoneInput  = document.getElementById('phone-input');

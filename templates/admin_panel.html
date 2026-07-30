@@ -241,6 +241,7 @@
         {% if not tickets %}
         <div class="text-center py-16 text-faint">No open tickets.</div>
         {% else %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" id="tickets-csrf-token">
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>
@@ -831,7 +832,9 @@ document.querySelectorAll('.resolve-btn').forEach(btn => {
         btn.textContent = 'Saving…';
 
         try {
+            const csrf = document.getElementById('tickets-csrf-token').value;
             const fd = new FormData();
+            fd.append('csrf_token', csrf);
             fd.append('response_note', 'Resolved via admin panel.');
             const resp = await fetch('/admin/tickets/' + ticketId + '/respond', {
                 method: 'POST',
