@@ -1,10 +1,55 @@
 {% extends "base.html" %}
 {% from "partials/_icons.html" import icon %}
 
+{% macro activity_icon(action) %}
+{%- if action == 'FEE_CALCULATION' -%}calculator
+{%- elif action == 'RATE_UPDATED' -%}bar-chart-3
+{%- elif action == 'AUCTION_STATUS_UPDATED' -%}megaphone
+{%- elif action == 'LEGISLATION_CREATED' -%}scroll-text
+{%- elif action == 'LEGISLATION_UPDATED' -%}scroll-text
+{%- elif action == 'LEGISLATION_DELETED' -%}trash-2
+{%- elif action == 'LEGISLATION_TOGGLED' -%}eye
+{%- elif action == 'NEWS_IMPORT_TRIGGERED' -%}newspaper
+{%- elif action == 'COMPLIANCE_EVENTS_GENERATED' -%}calendar-days
+{%- elif action == 'COMPLIANCE_EVENTS_REGENERATED' -%}calendar-days
+{%- elif action == 'WHATSAPP_REMINDER_SENT' -%}message-circle
+{%- elif action == 'WHATSAPP_REMINDER_FAILED' -%}alert-triangle
+{%- elif action == 'WHATSAPP_REMINDER_SKIPPED' -%}clock
+{%- elif action == 'REMINDER_FLAGS_UPDATED' -%}clock
+{%- elif action == 'REMINDERS_DELIVERED' -%}message-circle
+{%- elif action == 'TICKET_CREATED' -%}message-circle
+{%- elif action == 'TICKET_RESOLVED' -%}check-circle
+{%- else -%}file-edit
+{%- endif -%}
+{% endmacro %}
+
+{% macro activity_label(log) %}
+{%- if log.action == 'FEE_CALCULATION' -%}
+    {%- if log.new_value and not log.new_value.startswith('mineral_id=') -%}<span class="font-mono">{{ log.new_value }}</span>
+    {%- else -%}Ran a fee calculation{%- endif -%}
+{%- elif log.action == 'RATE_UPDATED' -%}Rate updated
+{%- elif log.action == 'AUCTION_STATUS_UPDATED' -%}Auction status updated
+{%- elif log.action == 'LEGISLATION_CREATED' -%}Legislation entry added
+{%- elif log.action == 'LEGISLATION_UPDATED' -%}Legislation entry updated
+{%- elif log.action == 'LEGISLATION_DELETED' -%}Legislation entry removed
+{%- elif log.action == 'LEGISLATION_TOGGLED' -%}Legislation visibility toggled
+{%- elif log.action == 'NEWS_IMPORT_TRIGGERED' -%}News updated
+{%- elif log.action == 'COMPLIANCE_EVENTS_GENERATED' -%}Compliance deadlines generated
+{%- elif log.action == 'COMPLIANCE_EVENTS_REGENERATED' -%}Compliance deadlines refreshed
+{%- elif log.action == 'WHATSAPP_REMINDER_SENT' -%}WhatsApp reminder sent
+{%- elif log.action == 'WHATSAPP_REMINDER_FAILED' -%}Reminder delivery failed
+{%- elif log.action == 'WHATSAPP_REMINDER_SKIPPED' -%}Reminder held (sending paused)
+{%- elif log.action == 'REMINDER_FLAGS_UPDATED' -%}Reminder settings updated
+{%- elif log.action == 'REMINDERS_DELIVERED' -%}Reminders delivered
+{%- elif log.action == 'TICKET_CREATED' -%}Submitted an expert question
+{%- elif log.action == 'TICKET_RESOLVED' -%}Expert query resolved
+{%- else -%}{{ log.action.replace('_', ' ').title() }}{%- endif -%}
+{% endmacro %}
+
 {% block title %}Dashboard — MineralLaw.in{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 py-8">
+<div class="max-w-4xl">
 
     <!-- ── Header ─────────────────────────────────────────── -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between
@@ -42,7 +87,7 @@
     </div>
 
     <!-- ── Quick Actions ──────────────────────────────────── -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6" data-reveal-stagger>
         <a href="{{ url_for('main.calculator') }}"
            class="bg-surface border border-edge rounded-xl p-5 shadow-sm
                   hover:border-accent transition card-lift group">
@@ -114,26 +159,12 @@
             {% for log in recent_activity %}
             <li class="flex items-center gap-3 py-3 border-b border-edge last:border-0">
                 <span class="text-muted flex-shrink-0" aria-hidden="true">
-                    {%- if log.action == 'FEE_CALCULATION' %}{{ icon('calculator', 'w-4 h-4') }}
-                    {%- elif log.action == 'RATE_UPDATED' %}{{ icon('bar-chart-3', 'w-4 h-4') }}
-                    {%- elif log.action == 'LEGISLATION_CREATED' %}{{ icon('scroll-text', 'w-4 h-4') }}
-                    {%- elif log.action == 'LEGISLATION_TOGGLED' %}{{ icon('eye', 'w-4 h-4') }}
-                    {%- elif log.action == 'LEGISLATION_DELETED' %}{{ icon('trash-2', 'w-4 h-4') }}
-                    {%- elif log.action == 'TICKET_CREATED' %}{{ icon('message-circle', 'w-4 h-4') }}
-                    {%- else %}{{ icon('file-edit', 'w-4 h-4') }}{%- endif %}
+                    {{ icon(activity_icon(log.action) | trim, 'w-4 h-4') }}
                 </span>
                 <span class="text-content text-sm flex-1">
-                    {%- if log.action == 'FEE_CALCULATION' %}
-                        {%- if log.new_value and not log.new_value.startswith('mineral_id=') %}{{ log.new_value }}
-                        {%- else %}Ran a fee calculation{%- endif %}
-                    {%- elif log.action == 'RATE_UPDATED' %}Rate updated
-                    {%- elif log.action == 'LEGISLATION_CREATED' %}Legislation entry added
-                    {%- elif log.action == 'LEGISLATION_TOGGLED' %}Legislation entry updated
-                    {%- elif log.action == 'LEGISLATION_DELETED' %}Legislation entry removed
-                    {%- elif log.action == 'TICKET_CREATED' %}Submitted an expert question
-                    {%- else %}{{ log.action.replace('_', ' ').title() }}{%- endif %}
+                    {{- activity_label(log) | trim -}}
                 </span>
-                <span class="text-faint text-xs shrink-0">
+                <span class="text-faint text-xs font-mono shrink-0">
                     {{ log.timestamp.strftime('%d %b, %H:%M') if log.timestamp else '' }}
                 </span>
             </li>
@@ -151,7 +182,7 @@
     </div>
 
     <!-- ── Account Info ───────────────────────────────────── -->
-    <div class="bg-surface border border-edge rounded-xl p-6 shadow-sm">
+    <div class="bg-surface border border-edge rounded-xl p-6 shadow-sm" data-reveal>
         <h2 class="text-content font-semibold mb-4" data-i18n="dash_account">Account</h2>
 
         <div class="text-sm">
@@ -183,7 +214,7 @@
             </div>
             <div class="flex justify-between items-center py-3">
                 <span class="text-faint" data-i18n="dash_member_since">Member since</span>
-                <span class="text-content">
+                <span class="text-content font-mono">
                     {{ user.created_at.strftime('%d %b %Y') if user.created_at else 'N/A' }}
                 </span>
             </div>

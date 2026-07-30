@@ -2,7 +2,7 @@
 {% from "partials/_icons.html" import icon %}
 {% block title %}Compliance Calendar — MineralLaw.in{% endblock %}
 {% block content %}
-<div class="max-w-3xl mx-auto px-4 py-8">
+<div class="max-w-3xl">
 
   <div class="mb-6">
     <h1 class="text-2xl font-bold font-display leading-tight tracking-tight text-content" data-i18n="compliance_title">Compliance Calendar</h1>
@@ -27,7 +27,7 @@
     </div>
   </div>
   {% else %}
-  <div class="space-y-3" data-reveal>
+  <div class="space-y-3" data-reveal-stagger>
     {% for event in events %}
     <div class="bg-surface border border-edge rounded-xl p-4 shadow-sm
                 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
