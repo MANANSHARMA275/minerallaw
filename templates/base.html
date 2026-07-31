@@ -1,3 +1,4 @@
+{% from "partials/_icons.html" import icon %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,6 +87,7 @@
             </a>
 
             <div class="flex items-center gap-4 text-sm">
+                <div class="hidden lg:flex items-center gap-4">
                 {% if current_user.is_authenticated %}
                     <a href="{{ url_for('main.dashboard') }}"
                        class="text-muted hover:text-accentTx transition"
@@ -131,6 +133,7 @@
                               font-semibold hover:bg-accentHover transition"
                        data-i18n="nav_login">Login</a>
                 {% endif %}
+                </div>
 
                 <button id="lang-toggle-btn"
                         class="text-xs text-faint hover:text-accentTx
@@ -153,6 +156,66 @@
                               d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/>
                     </svg>
                 </button>
+
+                <button id="mobile-menu-btn"
+                        class="lg:hidden text-faint hover:text-accentTx
+                               border border-edge px-2 py-1.5 rounded transition"
+                        aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+                    {{ icon('menu', 'menu-icon-open w-4 h-4') }}
+                    {{ icon('x', 'menu-icon-close w-4 h-4') }}
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile link panel — same hrefs/data-i18n keys as the desktop row above,
+             mobile-appropriate stacked classes. Toggled by static/js/mobile-nav.js -->
+        <div id="mobile-menu" class="hidden lg:hidden border-t border-edge bg-surface">
+            <div class="flex flex-col text-sm px-4 py-2">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('main.dashboard') }}"
+                       class="block px-2 py-2.5 rounded text-muted hover:bg-surface2 hover:text-accentTx transition"
+                       data-i18n="nav_dashboard">Dashboard</a>
+                    <a href="{{ url_for('main.compliance_calendar') }}"
+                       class="block px-2 py-2.5 rounded text-muted hover:bg-surface2 hover:text-accentTx transition"
+                       data-i18n="nav_compliance">Compliance</a>
+                    <a href="{{ url_for('main.calculator') }}"
+                       class="block px-2 py-2.5 rounded text-muted hover:bg-surface2 hover:text-accentTx transition"
+                       data-i18n="nav_calculator">Calculator</a>
+                    <a href="{{ url_for('main.auctions') }}"
+                       class="block px-2 py-2.5 rounded text-muted hover:bg-surface2 hover:text-accentTx transition"
+                       data-i18n="nav_auctions">Auctions</a>
+                    <a href="{{ url_for('main.legislation') }}"
+                       class="block px-2 py-2.5 rounded text-muted hover:bg-surface2 hover:text-accentTx transition"
+                       data-i18n="nav_legislation">Legislation</a>
+                    <a href="{{ url_for('main.news') }}"
+                       class="block px-2 py-2.5 rounded text-muted hover:bg-surface2 hover:text-accentTx transition"
+                       data-i18n="nav_news">News</a>
+                    {% if current_user.role == 'superadmin' %}
+                    <a href="{{ url_for('admin.overview') }}"
+                       class="block px-2 py-2.5 rounded text-accentTx hover:bg-accentSoft hover:text-accentSoftTx font-semibold transition"
+                       data-i18n="nav_admin">Admin</a>
+                    {% endif %}
+                    <a href="{{ url_for('auth.logout') }}"
+                       class="block px-2 py-2.5 rounded text-faint hover:bg-surface2 hover:text-dangerTx transition"
+                       data-i18n="nav_logout">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('main.auctions') }}"
+                       class="block px-2 py-2.5 rounded text-muted hover:bg-surface2 hover:text-accentTx transition"
+                       data-i18n="nav_auctions">Auctions</a>
+                    <a href="{{ url_for('main.legislation') }}"
+                       class="block px-2 py-2.5 rounded text-muted hover:bg-surface2 hover:text-accentTx transition"
+                       data-i18n="nav_legislation">Legislation</a>
+                    <a href="{{ url_for('main.news') }}"
+                       class="block px-2 py-2.5 rounded text-muted hover:bg-surface2 hover:text-accentTx transition"
+                       data-i18n="nav_news">News</a>
+                    <a href="{{ url_for('main.pricing') }}"
+                       class="block px-2 py-2.5 rounded text-muted hover:bg-surface2 hover:text-accentTx transition"
+                       data-i18n="nav_pricing">Pricing</a>
+                    <a href="{{ url_for('main.login') }}"
+                       class="block px-2 py-2.5 rounded bg-accent text-onAccent text-center
+                              font-semibold hover:bg-accentHover transition mt-1"
+                       data-i18n="nav_login">Login</a>
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -194,6 +257,7 @@
     <!-- JAVASCRIPT -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/reveal.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/mobile-nav.js') }}"></script>
 
     <script nonce="{{ csp_nonce() }}">
     document.getElementById('lang-toggle-btn').addEventListener('click', toggleLanguage);

@@ -66,7 +66,11 @@ class TestNavLink:
             expected_href = f'href="{url_for("main.compliance_calendar")}"'
         resp = client.get('/dashboard')
         body = resp.get_data(as_text=True)
-        assert body.count(expected_href) == 1
+        # F2: the responsive nav renders a desktop-row copy and a mobile-panel
+        # copy of every link, CSS-gated by breakpoint (hidden lg:flex /
+        # lg:hidden) so only one is ever visible at a time — both are
+        # legitimately present in the markup.
+        assert body.count(expected_href) == 2
 
 
 class TestSoftDelete:

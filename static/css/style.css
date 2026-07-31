@@ -55,6 +55,11 @@ body {
   }
 }
 
+/* ── F2: Mobile nav hamburger/close icon swap ─────────────── */
+.menu-icon-close { display: none; }
+[aria-expanded="true"] .menu-icon-close { display: block; }
+[aria-expanded="true"] .menu-icon-open  { display: none; }
+
 /* ── C5: Condensing nav ───────────────────────────────────── */
 nav .nav-inner {
   transition: padding 220ms ease;
